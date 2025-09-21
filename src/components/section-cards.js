@@ -25,7 +25,12 @@ export default function SectionCards() {
       </div>
 
       {/* Customer Section Card */}
-      <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-secondary to-secondary/80 p-8 text-secondary-foreground transition-all duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer">
+      <div className="group relative overflow-hidden rounded-2xl 
+bg-gradient-to-br from-orange-400 via-amber-300 to-yellow-200 
+p-8 text-white transition-all duration-300 
+hover:scale-105 hover:shadow-2xl cursor-pointer">
+
+
         <div className="relative z-10">
           <div className="mb-6">
             <CustomerIcon />

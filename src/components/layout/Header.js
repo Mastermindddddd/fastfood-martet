@@ -78,8 +78,12 @@ export default function Header() {
       )}
       <div className="hidden md:flex items-center justify-between">
         <nav className="flex items-center gap-8 text-gray-500 font-semibold">
-          <Link className="text-primary font-semibold text-2xl" href={'/'}>
-            FAST-FOOD
+          <Link className="text-primary font-semibold text-2xl mr-20" href={'/'}>
+            <div className="w-full mx-auto"> {/* full width */}
+              <h1 className="text-2xl font-bold text-center text-foreground">
+                🍔 <span className="text-gray-700">FastBite</span>-Express
+              </h1>
+            </div>
           </Link>
           <Link href={'/'}>Home</Link>
           <Link href={'/menu'}>Menu</Link>
