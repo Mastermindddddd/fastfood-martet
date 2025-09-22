@@ -6,37 +6,50 @@ export default function HomePage() {
   return (
     <div className="relative min-h-screen bg-white overflow-hidden">
       {/* Subtle Background Pattern */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-white to-orange-50/30 -z-10"></div>
-      
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-white to-orange-50/40 -z-10"></div>
+
       {/* Hero Section */}
-      <section className="relative py-12 sm:py-16 lg:py-20 px-4">
-        <div className="max-w-7xl mx-auto text-center">
-          <div className="mb-8">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 text-slate-800 leading-tight px-2">
-              Delicious Food,{' '}
-              <span className="bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent block sm:inline">
+      <section className="relative py-12 sm:py-20 px-4 bg-gradient-to-br from-orange-50 via-white to-orange-100">
+        {/* Search Section */}
+        <div className="max-w-3xl mx-auto mt-10 sm:mt-16">
+          <SearchBar />
+        </div>
+        
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          {/* Text side */}
+          <div className="text-center lg:text-left">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-800 leading-tight mb-6">
+              Delicious Food,
+              <span className="bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent block lg:inline">
                 Delivered Fast
               </span>
             </h1>
-            <p className="text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto mb-6 sm:mb-8 leading-relaxed px-4">
-              Experience the convenience of premium food delivery with FastBite Express. 
-              Quality meals from your favorite restaurants, delivered fresh to your doorstep.
+            <p className="text-lg sm:text-xl text-slate-600 max-w-xl mx-auto lg:mx-0 mb-8 leading-relaxed">
+              Premium food delivery from your favorite restaurants, delivered fresh to your doorstep.
             </p>
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
-              <button className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-orange-600 to-red-600 text-white rounded-xl font-semibold hover:from-orange-700 hover:to-red-700 transition-all duration-300 shadow-lg hover:shadow-xl text-base sm:text-lg">
-                Order Now
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start">
+              <button className="w-full sm:w-auto px-6 py-4 bg-gradient-to-r from-orange-600 to-red-600 text-white rounded-xl font-semibold hover:from-orange-700 hover:to-red-700 transition-all duration-300 shadow-lg hover:shadow-xl text-base sm:text-lg">
+                🚀 Order Now
               </button>
-              <button className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 border-2 border-orange-600 text-orange-600 rounded-xl font-semibold hover:bg-orange-600 hover:text-white transition-all duration-300 text-base sm:text-lg">
-                View Menu
+              <button className="w-full sm:w-auto px-6 py-4 border-2 border-orange-600 text-orange-600 rounded-xl font-semibold hover:bg-orange-600 hover:text-white transition-all duration-300 text-base sm:text-lg">
+                📖 View Menu
               </button>
             </div>
           </div>
+
+          {/* Image side */}
+          <div className="flex justify-center lg:justify-end">
+            <Image
+              src="/kota.png"
+              alt="Delicious Food"
+              width={500}
+              height={400}
+              className="rounded-3xl w-full max-w-sm sm:max-w-md lg:max-w-full object-cover"
+              priority
+            />
+          </div>
         </div>
 
-        {/* Search Section */}
-        <div className="max-w-4xl mx-auto mt-8 sm:mt-12 px-4">
-          <SearchBar />
-        </div>
       </section>
 
       {/* Section Cards */}
@@ -49,66 +62,50 @@ export default function HomePage() {
       {/* Features Section */}
       <section className="py-16 sm:py-20 px-4 bg-white">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12 sm:mb-16 px-4">
-            <h2 className="text-3xl sm:text-4xl font-bold text-slate-800 mb-3 sm:mb-4">
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold text-slate-800 mb-4">
               Why Choose FastBite Express?
             </h2>
             <p className="text-lg sm:text-xl text-slate-600 max-w-3xl mx-auto">
-              We're committed to providing you with the best food delivery experience possible
+              We’re committed to providing you with the best food delivery experience possible.
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {/* Fast Delivery */}
-            <div className="group p-6 sm:p-8 rounded-2xl border border-slate-200 hover:border-orange-300 hover:shadow-xl transition-all duration-300 bg-white mx-4 sm:mx-0">
-              <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300">
-                <span className="text-xl sm:text-2xl">🚚</span>
+            {[
+              {
+                emoji: '🚚',
+                title: 'Lightning Fast Delivery',
+                desc: 'Get your favorite meals delivered in 30 minutes or less. Our optimized delivery network ensures your food arrives hot and fresh.'
+              },
+              {
+                emoji: '💳',
+                title: 'Secure & Easy Payment',
+                desc: 'Multiple secure payment options including credit cards, digital wallets, and cash on delivery for your convenience.'
+              },
+              {
+                emoji: '⭐',
+                title: 'Premium Quality',
+                desc: 'We partner only with top-rated restaurants that maintain the highest standards for ingredients and food preparation.'
+              },
+            ].map((item) => (
+              <div
+                key={item.title}
+                className="group p-6 sm:p-8 rounded-2xl border border-slate-200 hover:border-orange-300 hover:shadow-xl transition-all duration-300 bg-white"
+              >
+                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                  <span className="text-xl sm:text-2xl">{item.emoji}</span>
+                </div>
+                <h3 className="text-xl sm:text-2xl font-bold text-slate-800 mb-4">{item.title}</h3>
+                <p className="text-slate-600 leading-relaxed text-sm sm:text-base mb-6">{item.desc}</p>
+                <div className="flex items-center text-orange-600 font-semibold text-sm sm:text-base">
+                  <span>Learn more</span>
+                  <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
               </div>
-              <h3 className="text-xl sm:text-2xl font-bold text-slate-800 mb-3 sm:mb-4">Lightning Fast Delivery</h3>
-              <p className="text-slate-600 mb-4 sm:mb-6 leading-relaxed text-sm sm:text-base">
-                Get your favorite meals delivered in 30 minutes or less. Our optimized delivery network ensures your food arrives hot and fresh.
-              </p>
-              <div className="flex items-center text-orange-600 font-semibold text-sm sm:text-base">
-                <span>Learn more</span>
-                <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </div>
-            </div>
-
-            {/* Easy Payment */}
-            <div className="group p-6 sm:p-8 rounded-2xl border border-slate-200 hover:border-orange-300 hover:shadow-xl transition-all duration-300 bg-white mx-4 sm:mx-0">
-              <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300">
-                <span className="text-xl sm:text-2xl">💳</span>
-              </div>
-              <h3 className="text-xl sm:text-2xl font-bold text-slate-800 mb-3 sm:mb-4">Secure & Easy Payment</h3>
-              <p className="text-slate-600 mb-4 sm:mb-6 leading-relaxed text-sm sm:text-base">
-                Multiple secure payment options including credit cards, digital wallets, and cash on delivery for your convenience.
-              </p>
-              <div className="flex items-center text-orange-600 font-semibold text-sm sm:text-base">
-                <span>Learn more</span>
-                <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </div>
-            </div>
-
-            {/* Quality Food */}
-            <div className="group p-6 sm:p-8 rounded-2xl border border-slate-200 hover:border-orange-300 hover:shadow-xl transition-all duration-300 bg-white mx-4 sm:mx-0 sm:col-span-2 lg:col-span-1">
-              <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300">
-                <span className="text-xl sm:text-2xl">⭐</span>
-              </div>
-              <h3 className="text-xl sm:text-2xl font-bold text-slate-800 mb-3 sm:mb-4">Premium Quality</h3>
-              <p className="text-slate-600 mb-4 sm:mb-6 leading-relaxed text-sm sm:text-base">
-                We partner only with top-rated restaurants that maintain the highest standards for ingredients and food preparation.
-              </p>
-              <div className="flex items-center text-orange-600 font-semibold text-sm sm:text-base">
-                <span>Learn more</span>
-                <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
