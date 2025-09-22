@@ -4,165 +4,320 @@ import Image from 'next/image'
 
 export default function HomePage() {
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-orange-50 via-red-50/80 to-yellow-50/60 overflow-hidden">
-      {/* Floating Lettuce Images */}
-      <div className="absolute top-32 -left-8 w-24 h-24 opacity-80 animate-float z-10 transform hover:scale-110 transition-transform duration-300">
-        <Image
-          src="/sallad1.png"
-          alt="Fresh lettuce decoration"
-          width={96}
-          height={96}
-          className="object-contain drop-shadow-lg filter brightness-105 saturate-110"
-        />
-      </div>
+    <div className="relative min-h-screen bg-white overflow-hidden">
+      {/* Subtle Background Pattern */}
+      <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-white to-orange-50/30 -z-10"></div>
       
-      <div className="absolute top-80 -right-12 w-38 h-38 opacity-70 animate-float-delayed z-10 transform hover:scale-110 transition-transform duration-300 rotate-12">
-        <Image
-          src="/sallad2.png"
-          alt="Fresh lettuce decoration"
-          width={180}
-          height={180}
-          className="object-contain drop-shadow-lg filter brightness-105 saturate-110"
-        />
-      </div>
+      {/* Hero Section */}
+      <section className="relative py-12 sm:py-16 lg:py-20 px-4">
+        <div className="max-w-7xl mx-auto text-center">
+          <div className="mb-8">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 text-slate-800 leading-tight px-2">
+              Delicious Food,{' '}
+              <span className="bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent block sm:inline">
+                Delivered Fast
+              </span>
+            </h1>
+            <p className="text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto mb-6 sm:mb-8 leading-relaxed px-4">
+              Experience the convenience of premium food delivery with FastBite Express. 
+              Quality meals from your favorite restaurants, delivered fresh to your doorstep.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
+              <button className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-orange-600 to-red-600 text-white rounded-xl font-semibold hover:from-orange-700 hover:to-red-700 transition-all duration-300 shadow-lg hover:shadow-xl text-base sm:text-lg">
+                Order Now
+              </button>
+              <button className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 border-2 border-orange-600 text-orange-600 rounded-xl font-semibold hover:bg-orange-600 hover:text-white transition-all duration-300 text-base sm:text-lg">
+                View Menu
+              </button>
+            </div>
+          </div>
+        </div>
 
-      {/* Additional floating lettuce for balance */}
-      <div className="absolute top-80 -left-6 w-30 h-30 opacity-60 animate-bounce-slow z-10 transform hover:scale-110 transition-transform duration-300 -rotate-12">
-        <Image
-          src="/sallad1.png"
-          alt="Fresh lettuce decoration"
-          width={180}
-          height={180}
-          className="object-contain drop-shadow-md filter brightness-110 saturate-120"
-        />
-      </div>
-
-      <div className="absolute bottom-96 -right-8 w-22 h-22 opacity-65 animate-sway z-10 transform hover:scale-110 transition-transform duration-300 rotate-12">
-        <Image
-          src="/sallad2.png"
-          alt="Fresh lettuce decoration"
-          width={88}
-          height={88}
-          className="object-contain drop-shadow-lg filter brightness-105 saturate-110"
-        />
-      </div>
-
-      {/* Floating food-themed decorative elements */}
-      <div className="absolute bottom-40 left-1/4 w-8 h-8 bg-gradient-to-br from-red-400 to-pink-400 rounded-full opacity-25 animate-bounce delay-500 blur-sm"></div>
-      <div className="absolute bottom-60 right-1/3 w-10 h-10 bg-gradient-to-br from-green-400 to-emerald-400 rounded-full opacity-25 animate-pulse delay-300 blur-sm"></div>
-      
-     {/*<Image
-      src="/kota.png"
-      alt="Background"
-      width={800}      // desired width
-      height={600}     // desired height
-      className="object-contain absolute top-0 left-1/2 -translate-x-1/2 -z-10" 
-      priority
-    />*/}
-
-      {/* Main Content */}
-      <main className="py-12 relative">
         {/* Search Section */}
-        <div className="transform hover:scale-[1.02] transition-transform duration-300">
+        <div className="max-w-4xl mx-auto mt-8 sm:mt-12 px-4">
           <SearchBar />
         </div>
+      </section>
 
-        {/* Section Cards */}
-        <div className="transform hover:scale-[1.01] transition-transform duration-300">
+      {/* Section Cards */}
+      <section className="py-12 sm:py-16 px-4 bg-slate-50/50">
+        <div className="max-w-7xl mx-auto">
           <SectionCards />
         </div>
+      </section>
 
-        {/* Welcome Section */}
-        <div className="mt-16 w-full px-4 text-center relative"> {/* full width */}
-          {/* Food-themed decorative elements */}
-          <div className="absolute -top-12 left-1/2 -translate-x-1/2 flex gap-2">
-            <div className="w-6 h-1 bg-gradient-to-r from-orange-400 via-red-400 to-yellow-400 rounded-full opacity-80"></div>
-            <div className="w-4 h-1 bg-gradient-to-r from-green-400 to-emerald-400 rounded-full opacity-60"></div>
-            <div className="w-6 h-1 bg-gradient-to-r from-orange-400 via-red-400 to-yellow-400 rounded-full opacity-80"></div>
+      {/* Features Section */}
+      <section className="py-16 sm:py-20 px-4 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12 sm:mb-16 px-4">
+            <h2 className="text-3xl sm:text-4xl font-bold text-slate-800 mb-3 sm:mb-4">
+              Why Choose FastBite Express?
+            </h2>
+            <p className="text-lg sm:text-xl text-slate-600 max-w-3xl mx-auto">
+              We're committed to providing you with the best food delivery experience possible
+            </p>
           </div>
-          
-          <h2 className="text-3xl font-bold mb-4 text-balance bg-gradient-to-r from-orange-600 via-red-500 to-yellow-600 bg-clip-text text-transparent drop-shadow-sm">
-            Welcome to fast food ordering with <span className="bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text text-transparent font-black text-4xl animate-pulse drop-shadow-lg">FastBite Express</span>
-          </h2>
-          <p className="text-slate-700 leading-relaxed mx-auto max-w-none relative z-10 backdrop-blur-md bg-white/60 p-8 rounded-3xl border-2 border-orange-200/50 shadow-2xl shadow-orange-200/30"> {/* removed max-w */}
-            FastBite Express offers the very best in online food ordering. There is nothing that quite matches the
-            excitement of getting your favorite meals delivered fresh to your door. The only thing that could make this
-            experience any better would be by getting exclusive deals and tracking your orders in real-time.{" "}
-            <span className="font-bold bg-gradient-to-r from-red-600 via-orange-600 to-yellow-600 bg-clip-text text-transparent text-lg">Place a bet and start ordering your food!</span>
-          </p>
-          <button className="mt-8 px-10 py-4 bg-gradient-to-r from-orange-500 via-red-500 to-yellow-500 text-white rounded-2xl font-bold hover:from-orange-600 hover:via-red-600 hover:to-yellow-600 transition-all duration-300 transform hover:scale-110 hover:shadow-2xl shadow-xl border-2 border-orange-300/50 backdrop-blur-sm relative overflow-hidden group text-lg">
-            <span className="absolute inset-0 bg-gradient-to-r from-white/20 via-white/10 to-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 animate-pulse"></span>
-            <span className="relative z-10 drop-shadow-sm">Show More 🍕→</span>
-          </button>
-          
-          {/* Food-themed bottom decoration */}
-          <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 flex gap-3">
-            <div className="w-3 h-3 bg-gradient-to-br from-red-400 to-orange-400 rounded-full opacity-60 animate-bounce"></div>
-            <div className="w-4 h-4 bg-gradient-to-br from-yellow-400 to-orange-400 rounded-full opacity-70 animate-bounce delay-100"></div>
-            <div className="w-3 h-3 bg-gradient-to-br from-green-400 to-emerald-400 rounded-full opacity-60 animate-bounce delay-200"></div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            {/* Fast Delivery */}
+            <div className="group p-6 sm:p-8 rounded-2xl border border-slate-200 hover:border-orange-300 hover:shadow-xl transition-all duration-300 bg-white mx-4 sm:mx-0">
+              <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300">
+                <span className="text-xl sm:text-2xl">🚚</span>
+              </div>
+              <h3 className="text-xl sm:text-2xl font-bold text-slate-800 mb-3 sm:mb-4">Lightning Fast Delivery</h3>
+              <p className="text-slate-600 mb-4 sm:mb-6 leading-relaxed text-sm sm:text-base">
+                Get your favorite meals delivered in 30 minutes or less. Our optimized delivery network ensures your food arrives hot and fresh.
+              </p>
+              <div className="flex items-center text-orange-600 font-semibold text-sm sm:text-base">
+                <span>Learn more</span>
+                <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </div>
+
+            {/* Easy Payment */}
+            <div className="group p-6 sm:p-8 rounded-2xl border border-slate-200 hover:border-orange-300 hover:shadow-xl transition-all duration-300 bg-white mx-4 sm:mx-0">
+              <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-xl flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300">
+                <span className="text-xl sm:text-2xl">💳</span>
+              </div>
+              <h3 className="text-xl sm:text-2xl font-bold text-slate-800 mb-3 sm:mb-4">Secure & Easy Payment</h3>
+              <p className="text-slate-600 mb-4 sm:mb-6 leading-relaxed text-sm sm:text-base">
+                Multiple secure payment options including credit cards, digital wallets, and cash on delivery for your convenience.
+              </p>
+              <div className="flex items-center text-orange-600 font-semibold text-sm sm:text-base">
+                <span>Learn more</span>
+                <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </div>
+
+            {/* Quality Food */}
+            <div className="group p-6 sm:p-8 rounded-2xl border border-slate-200 hover:border-orange-300 hover:shadow-xl transition-all duration-300 bg-white mx-4 sm:mx-0 sm:col-span-2 lg:col-span-1">
+              <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300">
+                <span className="text-xl sm:text-2xl">⭐</span>
+              </div>
+              <h3 className="text-xl sm:text-2xl font-bold text-slate-800 mb-3 sm:mb-4">Premium Quality</h3>
+              <p className="text-slate-600 mb-4 sm:mb-6 leading-relaxed text-sm sm:text-base">
+                We partner only with top-rated restaurants that maintain the highest standards for ingredients and food preparation.
+              </p>
+              <div className="flex items-center text-orange-600 font-semibold text-sm sm:text-base">
+                <span>Learn more</span>
+                <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </div>
           </div>
         </div>
+      </section>
 
-        {/* Features Grid */}
-        <div className="mt-20 w-full px-4 relative"> {/* full width */}
-          {/* Colorful background decoration */}
-          <div className="absolute inset-0 bg-gradient-to-r from-orange-100/50 via-red-100/30 to-yellow-100/50 rounded-3xl blur-3xl -z-10"></div>
-          
+      {/* Stats Section */}
+      <section className="py-16 sm:py-20 px-4 bg-gradient-to-r from-orange-600 to-red-600 text-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12 sm:mb-16 px-4">
+            <h2 className="text-3xl sm:text-4xl font-bold mb-3 sm:mb-4">Trusted by Thousands</h2>
+            <p className="text-lg sm:text-xl text-orange-100">Join our growing community of satisfied customers</p>
+          </div>
+
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 px-4">
+            <div className="text-center">
+              <div className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-1 sm:mb-2">50K+</div>
+              <div className="text-orange-100 text-sm sm:text-base lg:text-lg">Happy Customers</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-1 sm:mb-2">500+</div>
+              <div className="text-orange-100 text-sm sm:text-base lg:text-lg">Partner Restaurants</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-1 sm:mb-2">100K+</div>
+              <div className="text-orange-100 text-sm sm:text-base lg:text-lg">Orders Delivered</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-1 sm:mb-2">25</div>
+              <div className="text-orange-100 text-sm sm:text-base lg:text-lg">Cities Served</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works Section */}
+      <section className="py-16 sm:py-20 px-4 bg-slate-50">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12 sm:mb-16 px-4">
+            <h2 className="text-3xl sm:text-4xl font-bold text-slate-800 mb-3 sm:mb-4">How It Works</h2>
+            <p className="text-lg sm:text-xl text-slate-600">Ordering your favorite food is just a few clicks away</p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-6 lg:gap-8 px-4">
+            <div className="text-center">
+              <div className="w-16 h-16 sm:w-18 sm:h-18 lg:w-20 lg:h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
+                <span className="text-2xl sm:text-3xl">📱</span>
+              </div>
+              <h3 className="text-lg sm:text-xl font-bold text-slate-800 mb-2 sm:mb-3">Choose Restaurant</h3>
+              <p className="text-slate-600 text-sm sm:text-base leading-relaxed">Browse through our extensive list of partner restaurants and cuisines</p>
+            </div>
+            <div className="text-center">
+              <div className="w-16 h-16 sm:w-18 sm:h-18 lg:w-20 lg:h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
+                <span className="text-2xl sm:text-3xl">🍕</span>
+              </div>
+              <h3 className="text-lg sm:text-xl font-bold text-slate-800 mb-2 sm:mb-3">Select Items</h3>
+              <p className="text-slate-600 text-sm sm:text-base leading-relaxed">Add your favorite dishes to cart and customize as needed</p>
+            </div>
+            <div className="text-center">
+              <div className="w-16 h-16 sm:w-18 sm:h-18 lg:w-20 lg:h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
+                <span className="text-2xl sm:text-3xl">💳</span>
+              </div>
+              <h3 className="text-lg sm:text-xl font-bold text-slate-800 mb-2 sm:mb-3">Make Payment</h3>
+              <p className="text-slate-600 text-sm sm:text-base leading-relaxed">Choose your preferred payment method and complete the order</p>
+            </div>
+            <div className="text-center">
+              <div className="w-16 h-16 sm:w-18 sm:h-18 lg:w-20 lg:h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
+                <span className="text-2xl sm:text-3xl">🚚</span>
+              </div>
+              <h3 className="text-lg sm:text-xl font-bold text-slate-800 mb-2 sm:mb-3">Fast Delivery</h3>
+              <p className="text-slate-600 text-sm sm:text-base leading-relaxed">Sit back and relax while we deliver your food fresh and hot</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="py-20 px-4 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-slate-800 mb-4">What Our Customers Say</h2>
+            <p className="text-xl text-slate-600">Real reviews from real customers</p>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Fast Delivery Card - Orange/Red Theme */}
-            <div className="bg-gradient-to-br from-white/90 to-orange-50/80 backdrop-blur-lg p-8 rounded-2xl border-2 border-orange-200/60 shadow-xl hover:shadow-2xl transform hover:scale-110 hover:-translate-y-4 transition-all duration-400 group relative overflow-hidden">
-              {/* Colorful gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-br from-orange-400/10 via-red-400/5 to-yellow-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-400"></div>
-              
-              <div className="w-16 h-16 bg-gradient-to-br from-orange-400 via-red-400 to-orange-500 rounded-xl flex items-center justify-center mb-6 shadow-lg group-hover:shadow-xl transition-all duration-400 relative z-10 group-hover:rotate-12">
-                <span className="text-3xl group-hover:scale-125 transition-transform duration-400 drop-shadow-lg">🚚</span>
+            <div className="bg-slate-50 p-8 rounded-2xl">
+              <div className="flex mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <span key={i} className="text-yellow-400 text-xl">⭐</span>
+                ))}
               </div>
-              <h3 className="text-xl font-bold text-orange-700 mb-3 relative z-10 group-hover:text-red-600 transition-colors duration-300">Fast Delivery</h3>
-              <p className="text-slate-600 text-base relative z-10 group-hover:text-slate-700 transition-colors duration-300 leading-relaxed">
-                Get your food delivered in 30 minutes or less with our express delivery service.
+              <p className="text-slate-700 mb-6 italic">
+                "FastBite Express has been a game-changer for our family. The food always arrives hot and fresh, and the delivery is incredibly fast!"
               </p>
-              {/* Decorative corner accent */}
-              <div className="absolute top-4 right-4 w-6 h-6 bg-gradient-to-br from-orange-300 to-red-300 rounded-full opacity-30 group-hover:opacity-60 transition-opacity duration-300"></div>
+              <div className="flex items-center">
+                <div className="w-10 h-10 bg-orange-200 rounded-full flex items-center justify-center mr-3">
+                  <span className="font-bold text-orange-700">SJ</span>
+                </div>
+                <div>
+                  <div className="font-semibold text-slate-800">Sarah Johnson</div>
+                  <div className="text-slate-600 text-sm">Regular Customer</div>
+                </div>
+              </div>
             </div>
 
-            {/* Easy Payment Card - Green/Blue Theme */}
-            <div className="bg-gradient-to-br from-white/90 to-emerald-50/80 backdrop-blur-lg p-8 rounded-2xl border-2 border-emerald-200/60 shadow-xl hover:shadow-2xl transform hover:scale-110 hover:-translate-y-4 transition-all duration-400 group relative overflow-hidden">
-              {/* Colorful gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-br from-emerald-400/10 via-green-400/5 to-teal-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-400"></div>
-              
-              <div className="w-16 h-16 bg-gradient-to-br from-emerald-400 via-green-400 to-teal-500 rounded-xl flex items-center justify-center mb-6 shadow-lg group-hover:shadow-xl transition-all duration-400 relative z-10 group-hover:rotate-12">
-                <span className="text-3xl group-hover:scale-125 transition-transform duration-400 drop-shadow-lg">💳</span>
+            <div className="bg-slate-50 p-8 rounded-2xl">
+              <div className="flex mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <span key={i} className="text-yellow-400 text-xl">⭐</span>
+                ))}
               </div>
-              <h3 className="text-xl font-bold text-emerald-700 mb-3 relative z-10 group-hover:text-green-600 transition-colors duration-300">Easy Payment</h3>
-              <p className="text-slate-600 text-base relative z-10 group-hover:text-slate-700 transition-colors duration-300 leading-relaxed">
-                Multiple payment options including cards, digital wallets, and cash on delivery.
+              <p className="text-slate-700 mb-6 italic">
+                "The variety of restaurants and cuisines available is amazing. I can order from my favorite places all in one app!"
               </p>
-              {/* Decorative corner accent */}
-              <div className="absolute top-4 right-4 w-6 h-6 bg-gradient-to-br from-emerald-300 to-green-300 rounded-full opacity-30 group-hover:opacity-60 transition-opacity duration-300"></div>
+              <div className="flex items-center">
+                <div className="w-10 h-10 bg-orange-200 rounded-full flex items-center justify-center mr-3">
+                  <span className="font-bold text-orange-700">MR</span>
+                </div>
+                <div>
+                  <div className="font-semibold text-slate-800">Mike Rodriguez</div>
+                  <div className="text-slate-600 text-sm">Food Enthusiast</div>
+                </div>
+              </div>
             </div>
 
-            {/* Quality Food Card - Purple/Pink Theme */}
-            <div className="bg-gradient-to-br from-white/90 to-purple-50/80 backdrop-blur-lg p-8 rounded-2xl border-2 border-purple-200/60 shadow-xl hover:shadow-2xl transform hover:scale-110 hover:-translate-y-4 transition-all duration-400 group relative overflow-hidden">
-              {/* Colorful gradient overlay */}
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-400/10 via-pink-400/5 to-violet-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-400"></div>
-              
-              <div className="w-16 h-16 bg-gradient-to-br from-purple-400 via-pink-400 to-violet-500 rounded-xl flex items-center justify-center mb-6 shadow-lg group-hover:shadow-xl transition-all duration-400 relative z-10 group-hover:rotate-12">
-                <span className="text-3xl group-hover:scale-125 transition-transform duration-400 drop-shadow-lg">⭐</span>
+            <div className="bg-slate-50 p-8 rounded-2xl">
+              <div className="flex mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <span key={i} className="text-yellow-400 text-xl">⭐</span>
+                ))}
               </div>
-              <h3 className="text-xl font-bold text-purple-700 mb-3 relative z-10 group-hover:text-pink-600 transition-colors duration-300">Quality Food</h3>
-              <p className="text-slate-600 text-base relative z-10 group-hover:text-slate-700 transition-colors duration-300 leading-relaxed">
-                Fresh ingredients and quality preparation ensure every meal meets our high standards.
+              <p className="text-slate-700 mb-6 italic">
+                "Customer service is outstanding! They resolved my order issue within minutes and even offered a discount for the inconvenience."
               </p>
-              {/* Decorative corner accent */}
-              <div className="absolute top-4 right-4 w-6 h-6 bg-gradient-to-br from-purple-300 to-pink-300 rounded-full opacity-30 group-hover:opacity-60 transition-opacity duration-300"></div>
+              <div className="flex items-center">
+                <div className="w-10 h-10 bg-orange-200 rounded-full flex items-center justify-center mr-3">
+                  <span className="font-bold text-orange-700">EC</span>
+                </div>
+                <div>
+                  <div className="font-semibold text-slate-800">Emily Chen</div>
+                  <div className="text-slate-600 text-sm">Satisfied Customer</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
+      </section>
 
-        {/* Additional food-themed floating elements */}
-        <div className="absolute top-1/2 -left-4 w-6 h-6 bg-gradient-to-br from-yellow-400 to-orange-400 rounded-full opacity-20 animate-ping"></div>
-        <div className="absolute top-3/4 -right-6 w-8 h-8 bg-gradient-to-br from-red-400 to-pink-400 rounded-full opacity-15 animate-pulse delay-700"></div>
-      </main>
+      {/* Popular Categories Section */}
+      <section className="py-20 px-4 bg-slate-50">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-slate-800 mb-4">Popular Categories</h2>
+            <p className="text-xl text-slate-600">Discover cuisines loved by our customers</p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-6 gap-6">
+            {[
+              { name: 'Pizza', emoji: '🍕', count: '150+ Restaurants' },
+              { name: 'Burgers', emoji: '🍔', count: '120+ Restaurants' },
+              { name: 'Asian', emoji: '🍜', count: '200+ Restaurants' },
+              { name: 'Mexican', emoji: '🌮', count: '80+ Restaurants' },
+              { name: 'Desserts', emoji: '🍰', count: '90+ Restaurants' },
+              { name: 'Healthy', emoji: '🥗', count: '100+ Restaurants' }
+            ].map((category) => (
+              <div key={category.name} className="bg-white p-6 rounded-2xl text-center hover:shadow-lg transition-all duration-300 cursor-pointer group border border-slate-200 hover:border-orange-300">
+                <div className="text-4xl mb-3 group-hover:scale-110 transition-transform duration-300">
+                  {category.emoji}
+                </div>
+                <h3 className="font-bold text-slate-800 mb-1">{category.name}</h3>
+                <p className="text-sm text-slate-600">{category.count}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-20 px-4 bg-gradient-to-r from-slate-800 to-slate-900 text-white">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-4xl font-bold mb-6">Ready to Order?</h2>
+          <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto">
+            Join thousands of satisfied customers and experience the best food delivery service in your city.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <button className="px-8 py-4 bg-gradient-to-r from-orange-600 to-red-600 text-white rounded-xl font-semibold hover:from-orange-700 hover:to-red-700 transition-all duration-300 shadow-lg hover:shadow-xl">
+              Start Ordering Now
+            </button>
+            <button className="px-8 py-4 border-2 border-white text-white rounded-xl font-semibold hover:bg-white hover:text-slate-800 transition-all duration-300">
+              Download App
+            </button>
+          </div>
+          
+          <div className="mt-12 flex justify-center gap-8">
+            <div className="text-center">
+              <div className="text-3xl mb-2">📱</div>
+              <div className="text-sm text-slate-300">Mobile App</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl mb-2">🌐</div>
+              <div className="text-sm text-slate-300">Web Platform</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl mb-2">☎️</div>
+              <div className="text-sm text-slate-300">Phone Orders</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
     </div>
   )
 }

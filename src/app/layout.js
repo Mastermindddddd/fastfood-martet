@@ -20,9 +20,71 @@ export default function RootLayout({ children }) {
             <Toaster />
             <Header />
             {children}
-            <footer className="border-t p-8 text-center text-gray-500 mt-16">
-              &copy; 2025 All rights reserved
-            </footer>
+            <footer className="bg-slate-900 text-white py-12 px-4">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+              <h3 className="text-xl font-bold mb-4 text-orange-400">FastBite Express</h3>
+              <p className="text-slate-400 mb-4">
+                Your trusted partner for fast, reliable food delivery. Quality meals delivered with care.
+              </p>
+              <div className="flex gap-3">
+                <div className="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center hover:bg-orange-600 transition-colors cursor-pointer">
+                  <span>📘</span>
+                </div>
+                <div className="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center hover:bg-orange-600 transition-colors cursor-pointer">
+                  <span>🐦</span>
+                </div>
+                <div className="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center hover:bg-orange-600 transition-colors cursor-pointer">
+                  <span>📷</span>
+                </div>
+              </div>
+            </div>
+            
+            <div>
+              <h4 className="font-semibold mb-4">Quick Links</h4>
+              <ul className="space-y-2 text-slate-400">
+                <li><a href="#" className="hover:text-orange-400 transition-colors">About Us</a></li>
+                <li><a href="#" className="hover:text-orange-400 transition-colors">How It Works</a></li>
+                <li><a href="#" className="hover:text-orange-400 transition-colors">Partner With Us</a></li>
+                <li><a href="#" className="hover:text-orange-400 transition-colors">Careers</a></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h4 className="font-semibold mb-4">Support</h4>
+              <ul className="space-y-2 text-slate-400">
+                <li><a href="#" className="hover:text-orange-400 transition-colors">Help Center</a></li>
+                <li><a href="#" className="hover:text-orange-400 transition-colors">Contact Us</a></li>
+                <li><a href="#" className="hover:text-orange-400 transition-colors">Track Order</a></li>
+                <li><a href="#" className="hover:text-orange-400 transition-colors">FAQs</a></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h4 className="font-semibold mb-4">Contact Info</h4>
+              <div className="space-y-3 text-slate-400">
+                <div className="flex items-center gap-2">
+                  <span>📍</span>
+                  <span>123 Main St, Your City</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span>📞</span>
+                  <span>+1 (555) 123-4567</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span>✉️</span>
+                  <span>info@fastbiteexpress.com</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="border-t border-slate-800 mt-12 pt-8 text-center text-slate-400">
+            <p>&copy; 2025 FastBite Express. All rights reserved. | Privacy Policy | Terms of Service</p>
+          </div>
+        </div>
+      </footer>
           </AppProvider>
         </main>
       </body>
