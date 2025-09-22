@@ -8,7 +8,7 @@ export default function HomePage() {
       {/* Floating Lettuce Images */}
       <div className="absolute top-32 -left-8 w-24 h-24 opacity-80 animate-float z-10 transform hover:scale-110 transition-transform duration-300">
         <Image
-          src="/lettuce.png"
+          src="/sallad1.png"
           alt="Fresh lettuce decoration"
           width={96}
           height={96}
