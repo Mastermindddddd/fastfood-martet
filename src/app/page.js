@@ -264,7 +264,7 @@ export default function HomePage() {
             {[
               { name: 'Pizza', emoji: '🍕', count: '150+ Restaurants' },
               { name: 'Burgers', emoji: '🍔', count: '120+ Restaurants' },
-              { name: 'Asian', emoji: '🍜', count: '200+ Restaurants' },
+              { name: 'Kota', emoji: '🍔', count: '200+ Restaurants' },
               { name: 'Mexican', emoji: '🌮', count: '80+ Restaurants' },
               { name: 'Desserts', emoji: '🍰', count: '90+ Restaurants' },
               { name: 'Healthy', emoji: '🥗', count: '100+ Restaurants' }

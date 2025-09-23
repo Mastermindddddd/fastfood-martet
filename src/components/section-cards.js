@@ -11,12 +11,12 @@ export default function SectionCards() {
           <div className="mb-6">
             <BurgerIcon />
           </div>
-          <h2 className="text-3xl font-bold mb-4 text-balance">SHOP</h2>
+          <h2 className="text-3xl font-bold mb-4 text-balance">SHOP OWNER</h2>
           <p className="text-primary-foreground/90 mb-6 leading-relaxed">
             Browse our delicious menu, place orders, and enjoy fresh fast food delivered to your door
           </p>
           <div className="flex items-center gap-2 text-sm font-semibold">
-            <span>Order Now</span>
+            <span>CREATE SHOP ACCOUNT</span>
             <ArrowRightIcon />
           </div>
         </div>
@@ -40,7 +40,7 @@ hover:scale-105 hover:shadow-2xl cursor-pointer">
             Track your orders, manage your account, view order history, and get exclusive deals
           </p>
           <div className="flex items-center gap-2 text-sm font-semibold">
-            <span>My Account</span>
+            <span>ORDER NOW</span>
             <ArrowRightIcon />
           </div>
         </div>
