@@ -196,7 +196,7 @@ export default function HomePage() {
                 ))}
               </div>
               <p className="text-slate-700 mb-6 italic">
-                "FastBite Express has been a game-changer for our family. The food always arrives hot and fresh, and the delivery is incredibly fast!"
+                &quot;FastBite Express has been a game-changer for our family. The food always arrives hot and fresh, and the delivery is incredibly fast!&quot;
               </p>
               <div className="flex items-center">
                 <div className="w-10 h-10 bg-orange-200 rounded-full flex items-center justify-center mr-3">
@@ -216,7 +216,7 @@ export default function HomePage() {
                 ))}
               </div>
               <p className="text-slate-700 mb-6 italic">
-                "The variety of restaurants and cuisines available is amazing. I can order from my favorite places all in one app!"
+                &quot;The variety of restaurants and cuisines available is amazing. I can order from my favorite places all in one app!&quot;
               </p>
               <div className="flex items-center">
                 <div className="w-10 h-10 bg-orange-200 rounded-full flex items-center justify-center mr-3">
@@ -236,7 +236,7 @@ export default function HomePage() {
                 ))}
               </div>
               <p className="text-slate-700 mb-6 italic">
-                "Customer service is outstanding! They resolved my order issue within minutes and even offered a discount for the inconvenience."
+                &quot;Customer service is outstanding! They resolved my order issue within minutes and even offered a discount for the inconvenience.&quot;
               </p>
               <div className="flex items-center">
                 <div className="w-10 h-10 bg-orange-200 rounded-full flex items-center justify-center mr-3">
