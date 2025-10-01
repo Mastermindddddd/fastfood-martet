@@ -1,79 +1,261 @@
-"use client";
-import { signIn } from "next-auth/react";
-import Image from "next/image";
-import Link from "next/link";
-import { useState } from "react";
+"use client"
+
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { Eye, EyeOff, ArrowLeft } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Label } from "@/components/ui/label"
+import Link from "next/link"
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loginInProgress, setLoginInProgress] = useState(false);
+  const router = useRouter()
 
-  async function handleFormSubmit(ev) {
-    ev.preventDefault();
-    setLoginInProgress(true);
-    await signIn("credentials", { email, password, callbackUrl: "/" });
-    setLoginInProgress(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    password: "",
+    confirmPassword: "",
+  })
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [errors, setErrors] = useState({})
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }))
+    if (errors[name]) {
+      setErrors((prev) => ({
+        ...prev,
+        [name]: "",
+      }))
+    }
+  }
+
+  const validateForm = () => {
+    const newErrors = {}
+
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required"
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "Invalid email address"
+    }
+
+    if (!formData.name.trim()) {
+      newErrors.name = "Name is required"
+    }
+
+    if (!formData.phone.trim()) {
+      newErrors.phone = "Phone is required"
+    }
+
+    if (!formData.password) {
+      newErrors.password = "Password is required"
+    }
+
+    if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = "Passwords do not match"
+    }
+
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+
+    if (!validateForm()) return
+
+    setIsLoading(true)
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      })
+
+      if (!res.ok) throw new Error("Login failed")
+
+      router.push("/") // redirect after login
+    } catch (err) {
+      setErrors({ general: err.message })
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
-    <section className="min-h-screen flex items-center justify-center bg-gradient-to-br from-orange-50 via-white to-orange-100 px-4 py-12">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 sm:p-10">
-        <h1 className="text-center text-3xl sm:text-4xl font-bold text-slate-800 mb-6">
-          Login
-        </h1>
-
-        <form className="space-y-4" onSubmit={handleFormSubmit}>
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            value={email}
-            disabled={loginInProgress}
-            onChange={(ev) => setEmail(ev.target.value)}
-            className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-orange-500 disabled:bg-slate-100"
-          />
-          <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            value={password}
-            disabled={loginInProgress}
-            onChange={(ev) => setPassword(ev.target.value)}
-            className="w-full px-4 py-3 rounded-lg border border-slate-300 focus:outline-none focus:ring-2 focus:ring-orange-500 disabled:bg-slate-100"
-          />
-          <button
-            disabled={loginInProgress}
-            type="submit"
-            className={`w-full py-3 rounded-lg font-semibold text-white bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 transition-all duration-300 shadow-md ${
-              loginInProgress ? "opacity-70 cursor-not-allowed" : ""
-            }`}
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8">
+        {/* Header */}
+        <div className="text-center">
+          <Link
+            href="/"
+            className="inline-flex items-center text-orange-600 hover:text-orange-700 mb-4"
           >
-            {loginInProgress ? "Logging in..." : "Login"}
-          </button>
-        </form>
-
-        <div className="my-6 text-center text-gray-500 relative">
-          <span className="bg-white px-2 relative z-10">or continue with</span>
-          <div className="absolute left-0 right-0 top-1/2 border-t border-gray-300 -z-0"></div>
-        </div>
-
-        <button
-          type="button"
-          onClick={() => signIn("google", { callbackUrl: "/" })}
-          className="w-full flex items-center justify-center gap-3 py-3 rounded-lg border border-slate-300 hover:bg-slate-50 transition-all duration-300"
-        >
-          <Image src={"/google.png"} alt={""} width={24} height={24} />
-          <span className="font-medium text-slate-700">Continue with Google</span>
-        </button>
-
-        <div className="text-center mt-6 text-slate-600">
-          Don’t have an account?{" "}
-          <Link className="text-orange-600 font-semibold underline" href={"/register"}>
-            Register here &raquo;
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Home
           </Link>
+          <h2 className="text-3xl font-bold text-gray-900">Login</h2>
+          <p className="mt-2 text-gray-600">Access your FoodHub SA account</p>
         </div>
+
+        {/* Login Form */}
+        <Card>
+          <CardContent>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              {errors.general && (
+                <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md text-sm">
+                  {errors.general}
+                </div>
+              )}
+
+              {/* Name */}
+              <div>
+                <Label htmlFor="name">Name</Label>
+                <Input
+                  id="name"
+                  name="name"
+                  type="name"
+                  required
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  placeholder="Enter your name"
+                  className="mt-1"
+                />
+                {errors.name && (
+                  <p className="mt-1 text-sm text-red-600">{errors.name}</p>
+                )}
+              </div>
+
+              {/* Email */}
+              <div>
+                <Label htmlFor="email">Email Address</Label>
+                <Input
+                  id="email"
+                  name="email"
+                  type="email"
+                  required
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  placeholder="Enter your email"
+                  className="mt-1"
+                />
+                {errors.email && (
+                  <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+                )}
+              </div>
+
+              {/* Phone */}
+              <div>
+                <Label htmlFor="phone">Phone Number</Label>
+                <Input
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  required
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                  placeholder="Enter your phone number"
+                  className="mt-1"
+                />
+                {errors.phone && (
+                  <p className="mt-1 text-sm text-red-600">{errors.phone}</p>
+                )}
+              </div>
+
+              {/* Password */}
+              <div>
+                <Label htmlFor="password">Password</Label>
+                <div className="relative mt-1">
+                  <Input
+                    id="password"
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    required
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    placeholder="Enter your password"
+                    className="pr-10"
+                  />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4 text-gray-400" />
+                    ) : (
+                      <Eye className="h-4 w-4 text-gray-400" />
+                    )}
+                  </button>
+                </div>
+                {errors.password && (
+                  <p className="mt-1 text-sm text-red-600">{errors.password}</p>
+                )}
+              </div>
+
+              {/* Confirm Password */}
+              <div>
+                <Label htmlFor="confirmPassword">Confirm Password</Label>
+                <div className="relative mt-1">
+                  <Input
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    type={showConfirmPassword ? "text" : "password"}
+                    required
+                    value={formData.confirmPassword}
+                    onChange={handleInputChange}
+                    placeholder="Re-enter your password"
+                    className="pr-10"
+                  />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    onClick={() =>
+                      setShowConfirmPassword(!showConfirmPassword)
+                    }
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff className="h-4 w-4 text-gray-400" />
+                    ) : (
+                      <Eye className="h-4 w-4 text-gray-400" />
+                    )}
+                  </button>
+                </div>
+                {errors.confirmPassword && (
+                  <p className="mt-1 text-sm text-red-600">
+                    {errors.confirmPassword}
+                  </p>
+                )}
+              </div>
+
+              <Button type="submit" className="w-full" disabled={isLoading}>
+                {isLoading ? "Logging in..." : "Login"}
+              </Button>
+            </form>
+
+            {/* Register link */}
+            <div className="mt-6 text-center">
+              <p className="text-sm text-gray-600">
+                Don’t have an account?{" "}
+                <Link
+                  href="/register"
+                  className="text-orange-600 hover:text-orange-500 font-medium"
+                >
+                  Register here
+                </Link>
+              </p>
+            </div>
+          </CardContent>
+        </Card>
       </div>
-    </section>
-  );
+    </div>
+  )
 }

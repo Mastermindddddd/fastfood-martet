@@ -1,6 +1,7 @@
 import SearchBar from "@/components/search-bar"
 import SectionCards from "@/components/section-cards"
 import Image from 'next/image'
+import Link from 'next/link'
 
 export default function HomePage() {
   return (
@@ -31,9 +32,11 @@ export default function HomePage() {
               <button className="w-full sm:w-auto px-6 py-4 bg-gradient-to-r from-orange-600 to-red-600 text-white rounded-xl font-semibold hover:from-orange-700 hover:to-red-700 transition-all duration-300 shadow-lg hover:shadow-xl text-base sm:text-lg">
                 🚀 Order Now
               </button>
-              <button className="w-full sm:w-auto px-6 py-4 border-2 border-orange-600 text-orange-600 rounded-xl font-semibold hover:bg-orange-600 hover:text-white transition-all duration-300 text-base sm:text-lg">
-                📖 View Menu
-              </button>
+              <Link href='/menu'>
+                <button className="w-full sm:w-auto px-6 py-4 border-2 border-orange-600 text-orange-600 rounded-xl font-semibold hover:bg-orange-600 hover:text-white transition-all duration-300 text-base sm:text-lg">
+                  📖 View Menu
+                </button>
+              </Link>
             </div>
           </div>
 
