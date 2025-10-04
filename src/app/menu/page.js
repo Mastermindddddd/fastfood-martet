@@ -126,8 +126,27 @@ export default function HomePage() {
   const featuredRestaurants = filteredRestaurants.filter(r => r.featured)
 
   return (
-    <div className="min-h-screen bg-gray-50 mt-20">
+    <div className="min-h-screen bg-gray-50 mt-8">
 
+      <section className="bg-gradient-to-r from-orange-500 to-red-600 text-white py-12">
+        <div className="w-full px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-4xl font-bold mb-4">Delicious Food, Delivered Fast</h2>
+          <p className="text-xl mb-8">Discover the best fast food restaurants near you</p>
+          
+          {/* Search Bar */}
+          <div className="max-w-2xl mx-auto relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+            <Input
+              type="text"
+              placeholder="Search for restaurants or food..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 pr-4 py-3 text-lg bg-white text-gray-900"
+            />
+          </div>
+        </div>
+      </section>
+      
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Filters */}
         <div className="flex flex-wrap items-center justify-between mb-6 gap-4">
@@ -206,7 +225,7 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h3 className="text-2xl font-bold mb-4">Are you a restaurant owner?</h3>
           <p className="text-gray-600 mb-6">Join FoodHub SA and reach more customers</p>
-          <Link href="/shop/register">
+          <Link href="/shop-registration">
             <Button size="lg">Register Your Restaurant</Button>
           </Link>
         </div>
