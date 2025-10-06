@@ -133,7 +133,7 @@ export default function ShopRegistration() {
       }
 
       console.log("✅ Shop Registered:", mockShopOwner)
-      router.push('/shop/dashboard')
+      router.push('/shop-dashboard')
 
     } catch (err) {
       setErrors({ general: 'Registration failed. Please try again.' })

@@ -41,6 +41,13 @@ export function AppProvider({ children }) {
     saveCartProductsToLocalStorage([]);
   }
 
+  const getCartTotal = () => {
+  return cartProducts.reduce(
+    (total, item) => total + (item.price || 0) * (item.quantity || 1),
+    0
+  )
+}
+
   function removeCartProduct(indexToRemove) {
     setCartProducts(prev => {
       const newCartProducts = prev.filter((v, i) => i !== indexToRemove);
@@ -62,7 +69,7 @@ export function AppProvider({ children }) {
   return (
     <SessionProvider>
       <AppContext.Provider value={{ user, setUser, userLocation, setUserLocation }}>
-        <CartContext.Provider value={{ cartProducts, setCartProducts, addToCart, removeCartProduct, clearCart }}>
+        <CartContext.Provider value={{ cartProducts, setCartProducts, addToCart, removeCartProduct, clearCart, getCartTotal }}>
           {children}
         </CartContext.Provider>
       </AppContext.Provider>

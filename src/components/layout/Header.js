@@ -43,10 +43,10 @@ export default function Header() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   return (
-    <header>
+    <header className="mx-8 my-4">
       {/* Mobile Header */}
       <div className="flex items-center md:hidden justify-between">
-        <Link className="text-primary font-semibold text-2xl" href={'/'}>
+        <Link className="text-primary font-semibold text-3xl" href={'/'}>
           FAST-FOOD
         </Link>
         <div className="flex gap-8 items-center">

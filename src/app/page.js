@@ -6,6 +6,37 @@ import Link from 'next/link'
 export default function HomePage() {
   return (
     <div className="relative min-h-screen bg-white overflow-hidden">
+
+      <div className="absolute top-32 -left-8 w-24 h-24 opacity-80 animate-float z-10 transform hover:scale-110 transition-transform duration-300">
+        <Image
+          src="/sallad1.png"
+          alt="Fresh lettuce decoration"
+          width={96}
+          height={96}
+          className="object-contain drop-shadow-lg filter brightness-105 saturate-110"
+        />
+      </div>
+
+      <div className="absolute top-80 -right-12 w-38 h-38 opacity-70 animate-float-delayed z-10 transform hover:scale-110 transition-transform duration-300 rotate-12">
+        <Image
+          src="/sallad2.png"
+          alt="Fresh lettuce decoration"
+          width={180}
+          height={180}
+          className="object-contain drop-shadow-lg filter brightness-105 saturate-110"
+        />
+      </div>
+
+      <div className="absolute top-80 -left-6 w-30 h-30 opacity-60 animate-bounce-slow z-10 transform hover:scale-110 transition-transform duration-300 -rotate-12">
+        <Image
+          src="/sallad1.png"
+          alt="Fresh lettuce decoration"
+          width={180}
+          height={180}
+          className="object-contain drop-shadow-md filter brightness-110 saturate-120"
+        />
+      </div>
+      
       {/* Subtle Background Pattern */}
       <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-white to-orange-50/40 -z-10"></div>
 

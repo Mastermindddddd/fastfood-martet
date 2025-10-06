@@ -15,7 +15,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className="scroll-smooth">
       <body className={roboto.className}>
-        <main className="mx-8 p-4">
+        <main className="py-4">
           <AppProvider>
             <Toaster />
             <Header />
