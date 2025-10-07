@@ -1,65 +1,61 @@
-import clientPromise from "@/libs/mongoConnect";
-import {UserInfo} from "@/models/UserInfo";
-import bcrypt from "bcrypt";
-import * as mongoose from "mongoose";
-import {User} from '@/models/User';
-import NextAuth, {getServerSession} from "next-auth";
+// app/api/auth/[...nextauth]/route.js
+import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
-import { MongoDBAdapter } from "@auth/mongodb-adapter"
+import { MongoDBAdapter } from "@auth/mongodb-adapter";
+import clientPromise from "@/libs/mongoConnect";
+import { User } from "@/models/User";
+import bcrypt from "bcrypt";
+import mongoose from "mongoose";
 
 export const authOptions = {
-  secret: process.env.SECRET,
   adapter: MongoDBAdapter(clientPromise),
+  // prefer NEXTAUTH_SECRET but fallback to your SECRET
+  secret: process.env.NEXTAUTH_SECRET || process.env.SECRET,
+  session: { strategy: "jwt" }, // clearer session strategy
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
     CredentialsProvider({
-      name: 'Credentials',
-      id: 'credentials',
-      credentials: {
-        username: { label: "Email", type: "email", placeholder: "test@example.com" },
-        password: { label: "Password", type: "password" },
+      name: "Credentials",
+      credentials: { email: { label: "Email", type: "text" }, password: { label: "Password", type: "password" } },
+      async authorize(credentials) {
+        await mongoose.connect(process.env.MONGO_URL);
+        const user = await User.findOne({ email: credentials.email });
+        if (!user) throw new Error("User not found");
+        const passwordOk = await bcrypt.compare(credentials.password, user.password);
+        if (!passwordOk) throw new Error("Invalid password");
+        return { id: user._id.toString(), name: user.name, email: user.email };
       },
-      async authorize(credentials, req) {
-        const email = credentials?.email;
-        const password = credentials?.password;
-
-        mongoose.connect(process.env.MONGO_URL);
-        const user = await User.findOne({email});
-        const passwordOk = user && bcrypt.compareSync(password, user.password);
-        
-
-        if (passwordOk) {
-          return {
-            id: user._id.toString(),
-            email: user.email,
-          name: user.name || user.email,
-    };
-}
-
-
-        return null
-      }
-    })
+    }),
   ],
+  callbacks: {
+    async jwt({ token, user }) {
+      // on sign in, attach user fields into the token
+      if (user) {
+        token.id = user.id || user.sub;
+        token.name = user.name;
+        token.email = user.email;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      // make sure session.user has the fields we expect
+      session.user = session.user || {};
+      session.user.id = token.id;
+      session.user.name = token.name;
+      session.user.email = token.email;
+      return session;
+    },
+  },
+  logger: {
+    error(code, ...rest) { console.error("NextAuth error:", code, ...rest); },
+    warn(code, ...rest) { console.warn("NextAuth warn:", code, ...rest); },
+    debug(code, ...rest) { if (process.env.NODE_ENV === "development") console.debug("NextAuth debug:", code, ...rest); },
+  },
 };
 
-export async function isAdmin() {
-  const session = await getServerSession(authOptions);
-  const userEmail = session?.user?.email;
-  if (!userEmail) {
-    return false;
-  }
-  const userInfo = await UserInfo.findOne({email:userEmail});
-  if (!userInfo) {
-    return false;
-  }
-  return userInfo.admin;
-}
-
 const handler = NextAuth(authOptions);
-
-export { handler as GET, handler as POST }
+export { handler as GET, handler as POST };

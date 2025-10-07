@@ -17,6 +17,7 @@ export default function RegisterPage() {
     email: "",
     phone: "",
     password: "",
+    confirmPassword: "",
   })
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -28,9 +29,7 @@ export default function RegisterPage() {
       ...prev,
       [name]: value,
     }))
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: "" }))
-    }
+    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: "" }))
   }
 
   const validateForm = () => {
@@ -38,10 +37,15 @@ export default function RegisterPage() {
 
     if (!formData.name.trim()) newErrors.name = "Name is required"
     if (!formData.email.trim()) newErrors.email = "Email is required"
-    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = "Invalid email address"
+    else if (!/\S+@\S+\.\S+/.test(formData.email))
+      newErrors.email = "Invalid email address"
     if (!formData.phone.trim()) newErrors.phone = "Phone is required"
-    if (!formData.password) newErrors.password = "Password is required"
-    else if (formData.password.length < 5) newErrors.password = "Password must be at least 5 characters"
+    if (!formData.password)
+      newErrors.password = "Password is required"
+    else if (formData.password.length < 5)
+      newErrors.password = "Password must be at least 5 characters"
+    if (formData.password !== formData.confirmPassword)
+      newErrors.confirmPassword = "Passwords do not match"
 
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
@@ -59,13 +63,14 @@ export default function RegisterPage() {
         body: JSON.stringify(formData),
       })
 
-      if (!res.ok) {
-        const errData = await res.json()
-        throw new Error(errData.message || "Registration failed")
-      }
+      const data = await res.json()
 
+      if (!res.ok) throw new Error(data.message || "Registration failed")
+
+      alert("Registration successful! Redirecting to login...")
       router.push("/login")
     } catch (err) {
+      console.error("Error during registration:", err)
       setErrors({ general: err.message })
     } finally {
       setIsLoading(false)
@@ -75,7 +80,6 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
-        {/* Header */}
         <div className="text-center">
           <Link href="/" className="inline-flex items-center text-orange-600 hover:text-orange-700 mb-4">
             <ArrowLeft className="h-4 w-4 mr-2" />
@@ -85,7 +89,6 @@ export default function RegisterPage() {
           <p className="mt-2 text-gray-600">Create your FoodHub SA account</p>
         </div>
 
-        {/* Register Form */}
         <Card>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -136,6 +139,19 @@ export default function RegisterPage() {
                 {errors.password && <p className="text-sm text-red-600">{errors.password}</p>}
               </div>
 
+              {/* Confirm Password */}
+              <div>
+                <Label htmlFor="confirmPassword">Confirm Password</Label>
+                <Input
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type="password"
+                  value={formData.confirmPassword}
+                  onChange={handleInputChange}
+                  placeholder="Re-enter your password"
+                />
+                {errors.confirmPassword && <p className="text-sm text-red-600">{errors.confirmPassword}</p>}
+              </div>
 
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? "Registering..." : "Register"}
