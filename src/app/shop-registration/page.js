@@ -1,35 +1,21 @@
 "use client"
 import { useState } from 'react'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { ArrowLeft, Upload } from 'lucide-react'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
+import { ArrowLeft } from 'lucide-react'
 
 export default function ShopRegistration() {
-  const router = useRouter()
-  
   const [currentStep, setCurrentStep] = useState(1)
   const [formData, setFormData] = useState({
-    // Business Information
     businessName: '',
     businessType: '',
     businessRegistrationNumber: '',
-    
-    // Contact Information
     ownerName: '',
     email: '',
     phone: '',
-    
-    // Address Information
+    password: '',
+    confirmPassword: '',
     address: '',
     city: '',
     postalCode: '',
-    
-    // Operating Information
     cuisine: '',
     description: '',
     operatingHours: {
@@ -41,8 +27,6 @@ export default function ShopRegistration() {
       saturday: { open: '09:00', close: '22:00', closed: false },
       sunday: { open: '09:00', close: '22:00', closed: false }
     },
-    
-    // Banking Information
     bankName: '',
     accountNumber: '',
     accountHolder: ''
@@ -56,7 +40,6 @@ export default function ShopRegistration() {
       ...prev,
       [name]: value
     }))
-    // Clear error for this field
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
@@ -86,7 +69,12 @@ export default function ShopRegistration() {
         if (!formData.businessName.trim()) newErrors.businessName = 'Business name is required'
         if (!formData.ownerName.trim()) newErrors.ownerName = 'Owner name is required'
         if (!formData.email.trim()) newErrors.email = 'Email is required'
+        else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Email is invalid'
         if (!formData.phone.trim()) newErrors.phone = 'Phone is required'
+        if (!formData.password) newErrors.password = 'Password is required'
+        else if (formData.password.length < 5) newErrors.password = 'Password must be at least 5 characters'
+        if (!formData.confirmPassword) newErrors.confirmPassword = 'Please confirm password'
+        else if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = 'Passwords do not match'
         break
       case 2:
         if (!formData.address.trim()) newErrors.address = 'Address is required'
@@ -120,23 +108,25 @@ export default function ShopRegistration() {
     setIsLoading(true)
     
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000))
+      const { confirmPassword, ...submitData } = formData
       
-      // Mock registration success
-      const mockShopOwner = {
-        id: Date.now(),
-        name: formData.ownerName,
-        email: formData.email,
-        shopName: formData.businessName,
-        shopId: Date.now()
+      const res = await fetch("/api/register-shop", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(submitData),
+      })
+
+      const data = await res.json()
+
+      if (data.success) {
+        alert("✅ Registration successful! Redirecting to login...")
+        window.location.href = "/login"
+      } else {
+        setErrors({ general: data.message || "Registration failed." })
       }
-
-      console.log("✅ Shop Registered:", mockShopOwner)
-      router.push('/shop-dashboard')
-
     } catch (err) {
-      setErrors({ general: 'Registration failed. Please try again.' })
+      console.error("Registration error:", err)
+      setErrors({ general: "Registration failed. Please try again." })
     } finally {
       setIsLoading(false)
     }
@@ -152,17 +142,15 @@ export default function ShopRegistration() {
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
-        {/* Header */}
         <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center text-orange-600 hover:text-orange-700 mb-4">
+          <a href="/" className="inline-flex items-center text-orange-600 hover:text-orange-700 mb-4">
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Home
-          </Link>
+          </a>
           <h2 className="text-3xl font-bold text-gray-900">Register Your Restaurant</h2>
           <p className="mt-2 text-gray-600">Join FoodHub SA and start receiving orders</p>
         </div>
 
-        {/* Progress Steps */}
         <div className="mb-8">
           <div className="flex items-center justify-between">
             {steps.map((step, index) => (
@@ -192,366 +180,349 @@ export default function ShopRegistration() {
           </div>
         </div>
 
-        {/* Form */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Step {currentStep}: {steps[currentStep - 1].name}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {errors.general && (
-              <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md text-sm mb-6">
-                {errors.general}
-              </div>
-            )}
-
-            {/* Step 1: Business Information */}
-            {currentStep === 1 && (
-              <div className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <Label htmlFor="businessName">Business Name *</Label>
-                    <Input
-                      id="businessName"
-                      name="businessName"
-                      value={formData.businessName}
-                      onChange={handleInputChange}
-                      placeholder="e.g., Burger Palace"
-                      className="mt-1"
-                    />
-                    {errors.businessName && (
-                      <p className="mt-1 text-sm text-red-600">{errors.businessName}</p>
-                    )}
-                  </div>
-                  <div>
-                    <Label htmlFor="businessType">Business Type</Label>
-                    <select
-                      id="businessType"
-                      name="businessType"
-                      value={formData.businessType}
-                      onChange={handleInputChange}
-                      className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
-                    >
-                      <option value="">Select type</option>
-                      <option value="restaurant">Restaurant</option>
-                      <option value="fast_food">Fast Food</option>
-                      <option value="cafe">Cafe</option>
-                      <option value="bakery">Bakery</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div>
-                  <Label htmlFor="businessRegistrationNumber">Business Registration Number</Label>
-                  <Input
-                    id="businessRegistrationNumber"
-                    name="businessRegistrationNumber"
-                    value={formData.businessRegistrationNumber}
-                    onChange={handleInputChange}
-                    placeholder="Optional"
-                    className="mt-1"
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <Label htmlFor="ownerName">Owner Name *</Label>
-                    <Input
-                      id="ownerName"
-                      name="ownerName"
-                      value={formData.ownerName}
-                      onChange={handleInputChange}
-                      placeholder="Your full name"
-                      className="mt-1"
-                    />
-                    {errors.ownerName && (
-                      <p className="mt-1 text-sm text-red-600">{errors.ownerName}</p>
-                    )}
-                  </div>
-                  <div>
-                    <Label htmlFor="email">Email Address *</Label>
-                    <Input
-                      id="email"
-                      name="email"
-                      type="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      placeholder="business@example.com"
-                      className="mt-1"
-                    />
-                    {errors.email && (
-                      <p className="mt-1 text-sm text-red-600">{errors.email}</p>
-                    )}
-                  </div>
-                </div>
-
-                <div>
-                  <Label htmlFor="phone">Phone Number *</Label>
-                  <Input
-                    id="phone"
-                    name="phone"
-                    type="tel"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    placeholder="+27 12 345 6789"
-                    className="mt-1"
-                  />
-                  {errors.phone && (
-                    <p className="mt-1 text-sm text-red-600">{errors.phone}</p>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* Step 2: Location & Details */}
-            {currentStep === 2 && (
-              <div className="space-y-6">
-                <div>
-                  <Label htmlFor="address">Restaurant Address *</Label>
-                  <Input
-                    id="address"
-                    name="address"
-                    value={formData.address}
-                    onChange={handleInputChange}
-                    placeholder="Street address"
-                    className="mt-1"
-                  />
-                  {errors.address && (
-                    <p className="mt-1 text-sm text-red-600">{errors.address}</p>
-                  )}
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <Label htmlFor="city">City *</Label>
-                    <Input
-                      id="city"
-                      name="city"
-                      value={formData.city}
-                      onChange={handleInputChange}
-                      placeholder="Cape Town"
-                      className="mt-1"
-                    />
-                    {errors.city && (
-                      <p className="mt-1 text-sm text-red-600">{errors.city}</p>
-                    )}
-                  </div>
-                  <div>
-                    <Label htmlFor="postalCode">Postal Code</Label>
-                    <Input
-                      id="postalCode"
-                      name="postalCode"
-                      value={formData.postalCode}
-                      onChange={handleInputChange}
-                      placeholder="8001"
-                      className="mt-1"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <Label htmlFor="cuisine">Cuisine Type *</Label>
-                  <select
-                    id="cuisine"
-                    name="cuisine"
-                    value={formData.cuisine}
-                    onChange={handleInputChange}
-                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
-                  >
-                    <option value="">Select cuisine type</option>
-                    <option value="Burgers">Burgers</option>
-                    <option value="Pizza">Pizza</option>
-                    <option value="Chicken">Chicken</option>
-                    <option value="Kota">Kota</option>
-                    <option value="Dagwood">Dagwood</option>
-                    <option value="Hotdog">Hotdog</option>
-                    <option value="fries">fries</option>
-                    <option value="Steakhouse">Steakhouse</option>
-                  </select>
-                  {errors.cuisine && (
-                    <p className="mt-1 text-sm text-red-600">{errors.cuisine}</p>
-                  )}
-                </div>
-
-                <div>
-                  <Label htmlFor="description">Restaurant Description</Label>
-                  <Textarea
-                    id="description"
-                    name="description"
-                    value={formData.description}
-                    onChange={handleInputChange}
-                    placeholder="Describe your restaurant and what makes it special..."
-                    className="mt-1"
-                    rows={4}
-                  />
-                </div>
-              </div>
-            )}
-
-            {/* Step 3: Banking & Hours */}
-            {currentStep === 3 && (
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-lg font-medium mb-4">Banking Information</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <Label htmlFor="bankName">Bank Name *</Label>
-                      <Input
-                        id="bankName"
-                        name="bankName"
-                        value={formData.bankName}
-                        onChange={handleInputChange}
-                        placeholder="e.g., Standard Bank"
-                        className="mt-1"
-                      />
-                      {errors.bankName && (
-                        <p className="mt-1 text-sm text-red-600">{errors.bankName}</p>
-                      )}
-                    </div>
-                    <div>
-                      <Label htmlFor="accountNumber">Account Number *</Label>
-                      <Input
-                        id="accountNumber"
-                        name="accountNumber"
-                        value={formData.accountNumber}
-                        onChange={handleInputChange}
-                        placeholder="Account number"
-                        className="mt-1"
-                      />
-                      {errors.accountNumber && (
-                        <p className="mt-1 text-sm text-red-600">{errors.accountNumber}</p>
-                      )}
-                    </div>
-                  </div>
-                  <div className="mt-4">
-                    <Label htmlFor="accountHolder">Account Holder Name *</Label>
-                    <Input
-                      id="accountHolder"
-                      name="accountHolder"
-                      value={formData.accountHolder}
-                      onChange={handleInputChange}
-                      placeholder="Name on bank account"
-                      className="mt-1"
-                    />
-                    {errors.accountHolder && (
-                      <p className="mt-1 text-sm text-red-600">{errors.accountHolder}</p>
-                    )}
-                  </div>
-                </div>
-
-                <div>
-                  <h3 className="text-lg font-medium mb-4">Operating Hours</h3>
-                  <div className="space-y-3">
-                    {Object.entries(formData.operatingHours).map(([day, hours]) => (
-                      <div key={day} className="flex items-center space-x-4">
-                        <div className="w-20 capitalize">{day}</div>
-                        <label className="flex items-center">
-                          <input
-                            type="checkbox"
-                            checked={hours.closed}
-                            onChange={(e) => handleHoursChange(day, 'closed', e.target.checked)}
-                            className="mr-2"
-                          />
-                          Closed
-                        </label>
-                        {!hours.closed && (
-                          <>
-                            <Input
-                              type="time"
-                              value={hours.open}
-                              onChange={(e) => handleHoursChange(day, 'open', e.target.value)}
-                              className="w-32"
-                            />
-                            <span>to</span>
-                            <Input
-                              type="time"
-                              value={hours.close}
-                              onChange={(e) => handleHoursChange(day, 'close', e.target.value)}
-                              className="w-32"
-                            />
-                          </>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Step 4: Review */}
-            {currentStep === 4 && (
-              <div className="space-y-6">
-                <h3 className="text-lg font-medium">Review Your Information</h3>
-                <div className="bg-gray-50 p-6 rounded-lg space-y-4">
-                  <div>
-                    <h4 className="font-medium">Business Information</h4>
-                    <p>{formData.businessName}</p>
-                    <p>{formData.ownerName} • {formData.email} • {formData.phone}</p>
-                  </div>
-                  <div>
-                    <h4 className="font-medium">Location</h4>
-                    <p>{formData.address}, {formData.city} {formData.postalCode}</p>
-                    <p>Cuisine: {formData.cuisine}</p>
-                  </div>
-                  <div>
-                    <h4 className="font-medium">Banking</h4>
-                    <p>{formData.bankName} - {formData.accountNumber}</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-center">
-                  <input
-                    id="terms"
-                    type="checkbox"
-                    required
-                    className="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
-                  />
-                  <Label htmlFor="terms" className="ml-2 text-sm">
-                    I agree to the{' '}
-                    <a href="#" className="text-orange-600 hover:text-orange-500">
-                      Terms of Service
-                    </a>{' '}
-                    and{' '}
-                    <a href="#" className="text-orange-600 hover:text-orange-500">
-                      Restaurant Partner Agreement
-                    </a>
-                  </Label>
-                </div>
-              </div>
-            )}
-
-            {/* Navigation Buttons */}
-            <div className="flex justify-between mt-8">
-              <Button
-                variant="outline"
-                onClick={handlePrevious}
-                disabled={currentStep === 1}
-              >
-                Previous
-              </Button>
-              
-              {currentStep < 4 ? (
-                <Button onClick={handleNext}>
-                  Next
-                </Button>
-              ) : (
-                <Button
-                  onClick={handleSubmit}
-                  disabled={isLoading}
-                >
-                  {isLoading ? 'Submitting...' : 'Submit Registration'}
-                </Button>
-              )}
+        <div className="bg-white shadow rounded-lg p-6">
+          <h3 className="text-xl font-semibold mb-6">Step {currentStep}: {steps[currentStep - 1].name}</h3>
+          
+          {errors.general && (
+            <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md text-sm mb-6">
+              {errors.general}
             </div>
-          </CardContent>
-        </Card>
+          )}
 
-        {/* Login Link */}
+          {currentStep === 1 && (
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Business Name *</label>
+                  <input
+                    name="businessName"
+                    value={formData.businessName}
+                    onChange={handleInputChange}
+                    placeholder="e.g., Burger Palace"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  />
+                  {errors.businessName && <p className="mt-1 text-sm text-red-600">{errors.businessName}</p>}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Business Type</label>
+                  <select
+                    name="businessType"
+                    value={formData.businessType}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  >
+                    <option value="">Select type</option>
+                    <option value="restaurant">Restaurant</option>
+                    <option value="fast_food">Fast Food</option>
+                    <option value="cafe">Cafe</option>
+                    <option value="bakery">Bakery</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Business Registration Number</label>
+                <input
+                  name="businessRegistrationNumber"
+                  value={formData.businessRegistrationNumber}
+                  onChange={handleInputChange}
+                  placeholder="Optional"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Owner Name *</label>
+                  <input
+                    name="ownerName"
+                    value={formData.ownerName}
+                    onChange={handleInputChange}
+                    placeholder="Your full name"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  />
+                  {errors.ownerName && <p className="mt-1 text-sm text-red-600">{errors.ownerName}</p>}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Email Address *</label>
+                  <input
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    placeholder="business@example.com"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  />
+                  {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number *</label>
+                <input
+                  name="phone"
+                  type="tel"
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                  placeholder="+27 12 345 6789"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                />
+                {errors.phone && <p className="mt-1 text-sm text-red-600">{errors.phone}</p>}
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Password *</label>
+                  <input
+                    name="password"
+                    type="password"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    placeholder="At least 5 characters"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  />
+                  {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password}</p>}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Confirm Password *</label>
+                  <input
+                    name="confirmPassword"
+                    type="password"
+                    value={formData.confirmPassword}
+                    onChange={handleInputChange}
+                    placeholder="Re-enter password"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  />
+                  {errors.confirmPassword && <p className="mt-1 text-sm text-red-600">{errors.confirmPassword}</p>}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {currentStep === 2 && (
+            <div className="space-y-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Restaurant Address *</label>
+                <input
+                  name="address"
+                  value={formData.address}
+                  onChange={handleInputChange}
+                  placeholder="Street address"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                />
+                {errors.address && <p className="mt-1 text-sm text-red-600">{errors.address}</p>}
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">City *</label>
+                  <input
+                    name="city"
+                    value={formData.city}
+                    onChange={handleInputChange}
+                    placeholder="Cape Town"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  />
+                  {errors.city && <p className="mt-1 text-sm text-red-600">{errors.city}</p>}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Postal Code</label>
+                  <input
+                    name="postalCode"
+                    value={formData.postalCode}
+                    onChange={handleInputChange}
+                    placeholder="8001"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Cuisine Type *</label>
+                <select
+                  name="cuisine"
+                  value={formData.cuisine}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                >
+                  <option value="">Select cuisine type</option>
+                  <option value="Burgers">Burgers</option>
+                  <option value="Pizza">Pizza</option>
+                  <option value="Chicken">Chicken</option>
+                  <option value="Kota">Kota</option>
+                  <option value="Dagwood">Dagwood</option>
+                  <option value="Hotdog">Hotdog</option>
+                  <option value="fries">Fries</option>
+                  <option value="Steakhouse">Steakhouse</option>
+                </select>
+                {errors.cuisine && <p className="mt-1 text-sm text-red-600">{errors.cuisine}</p>}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Restaurant Description</label>
+                <textarea
+                  name="description"
+                  value={formData.description}
+                  onChange={handleInputChange}
+                  placeholder="Describe your restaurant and what makes it special..."
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  rows={4}
+                />
+              </div>
+            </div>
+          )}
+
+          {currentStep === 3 && (
+            <div className="space-y-6">
+              <div>
+                <h3 className="text-lg font-medium mb-4">Banking Information</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Bank Name *</label>
+                    <input
+                      name="bankName"
+                      value={formData.bankName}
+                      onChange={handleInputChange}
+                      placeholder="e.g., Standard Bank"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    />
+                    {errors.bankName && <p className="mt-1 text-sm text-red-600">{errors.bankName}</p>}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Account Number *</label>
+                    <input
+                      name="accountNumber"
+                      value={formData.accountNumber}
+                      onChange={handleInputChange}
+                      placeholder="Account number"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    />
+                    {errors.accountNumber && <p className="mt-1 text-sm text-red-600">{errors.accountNumber}</p>}
+                  </div>
+                </div>
+                <div className="mt-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Account Holder Name *</label>
+                  <input
+                    name="accountHolder"
+                    value={formData.accountHolder}
+                    onChange={handleInputChange}
+                    placeholder="Name on bank account"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  />
+                  {errors.accountHolder && <p className="mt-1 text-sm text-red-600">{errors.accountHolder}</p>}
+                </div>
+              </div>
+
+              <div>
+                <h3 className="text-lg font-medium mb-4">Operating Hours</h3>
+                <div className="space-y-3">
+                  {Object.entries(formData.operatingHours).map(([day, hours]) => (
+                    <div key={day} className="flex items-center space-x-4">
+                      <div className="w-24 capitalize font-medium">{day}</div>
+                      <label className="flex items-center">
+                        <input
+                          type="checkbox"
+                          checked={hours.closed}
+                          onChange={(e) => handleHoursChange(day, 'closed', e.target.checked)}
+                          className="mr-2 h-4 w-4"
+                        />
+                        <span className="text-sm">Closed</span>
+                      </label>
+                      {!hours.closed && (
+                        <>
+                          <input
+                            type="time"
+                            value={hours.open}
+                            onChange={(e) => handleHoursChange(day, 'open', e.target.value)}
+                            className="px-3 py-1 border border-gray-300 rounded-md"
+                          />
+                          <span className="text-sm">to</span>
+                          <input
+                            type="time"
+                            value={hours.close}
+                            onChange={(e) => handleHoursChange(day, 'close', e.target.value)}
+                            className="px-3 py-1 border border-gray-300 rounded-md"
+                          />
+                        </>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {currentStep === 4 && (
+            <div className="space-y-6">
+              <h3 className="text-lg font-medium">Review Your Information</h3>
+              <div className="bg-gray-50 p-6 rounded-lg space-y-4">
+                <div>
+                  <h4 className="font-medium text-gray-900 mb-2">Business Information</h4>
+                  <p className="text-gray-700">{formData.businessName}</p>
+                  <p className="text-gray-600 text-sm">{formData.ownerName} • {formData.email} • {formData.phone}</p>
+                </div>
+                <div>
+                  <h4 className="font-medium text-gray-900 mb-2">Location</h4>
+                  <p className="text-gray-700">{formData.address}, {formData.city} {formData.postalCode}</p>
+                  <p className="text-gray-600 text-sm">Cuisine: {formData.cuisine}</p>
+                </div>
+                <div>
+                  <h4 className="font-medium text-gray-900 mb-2">Banking</h4>
+                  <p className="text-gray-700">{formData.bankName} - {formData.accountNumber}</p>
+                </div>
+              </div>
+              
+              <div className="flex items-center">
+                <input
+                  id="terms"
+                  type="checkbox"
+                  required
+                  className="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
+                />
+                <label htmlFor="terms" className="ml-2 text-sm text-gray-700">
+                  I agree to the{' '}
+                  <a href="#" className="text-orange-600 hover:text-orange-500">Terms of Service</a>
+                  {' '}and{' '}
+                  <a href="#" className="text-orange-600 hover:text-orange-500">Restaurant Partner Agreement</a>
+                </label>
+              </div>
+            </div>
+          )}
+
+          <div className="flex justify-between mt-8">
+            <button
+              onClick={handlePrevious}
+              disabled={currentStep === 1}
+              className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Previous
+            </button>
+            
+            {currentStep < 4 ? (
+              <button
+                onClick={handleNext}
+                className="px-6 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700"
+              >
+                Next
+              </button>
+            ) : (
+              <button
+                onClick={handleSubmit}
+                disabled={isLoading}
+                className="px-6 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isLoading ? 'Submitting...' : 'Submit Registration'}
+              </button>
+            )}
+          </div>
+        </div>
+
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-600">
             Already have an account?{' '}
-            <Link href="/shop/login" className="text-orange-600 hover:text-orange-500 font-medium">
+            <a href="/shop/login" className="text-orange-600 hover:text-orange-500 font-medium">
               Sign in here
-            </Link>
+            </a>
           </p>
         </div>
       </div>
