@@ -107,19 +107,22 @@ export default function ShopOwnerDashboard() {
   })
 
   useEffect(() => {
-    // Auto-update menu availability based on ingredients
-    const updatedMenuItems = menuItems.map(item => {
-      const hasLowStockIngredients = item.ingredients.some(ingredientId => {
-        const ingredient = ingredients.find(ing => ing.id === ingredientId)
-        return ingredient && ingredient.stock <= ingredient.lowStockThreshold
-      })
-      return {
-        ...item,
-        available: !hasLowStockIngredients
-      }
+  const updatedMenuItems = menuItems.map(item => {
+    const hasLowStockIngredients = item.ingredients.some(ingredientId => {
+      const ingredient = ingredients.find(ing => ing.id === ingredientId)
+      return ingredient && ingredient.stock <= ingredient.lowStockThreshold
     })
-    setMenuItems(updatedMenuItems)
-  }, [ingredients])
+    return {
+      ...item,
+      available: !hasLowStockIngredients
+    }
+  })
+
+  // ✅ Only update if something actually changed
+  const hasChanges = updatedMenuItems.some((item, i) => item.available !== menuItems[i].available)
+  if (hasChanges) setMenuItems(updatedMenuItems)
+}, [ingredients, menuItems])
+
 
   const handleLogout = () => {
     setUser(null)
@@ -271,7 +274,7 @@ export default function ShopOwnerDashboard() {
                     <CardContent className="p-6">
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="text-sm text-gray-600">Today's Revenue</p>
+                          <p className="text-sm text-gray-600">Today&apos;s Revenue</p>
                           <p className="text-3xl font-bold text-green-600">R{(orders.reduce((sum, order) => sum + order.total, 0)).toFixed(2)}</p>
                         </div>
                         <BarChart3 className="h-8 w-8 text-green-600" />
@@ -504,7 +507,7 @@ export default function ShopOwnerDashboard() {
                   
                   <div>
                     <h3 className="font-medium mb-3">Operating Hours</h3>
-                    <p className="text-sm text-gray-600 mb-4">Configure your restaurant's operating hours</p>
+                    <p className="text-sm text-gray-600 mb-4">Configure your restaurant&apos;s operating hours</p>
                     <Button variant="outline">Edit Hours</Button>
                   </div>
                   
