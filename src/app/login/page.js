@@ -123,7 +123,7 @@ const handleSubmit = async (e) => {
             </form>
 
             <div className="text-center mt-6 text-slate-600">
-              Don't have an account?{" "}
+              Don&apos;t have an account?{" "}
               <Link href="/register" className="text-orange-600 font-semibold underline">
                 Register here »
               </Link>

@@ -1,6 +1,7 @@
 "use client"
 import { useState, useEffect } from 'react'
 import { ArrowLeft, Plus, Minus, Trash2, MapPin, CreditCard, Shield, Lock, AlertCircle } from 'lucide-react'
+import Image from "next/image";
 
 // Sample Data
 const SAMPLE_USER = {
@@ -303,7 +304,7 @@ export default function EnhancedCartPage() {
               <div className="bg-white rounded-lg shadow-sm">
                 <div className="p-4">
                   <div className="flex items-center space-x-4">
-                    <img
+                    <Image
                       src={currentRestaurant.image}
                       alt={currentRestaurant.name}
                       className="w-16 h-16 rounded-lg object-cover"
@@ -324,7 +325,7 @@ export default function EnhancedCartPage() {
               <div className="p-6 space-y-4">
                 {cartItems.map((item, index) => (
                   <div key={`${item.id}-${index}`} className="flex items-center space-x-4 py-4 border-b last:border-b-0">
-                    <img 
+                    <Image
                       src={item.image} 
                       alt={item.name}
                       className="w-20 h-20 rounded-lg object-cover"
