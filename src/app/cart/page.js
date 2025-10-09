@@ -307,7 +307,9 @@ export default function EnhancedCartPage() {
                     <Image
                       src={currentRestaurant.image}
                       alt={currentRestaurant.name}
-                      className="w-16 h-16 rounded-lg object-cover"
+                      width={64}
+                      height={64}
+                      className="rounded-lg object-cover"
                     />
                     <div>
                       <h3 className="font-semibold text-lg">{currentRestaurant.name}</h3>
@@ -328,7 +330,9 @@ export default function EnhancedCartPage() {
                     <Image
                       src={item.image} 
                       alt={item.name}
-                      className="w-20 h-20 rounded-lg object-cover"
+                      width={80}
+                      height={80}
+                      className="rounded-lg object-cover"
                     />
                     <div className="flex-1">
                       <h4 className="font-medium">{item.name}</h4>
