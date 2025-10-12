@@ -1,0 +1,5 @@
+{
+  "redirects": [
+    { "source": "https://kota-market.com/shop/:path*", "destination": "https://shop.kota-market.com/:path*", "permanent": true }
+  ]
+}
