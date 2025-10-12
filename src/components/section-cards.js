@@ -7,7 +7,7 @@ export default function SectionCards() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto px-4">
       {/* Shop Section Card */}
-      <Link href='/shop-registration'>
+      <Link href='/shop/shop-registration'>
         <div className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary to-primary/80 p-8 text-primary-foreground transition-all duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer">
           <div className="relative z-10">
             <div className="mb-6">
