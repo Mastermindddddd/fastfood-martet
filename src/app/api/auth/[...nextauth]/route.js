@@ -27,7 +27,7 @@ export const authOptions = {
         if (!user) throw new Error("User not found");
         const passwordOk = await bcrypt.compare(credentials.password, user.password);
         if (!passwordOk) throw new Error("Invalid password");
-        return { id: user._id.toString(), name: user.name, email: user.email };
+        return { id: user._id.toString(), name: user.name, email: user.email, phone: user.phone };
       },
     }),
   ],
@@ -38,6 +38,7 @@ export const authOptions = {
         token.id = user.id || user.sub;
         token.name = user.name;
         token.email = user.email;
+        token.phone = user.phone;
       }
       return token;
     },
@@ -47,6 +48,7 @@ export const authOptions = {
       session.user.id = token.id;
       session.user.name = token.name;
       session.user.email = token.email;
+      session.user.phone = token.phone;
       return session;
     },
   },

@@ -1,9 +1,15 @@
 "use client"
-import { useState } from 'react'
-import { ArrowLeft } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
+import { ArrowLeft, Loader } from 'lucide-react'
 
 export default function ShopRegistration() {
+  const router = useRouter()
+  const { data: session, status } = useSession()
+  
   const [currentStep, setCurrentStep] = useState(1)
+  const [isLoading, setIsLoading] = useState(true)
   const [formData, setFormData] = useState({
     businessName: '',
     businessType: '',
@@ -11,8 +17,6 @@ export default function ShopRegistration() {
     ownerName: '',
     email: '',
     phone: '',
-    password: '',
-    confirmPassword: '',
     address: '',
     city: '',
     postalCode: '',
@@ -31,8 +35,59 @@ export default function ShopRegistration() {
     accountNumber: '',
     accountHolder: ''
   })
-  const [isLoading, setIsLoading] = useState(false)
+  
   const [errors, setErrors] = useState({})
+  const [submitLoading, setSubmitLoading] = useState(false)
+
+  // Handle auth status, check for existing shop, and autofill
+  useEffect(() => {
+    if (status === 'loading') return
+
+    if (status === 'unauthenticated') {
+      router.push('/register')
+      return
+    }
+
+    if (status === 'authenticated' && session?.user) {
+      // Check if user already has a registered shop
+      checkExistingShop(session.user.email)
+      
+      setFormData(prev => ({
+        ...prev,
+        ownerName: session.user.name || '',
+        email: session.user.email || '',
+        phone: session.user.phone || ''
+      }))
+    }
+
+    setIsLoading(false)
+  }, [status, session, router])
+
+  const checkExistingShop = async (email) => {
+  try {
+    const res = await fetch(`/api/check-shop/${email}`)
+    const data = await res.json()
+
+    if (data.shopExists) {
+      // Redirect if the shop already exists
+      router.push('/shop-dashboard')
+    }
+  } catch (err) {
+    console.error("Error checking existing shop:", err)
+  }
+}
+
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="flex items-center space-x-2">
+          <Loader className="h-5 w-5 animate-spin text-orange-600" />
+          <span className="text-gray-600">Loading...</span>
+        </div>
+      </div>
+    )
+  }
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
@@ -67,14 +122,6 @@ export default function ShopRegistration() {
     switch (step) {
       case 1:
         if (!formData.businessName.trim()) newErrors.businessName = 'Business name is required'
-        if (!formData.ownerName.trim()) newErrors.ownerName = 'Owner name is required'
-        if (!formData.email.trim()) newErrors.email = 'Email is required'
-        else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Email is invalid'
-        if (!formData.phone.trim()) newErrors.phone = 'Phone is required'
-        if (!formData.password) newErrors.password = 'Password is required'
-        else if (formData.password.length < 5) newErrors.password = 'Password must be at least 5 characters'
-        if (!formData.confirmPassword) newErrors.confirmPassword = 'Please confirm password'
-        else if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = 'Passwords do not match'
         break
       case 2:
         if (!formData.address.trim()) newErrors.address = 'Address is required'
@@ -105,22 +152,23 @@ export default function ShopRegistration() {
   const handleSubmit = async () => {
     if (!validateStep(currentStep)) return
     
-    setIsLoading(true)
+    setSubmitLoading(true)
     
     try {
-      const { confirmPassword, ...submitData } = formData
-      
       const res = await fetch("/api/register-shop", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(submitData),
+        body: JSON.stringify({
+          ...formData,
+          userId: session?.user?.id
+        }),
       })
 
       const data = await res.json()
 
       if (data.success) {
-        alert("✅ Registration successful! Redirecting to login...")
-        window.location.href = "/login"
+        alert("✅ Registration successful! Redirecting to dashboard...")
+        router.push("/shop/dashboard")
       } else {
         setErrors({ general: data.message || "Registration failed." })
       }
@@ -128,7 +176,7 @@ export default function ShopRegistration() {
       console.error("Registration error:", err)
       setErrors({ general: "Registration failed. Please try again." })
     } finally {
-      setIsLoading(false)
+      setSubmitLoading(false)
     }
   }
 
@@ -143,12 +191,15 @@ export default function ShopRegistration() {
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
         <div className="text-center mb-8">
-          <a href="/" className="inline-flex items-center text-orange-600 hover:text-orange-700 mb-4">
+          <button onClick={() => router.back()} className="inline-flex items-center text-orange-600 hover:text-orange-700 mb-4">
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Home
-          </a>
+            Back
+          </button>
           <h2 className="text-3xl font-bold text-gray-900">Register Your Restaurant</h2>
           <p className="mt-2 text-gray-600">Join FoodHub SA and start receiving orders</p>
+          {session?.user && (
+            <p className="mt-2 text-sm text-gray-500">Logged in as {session.user.email}</p>
+          )}
         </div>
 
         <div className="mb-8">
@@ -191,6 +242,10 @@ export default function ShopRegistration() {
 
           {currentStep === 1 && (
             <div className="space-y-6">
+              <div className="bg-blue-50 border border-blue-200 rounded-md p-4 mb-6">
+                <p className="text-sm text-blue-800">Your details have been pre-filled from your account. You can edit them as needed.</p>
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Business Name *</label>
@@ -233,68 +288,35 @@ export default function ShopRegistration() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Owner Name *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Owner Name</label>
                   <input
                     name="ownerName"
                     value={formData.ownerName}
-                    onChange={handleInputChange}
-                    placeholder="Your full name"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    disabled
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-600 cursor-not-allowed"
                   />
-                  {errors.ownerName && <p className="mt-1 text-sm text-red-600">{errors.ownerName}</p>}
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Email Address *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
                   <input
                     name="email"
                     type="email"
                     value={formData.email}
-                    onChange={handleInputChange}
-                    placeholder="business@example.com"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    disabled
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-600 cursor-not-allowed"
                   />
-                  {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number *</label>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
                 <input
                   name="phone"
                   type="tel"
                   value={formData.phone}
-                  onChange={handleInputChange}
-                  placeholder="+27 12 345 6789"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  disabled
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 text-gray-600 cursor-not-allowed"
                 />
-                {errors.phone && <p className="mt-1 text-sm text-red-600">{errors.phone}</p>}
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Password *</label>
-                  <input
-                    name="password"
-                    type="password"
-                    value={formData.password}
-                    onChange={handleInputChange}
-                    placeholder="At least 5 characters"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-                  />
-                  {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password}</p>}
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Confirm Password *</label>
-                  <input
-                    name="confirmPassword"
-                    type="password"
-                    value={formData.confirmPassword}
-                    onChange={handleInputChange}
-                    placeholder="Re-enter password"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
-                  />
-                  {errors.confirmPassword && <p className="mt-1 text-sm text-red-600">{errors.confirmPassword}</p>}
-                </div>
               </div>
             </div>
           )}
@@ -418,7 +440,7 @@ export default function ShopRegistration() {
                 <div className="space-y-3">
                   {Object.entries(formData.operatingHours).map(([day, hours]) => (
                     <div key={day} className="flex items-center space-x-4">
-                      <div className="w-24 capitalize font-medium">{day}</div>
+                      <div className="w-24 capitalize font-medium text-sm">{day}</div>
                       <label className="flex items-center">
                         <input
                           type="checkbox"
@@ -434,14 +456,14 @@ export default function ShopRegistration() {
                             type="time"
                             value={hours.open}
                             onChange={(e) => handleHoursChange(day, 'open', e.target.value)}
-                            className="px-3 py-1 border border-gray-300 rounded-md"
+                            className="px-3 py-1 border border-gray-300 rounded-md text-sm"
                           />
                           <span className="text-sm">to</span>
                           <input
                             type="time"
                             value={hours.close}
                             onChange={(e) => handleHoursChange(day, 'close', e.target.value)}
-                            className="px-3 py-1 border border-gray-300 rounded-md"
+                            className="px-3 py-1 border border-gray-300 rounded-md text-sm"
                           />
                         </>
                       )}
@@ -458,17 +480,20 @@ export default function ShopRegistration() {
               <div className="bg-gray-50 p-6 rounded-lg space-y-4">
                 <div>
                   <h4 className="font-medium text-gray-900 mb-2">Business Information</h4>
-                  <p className="text-gray-700">{formData.businessName}</p>
+                  <p className="text-gray-700 font-semibold">{formData.businessName}</p>
+                  <p className="text-gray-600 text-sm">{formData.businessType && `Type: ${formData.businessType}`}</p>
                   <p className="text-gray-600 text-sm">{formData.ownerName} • {formData.email} • {formData.phone}</p>
                 </div>
                 <div>
                   <h4 className="font-medium text-gray-900 mb-2">Location</h4>
                   <p className="text-gray-700">{formData.address}, {formData.city} {formData.postalCode}</p>
                   <p className="text-gray-600 text-sm">Cuisine: {formData.cuisine}</p>
+                  {formData.description && <p className="text-gray-600 text-sm mt-2">{formData.description}</p>}
                 </div>
                 <div>
                   <h4 className="font-medium text-gray-900 mb-2">Banking</h4>
-                  <p className="text-gray-700">{formData.bankName} - {formData.accountNumber}</p>
+                  <p className="text-gray-700">{formData.bankName}</p>
+                  <p className="text-gray-600 text-sm">Account: {formData.accountNumber} ({formData.accountHolder})</p>
                 </div>
               </div>
               
@@ -480,10 +505,7 @@ export default function ShopRegistration() {
                   className="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
                 />
                 <label htmlFor="terms" className="ml-2 text-sm text-gray-700">
-                  I agree to the{' '}
-                  <a href="#" className="text-orange-600 hover:text-orange-500">Terms of Service</a>
-                  {' '}and{' '}
-                  <a href="#" className="text-orange-600 hover:text-orange-500">Restaurant Partner Agreement</a>
+                  I agree to the Terms of Service and Restaurant Partner Agreement
                 </label>
               </div>
             </div>
@@ -508,22 +530,13 @@ export default function ShopRegistration() {
             ) : (
               <button
                 onClick={handleSubmit}
-                disabled={isLoading}
+                disabled={submitLoading}
                 className="px-6 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isLoading ? 'Submitting...' : 'Submit Registration'}
+                {submitLoading ? 'Submitting...' : 'Submit Registration'}
               </button>
             )}
           </div>
-        </div>
-
-        <div className="mt-6 text-center">
-          <p className="text-sm text-gray-600">
-            Already have an account?{' '}
-            <a href="/shop/login" className="text-orange-600 hover:text-orange-500 font-medium">
-              Sign in here
-            </a>
-          </p>
         </div>
       </div>
     </div>
