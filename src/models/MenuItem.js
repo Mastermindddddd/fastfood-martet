@@ -1,18 +1,40 @@
-import mongoose, {model, models, Schema} from "mongoose";
+// models/MenuItem.js
+import mongoose from "mongoose";
 
-const ExtraPriceSchema = new Schema({
-  name: String,
-  price: Number,
-});
+const MenuItemSchema = new mongoose.Schema({
+  shopId: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'Shop',
+    required: true 
+  },
+  name: { 
+    type: String, 
+    required: true 
+  },
+  price: { 
+    type: Number, 
+    required: true,
+    min: 0
+  },
+  category: { 
+    type: String, 
+    required: true 
+  },
+  description: { 
+    type: String,
+    default: ''
+  },
+  available: { 
+    type: Boolean, 
+    default: true 
+  },
+  image: {
+    type: String,
+    default: ''
+  }
+}, { timestamps: true });
 
-const MenuItemSchema = new Schema({
-  image: {type: String},
-  name: {type: String},
-  description: {type: String},
-  category: {type: mongoose.Types.ObjectId},
-  basePrice: {type: Number},
-  sizes: {type:[ExtraPriceSchema]},
-  extraIngredientPrices: {type:[ExtraPriceSchema]},
-}, {timestamps: true});
+// Index for faster queries
+MenuItemSchema.index({ shopId: 1, available: 1 });
 
-export const MenuItem = models?.MenuItem || model('MenuItem', MenuItemSchema);
+export default mongoose.models.MenuItem || mongoose.model("MenuItem", MenuItemSchema);
