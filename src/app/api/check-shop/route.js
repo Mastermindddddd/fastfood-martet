@@ -1,25 +1,29 @@
 import Shop from "@/models/Shop";
 import mongoose from "mongoose";
 
-export async function GET(req, { params }) {
+export async function GET(req) {
   try {
-    // Connect to MongoDB if not already connected
     if (mongoose.connection.readyState !== 1) {
       await mongoose.connect(process.env.MONGO_URL);
     }
 
-    // Extract the email parameter from the route
-    const { email } = params;
+    // Extract email from query parameters
+    const { searchParams } = new URL(req.url);
+    const email = searchParams.get("email");
 
-    // Find the shop linked to this email
+    if (!email) {
+      return Response.json(
+        { shopExists: false, message: "Email is required" },
+        { status: 400 }
+      );
+    }
+
     const shop = await Shop.findOne({ email });
 
-    // Return response
     return Response.json({
       shopExists: !!shop,
-      shop: shop || null
+      shop: shop || null,
     });
-
   } catch (error) {
     console.error("Error checking shop by email:", error);
     return Response.json(

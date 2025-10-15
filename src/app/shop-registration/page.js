@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
-import { ArrowLeft, Loader } from 'lucide-react'
+import { ArrowLeft, Loader, AlertCircle } from 'lucide-react'
 
 export default function ShopRegistration() {
   const router = useRouter()
@@ -10,6 +10,7 @@ export default function ShopRegistration() {
   
   const [currentStep, setCurrentStep] = useState(1)
   const [isLoading, setIsLoading] = useState(true)
+  const [shopAlreadyExists, setShopAlreadyExists] = useState(false)
   const [formData, setFormData] = useState({
     businessName: '',
     businessType: '',
@@ -64,19 +65,18 @@ export default function ShopRegistration() {
   }, [status, session, router])
 
   const checkExistingShop = async (email) => {
-  try {
-    const res = await fetch(`/api/check-shop/${email}`)
-    const data = await res.json()
+    try {
+      const res = await fetch(`/api/check-shop?email=${encodeURIComponent(email)}`)
+      const data = await res.json()
 
-    if (data.shopExists) {
-      // Redirect if the shop already exists
-      router.push('/shop-dashboard')
+      if (data.shopExists) {
+        console.log("Shop already exists for this email")
+        setShopAlreadyExists(true)
+      }
+    } catch (err) {
+      console.error("Error checking existing shop:", err)
     }
-  } catch (err) {
-    console.error("Error checking existing shop:", err)
   }
-}
-
 
   if (isLoading) {
     return (
@@ -84,6 +84,53 @@ export default function ShopRegistration() {
         <div className="flex items-center space-x-2">
           <Loader className="h-5 w-5 animate-spin text-orange-600" />
           <span className="text-gray-600">Loading...</span>
+        </div>
+      </div>
+    )
+  }
+
+  // If shop already exists, show error message
+  if (shopAlreadyExists) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-2xl mx-auto">
+          <div className="text-center mb-8">
+            <button onClick={() => router.back()} className="inline-flex items-center text-orange-600 hover:text-orange-700 mb-4">
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back
+            </button>
+          </div>
+
+          <div className="bg-white shadow rounded-lg p-8">
+            <div className="flex items-center justify-center mb-4">
+              <AlertCircle className="h-12 w-12 text-red-600" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900 text-center mb-2">Shop Already Registered</h2>
+            <p className="text-gray-600 text-center mb-6">
+              A restaurant has already been registered with the email <strong>{formData.email}</strong>.
+            </p>
+            
+            <div className="bg-blue-50 border border-blue-200 rounded-md p-4 mb-6">
+              <p className="text-sm text-blue-800">
+                If this is your account, you can access your shop dashboard. If you need to register a different restaurant, please use a different email address.
+              </p>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button
+                onClick={() => router.push('/shop-dashboard')}
+                className="px-6 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 font-medium"
+              >
+                Go to Shop Dashboard
+              </button>
+              <button
+                onClick={() => router.push('/')}
+                className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 font-medium"
+              >
+                Back to Home
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     )
@@ -167,8 +214,8 @@ export default function ShopRegistration() {
       const data = await res.json()
 
       if (data.success) {
-        alert("✅ Registration successful! Redirecting to dashboard...")
-        router.push("/shop/dashboard")
+        alert("Registration successful! Redirecting to dashboard...")
+        router.push("/shop-dashboard")
       } else {
         setErrors({ general: data.message || "Registration failed." })
       }

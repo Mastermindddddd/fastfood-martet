@@ -39,22 +39,57 @@ export default function LoginPage() {
     return Object.keys(newErrors).length === 0
   }
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  if (!validateForm()) return;
-  setIsLoading(true);
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    if (!validateForm()) return
 
-  // Let NextAuth handle redirect and cookie set:
-  await signIn("credentials", {
-    email: formData.email,
-    password: formData.password,
-    redirect: true,
-    callbackUrl: "/",
-  });
+    setIsLoading(true)
 
-  // signIn with redirect true will navigate away — no extra router calls here
-};
+    try {
+      // Step 1: Try signing in with credentials
+      const res = await signIn("credentials", {
+        email: formData.email,
+        password: formData.password,
+        redirect: false,
+      })
 
+      console.log("SignIn response:", res) // DEBUG
+
+      if (res?.error) {
+        setErrors({ general: "Invalid email or password" })
+        setIsLoading(false)
+        return
+      }
+
+      if (!res?.ok) {
+        setErrors({ general: "Login failed. Please try again." })
+        setIsLoading(false)
+        return
+      }
+
+      // Step 2: Check if email exists in Shop model
+      const email = formData.email
+      console.log("Checking shop for email:", email) // DEBUG
+
+      const checkRes = await fetch(`/api/check-shop?email=${encodeURIComponent(email)}`)
+      const data = await checkRes.json()
+
+      console.log("Shop check response:", data) // DEBUG
+
+      // Step 3: Redirect based on shop existence
+      if (data.shopExists) {
+        console.log("Redirecting to shop dashboard") // DEBUG
+        router.push("/shop-dashboard")
+      } else {
+        console.log("Redirecting to home") // DEBUG
+        router.push("/")
+      }
+    } catch (err) {
+      console.error("Error during login:", err)
+      setErrors({ general: "An error occurred. Please try again." })
+      setIsLoading(false)
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
