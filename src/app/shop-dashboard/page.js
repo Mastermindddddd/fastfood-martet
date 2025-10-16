@@ -1,6 +1,5 @@
 "use client"
 import { useState, useEffect } from 'react'
-import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useSession, signOut } from 'next-auth/react'
 import { 
@@ -17,7 +16,8 @@ import {
   Loader,
   Trash2,
   X,
-  Save
+  Save,
+  AlertCircle as AlertIcon
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -26,48 +26,13 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 
-// Mock data for orders and ingredients
-const mockOrders = [
-  {
-    id: 'ORD-001',
-    customerName: 'John Doe',
-    items: [
-      { name: 'Classic Beef Burger', quantity: 2, price: 89 },
-      { name: 'French Fries', quantity: 1, price: 35 }
-    ],
-    total: 213,
-    status: 'new',
-    orderTime: '2025-09-29T14:30:00',
-    specialInstructions: 'No onions please'
-  },
-  {
-    id: 'ORD-002',
-    customerName: 'Jane Smith',
-    items: [
-      { name: 'Chicken Deluxe', quantity: 1, price: 79 }
-    ],
-    total: 79,
-    status: 'preparing',
-    orderTime: '2025-09-29T14:25:00'
-  }
-]
-
-const mockIngredients = [
-  { id: 1, name: 'Beef Patties', stock: 50, lowStockThreshold: 10, unit: 'pieces' },
-  { id: 2, name: 'Chicken Breast', stock: 8, lowStockThreshold: 15, unit: 'pieces' },
-  { id: 3, name: 'Lettuce', stock: 25, lowStockThreshold: 5, unit: 'heads' },
-  { id: 4, name: 'Tomatoes', stock: 2, lowStockThreshold: 10, unit: 'kg' },
-  { id: 5, name: 'Cheese Slices', stock: 100, lowStockThreshold: 20, unit: 'slices' }
-]
-
 export default function ShopOwnerDashboard() {
   const router = useRouter()
   const { data: session, status } = useSession()
   
   const [activeTab, setActiveTab] = useState('dashboard')
-  const [orders, setOrders] = useState(mockOrders)
-  const [ingredients, setIngredients] = useState(mockIngredients)
   const [menuItems, setMenuItems] = useState([])
+  const [ingredients, setIngredients] = useState([])
   const [shopOpen, setShopOpen] = useState(true)
   const [shopData, setShopData] = useState(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -81,20 +46,28 @@ export default function ShopOwnerDashboard() {
     price: '',
     category: '',
     description: '',
-    available: true
+    selectedIngredients: []
   })
   const [menuErrors, setMenuErrors] = useState({})
   const [isSaving, setIsSaving] = useState(false)
 
-  // Fetch shop data when component mounts
+  // Ingredient modal states
+  const [showIngredientModal, setShowIngredientModal] = useState(false)
+  const [editingIngredient, setEditingIngredient] = useState(null)
+  const [ingredientFormData, setIngredientFormData] = useState({
+    name: '',
+    stock: '',
+    unit: 'pieces',
+    lowStockThreshold: '10'
+  })
+  const [ingredientErrors, setIngredientErrors] = useState({})
+
   useEffect(() => {
     if (status === 'loading') return
-
     if (status === 'unauthenticated') {
       router.push('/login')
       return
     }
-
     if (status === 'authenticated' && session?.user?.email) {
       fetchShopData(session.user.email)
     }
@@ -112,8 +85,10 @@ export default function ShopOwnerDashboard() {
       }
 
       setShopData(data.shop)
-      // Load menu items (mock data for now - replace with API call)
-      loadMenuItems(data.shop._id)
+      await Promise.all([
+        loadMenuItems(data.shop._id),
+        loadIngredients(data.shop._id)
+      ])
       setIsLoading(false)
     } catch (err) {
       console.error('Error fetching shop data:', err)
@@ -132,38 +107,29 @@ export default function ShopOwnerDashboard() {
           ...item,
           id: item._id
         })))
-      } else {
-        console.error('Failed to load menu items:', data.message)
-        setMenuItems([])
       }
     } catch (err) {
       console.error('Error loading menu items:', err)
-      setMenuItems([])
     }
   }
 
-  const handleLogout = async () => {
-    await signOut({ redirect: false })
-    router.push('/')
+  const loadIngredients = async (shopId) => {
+    try {
+      const res = await fetch(`/api/ingredients?shopId=${shopId}`)
+      const data = await res.json()
+      
+      if (data.success) {
+        setIngredients(data.ingredients.map(ing => ({
+          ...ing,
+          id: ing._id
+        })))
+      }
+    } catch (err) {
+      console.error('Error loading ingredients:', err)
+    }
   }
 
-  const handleOrderStatusUpdate = (orderId, newStatus) => {
-    setOrders(orders.map(order => 
-      order.id === orderId ? { ...order, status: newStatus } : order
-    ))
-  }
-
-  const handleIngredientUpdate = (ingredientId, newStock) => {
-    setIngredients(ingredients.map(ingredient =>
-      ingredient.id === ingredientId ? { ...ingredient, stock: newStock } : ingredient
-    ))
-  }
-
-  const handleShopStatusToggle = () => {
-    setShopOpen(!shopOpen)
-  }
-
-  // Menu management functions
+  // Menu Management
   const openAddMenuModal = () => {
     setEditingItem(null)
     setMenuFormData({
@@ -171,7 +137,7 @@ export default function ShopOwnerDashboard() {
       price: '',
       category: '',
       description: '',
-      available: true
+      selectedIngredients: []
     })
     setMenuErrors({})
     setShowMenuModal(true)
@@ -184,34 +150,27 @@ export default function ShopOwnerDashboard() {
       price: item.price.toString(),
       category: item.category,
       description: item.description || '',
-      available: item.available
+      selectedIngredients: item.ingredients?.map(ing => ing._id || ing) || []
     })
     setMenuErrors({})
     setShowMenuModal(true)
   }
 
-  const closeMenuModal = () => {
-    setShowMenuModal(false)
-    setEditingItem(null)
-    setMenuFormData({
-      name: '',
-      price: '',
-      category: '',
-      description: '',
-      available: true
-    })
-    setMenuErrors({})
-  }
-
   const handleMenuInputChange = (e) => {
-    const { name, value, type, checked } = e.target
-    setMenuFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value
-    }))
+    const { name, value } = e.target
+    setMenuFormData(prev => ({ ...prev, [name]: value }))
     if (menuErrors[name]) {
       setMenuErrors(prev => ({ ...prev, [name]: '' }))
     }
+  }
+
+  const handleIngredientSelection = (ingredientId) => {
+    setMenuFormData(prev => ({
+      ...prev,
+      selectedIngredients: prev.selectedIngredients.includes(ingredientId)
+        ? prev.selectedIngredients.filter(id => id !== ingredientId)
+        : [...prev.selectedIngredients, ingredientId]
+    }))
   }
 
   const validateMenuForm = () => {
@@ -228,56 +187,38 @@ export default function ShopOwnerDashboard() {
 
     setIsSaving(true)
     try {
+      const payload = {
+        name: menuFormData.name,
+        price: parseFloat(menuFormData.price),
+        category: menuFormData.category,
+        description: menuFormData.description,
+        ingredients: menuFormData.selectedIngredients
+      }
+
+      let res
       if (editingItem) {
-        // Update existing item
-        const res = await fetch(`/api/menu-items/${editingItem.id}`, {
+        res = await fetch(`/api/menu-items/${editingItem.id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name: menuFormData.name,
-            price: parseFloat(menuFormData.price),
-            category: menuFormData.category,
-            description: menuFormData.description,
-            available: menuFormData.available
-          })
+          body: JSON.stringify(payload)
         })
-
-        const data = await res.json()
-        
-        if (data.success) {
-          setMenuItems(menuItems.map(item => 
-            item.id === editingItem.id ? { ...data.menuItem, id: data.menuItem._id } : item
-          ))
-          closeMenuModal()
-        } else {
-          setMenuErrors({ general: data.message || 'Failed to update menu item' })
-        }
       } else {
-        // Add new item
-        const res = await fetch('/api/menu-items', {
+        res = await fetch('/api/menu-items', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            shopId: shopData._id,
-            name: menuFormData.name,
-            price: parseFloat(menuFormData.price),
-            category: menuFormData.category,
-            description: menuFormData.description,
-            available: menuFormData.available
-          })
+          body: JSON.stringify({ ...payload, shopId: shopData._id })
         })
+      }
 
-        const data = await res.json()
-        
-        if (data.success) {
-          setMenuItems([...menuItems, { ...data.menuItem, id: data.menuItem._id }])
-          closeMenuModal()
-        } else {
-          setMenuErrors({ general: data.message || 'Failed to add menu item' })
-        }
+      const data = await res.json()
+      
+      if (data.success) {
+        await loadMenuItems(shopData._id)
+        setShowMenuModal(false)
+      } else {
+        setMenuErrors({ general: data.message })
       }
     } catch (err) {
-      console.error('Error saving menu item:', err)
       setMenuErrors({ general: 'Failed to save menu item' })
     } finally {
       setIsSaving(false)
@@ -285,22 +226,18 @@ export default function ShopOwnerDashboard() {
   }
 
   const handleDeleteMenuItem = async (itemId) => {
-    if (!confirm('Are you sure you want to delete this menu item?')) return
+    if (!confirm('Delete this menu item?')) return
 
     try {
-      const res = await fetch(`/api/menu-items/${itemId}`, {
-        method: 'DELETE'
-      })
-
+      const res = await fetch(`/api/menu-items/${itemId}`, { method: 'DELETE' })
       const data = await res.json()
       
       if (data.success) {
         setMenuItems(menuItems.filter(item => item.id !== itemId))
       } else {
-        alert(data.message || 'Failed to delete menu item')
+        alert(data.message)
       }
     } catch (err) {
-      console.error('Error deleting menu item:', err)
       alert('Failed to delete menu item')
     }
   }
@@ -310,77 +247,190 @@ export default function ShopOwnerDashboard() {
       const res = await fetch(`/api/menu-items/${itemId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ available: undefined }) // Will toggle
+        body: JSON.stringify({ action: 'toggle' })
       })
 
       const data = await res.json()
       
       if (data.success) {
-        setMenuItems(menuItems.map(item =>
-          item.id === itemId ? { ...data.menuItem, id: data.menuItem._id } : item
-        ))
+        await loadMenuItems(shopData._id)
       } else {
-        alert(data.message || 'Failed to update availability')
+        alert(data.message)
       }
     } catch (err) {
-      console.error('Error toggling availability:', err)
       alert('Failed to update availability')
     }
   }
 
-  const getOrderStatusColor = (status) => {
-    switch (status) {
-      case 'new': return 'bg-blue-100 text-blue-800'
-      case 'preparing': return 'bg-yellow-100 text-yellow-800'
-      case 'ready': return 'bg-green-100 text-green-800'
-      case 'completed': return 'bg-gray-100 text-gray-800'
-      default: return 'bg-gray-100 text-gray-800'
+  // Ingredient Management
+  const openAddIngredientModal = () => {
+    setEditingIngredient(null)
+    setIngredientFormData({
+      name: '',
+      stock: '',
+      unit: 'pieces',
+      lowStockThreshold: '10'
+    })
+    setIngredientErrors({})
+    setShowIngredientModal(true)
+  }
+
+  const openEditIngredientModal = (ingredient) => {
+    setEditingIngredient(ingredient)
+    setIngredientFormData({
+      name: ingredient.name,
+      stock: ingredient.stock.toString(),
+      unit: ingredient.unit,
+      lowStockThreshold: ingredient.lowStockThreshold.toString()
+    })
+    setIngredientErrors({})
+    setShowIngredientModal(true)
+  }
+
+  const handleIngredientInputChange = (e) => {
+    const { name, value } = e.target
+    setIngredientFormData(prev => ({ ...prev, [name]: value }))
+    if (ingredientErrors[name]) {
+      setIngredientErrors(prev => ({ ...prev, [name]: '' }))
+    }
+  }
+
+  const validateIngredientForm = () => {
+    const errors = {}
+    if (!ingredientFormData.name.trim()) errors.name = 'Name is required'
+    if (ingredientFormData.stock === '' || parseFloat(ingredientFormData.stock) < 0) 
+      errors.stock = 'Valid stock is required'
+    if (!ingredientFormData.unit) errors.unit = 'Unit is required'
+    setIngredientErrors(errors)
+    return Object.keys(errors).length === 0
+  }
+
+  const handleSaveIngredient = async () => {
+    if (!validateIngredientForm()) return
+
+    setIsSaving(true)
+    try {
+      const payload = {
+        name: ingredientFormData.name,
+        stock: parseFloat(ingredientFormData.stock),
+        unit: ingredientFormData.unit,
+        lowStockThreshold: parseFloat(ingredientFormData.lowStockThreshold)
+      }
+
+      let res
+      if (editingIngredient) {
+        res = await fetch(`/api/ingredients/${editingIngredient.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        })
+      } else {
+        res = await fetch('/api/ingredients', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ...payload, shopId: shopData._id })
+        })
+      }
+
+      const data = await res.json()
+      
+      if (data.success) {
+        await Promise.all([
+          loadIngredients(shopData._id),
+          loadMenuItems(shopData._id) // Refresh menu items to update availability
+        ])
+        setShowIngredientModal(false)
+      } else {
+        setIngredientErrors({ general: data.message })
+      }
+    } catch (err) {
+      setIngredientErrors({ general: 'Failed to save ingredient' })
+    } finally {
+      setIsSaving(false)
+    }
+  }
+
+  const handleDeleteIngredient = async (ingredientId) => {
+    if (!confirm('Delete this ingredient? Menu items using it will be affected.')) return
+
+    try {
+      const res = await fetch(`/api/ingredients/${ingredientId}`, { method: 'DELETE' })
+      const data = await res.json()
+      
+      if (data.success) {
+        await Promise.all([
+          loadIngredients(shopData._id),
+          loadMenuItems(shopData._id)
+        ])
+      } else {
+        alert(data.message)
+      }
+    } catch (err) {
+      alert('Failed to delete ingredient')
+    }
+  }
+
+  const handleStockUpdate = async (ingredientId, operation) => {
+    try {
+      const res = await fetch(`/api/ingredients/${ingredientId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ operation, amount: 1 })
+      })
+
+      const data = await res.json()
+      
+      if (data.success) {
+        await Promise.all([
+          loadIngredients(shopData._id),
+          loadMenuItems(shopData._id) // Refresh to update menu availability
+        ])
+      }
+    } catch (err) {
+      console.error('Failed to update stock')
     }
   }
 
   const getStockStatus = (ingredient) => {
-    if (ingredient.stock <= ingredient.lowStockThreshold) {
-      return { color: 'text-red-600', icon: AlertTriangle, status: 'Low Stock' }
+    if (ingredient.stock <= 0) {
+      return { color: 'text-red-600', icon: AlertTriangle, status: 'Out of Stock', bgColor: 'bg-red-50' }
     }
-    return { color: 'text-green-600', icon: CheckCircle, status: 'In Stock' }
+    if (ingredient.stock <= ingredient.lowStockThreshold) {
+      return { color: 'text-orange-600', icon: AlertTriangle, status: 'Low Stock', bgColor: 'bg-orange-50' }
+    }
+    return { color: 'text-green-600', icon: CheckCircle, status: 'In Stock', bgColor: 'bg-green-50' }
+  }
+
+  const handleLogout = async () => {
+    await signOut({ redirect: false })
+    router.push('/')
   }
 
   const lowStockCount = ingredients.filter(ing => ing.stock <= ing.lowStockThreshold).length
-  const newOrdersCount = orders.filter(order => order.status === 'new').length
+  const outOfStockCount = ingredients.filter(ing => ing.stock <= 0).length
+  const unavailableMenuItems = menuItems.filter(item => !item.available)
 
-  // Loading state
   if (status === 'loading' || isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="flex items-center space-x-2">
           <Loader className="h-5 w-5 animate-spin text-orange-600" />
-          <span className="text-gray-600">Loading shop dashboard...</span>
+          <span className="text-gray-600">Loading dashboard...</span>
         </div>
       </div>
     )
   }
 
-  // Error state
-  if (error) {
+  if (error || !shopData) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Error</h2>
-          <p className="text-gray-600 mb-4">{error}</p>
-          <Button onClick={() => router.push('/')}>Go Home</Button>
-        </div>
-      </div>
-    )
-  }
-
-  // No shop found
-  if (!shopData) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">No Shop Registered</h2>
-          <p className="text-gray-600 mb-4">You need to register your shop first</p>
-          <Button onClick={() => router.push('/shop-registration')}>Register Shop</Button>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            {error || 'No Shop Registered'}
+          </h2>
+          <Button onClick={() => router.push(error ? '/' : '/shop-registration')}>
+            {error ? 'Go Home' : 'Register Shop'}
+          </Button>
         </div>
       </div>
     )
@@ -388,15 +438,12 @@ export default function ShopOwnerDashboard() {
 
   const tabs = [
     { id: 'dashboard', name: 'Dashboard', icon: BarChart3 },
-    { id: 'orders', name: 'Orders', icon: ShoppingBag, badge: newOrdersCount },
-    { id: 'menu', name: 'Menu', icon: Package },
-    { id: 'ingredients', name: 'Ingredients', icon: Package, badge: lowStockCount },
-    { id: 'settings', name: 'Settings', icon: Settings }
+    { id: 'menu', name: 'Menu', icon: Package, badge: unavailableMenuItems.length },
+    { id: 'ingredients', name: 'Ingredients', icon: Package, badge: lowStockCount }
   ]
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
       <header className="bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
@@ -406,26 +453,6 @@ export default function ShopOwnerDashboard() {
             </div>
             
             <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                <span className="text-sm text-gray-600">Shop Status:</span>
-                <Button
-                  variant={shopOpen ? "default" : "secondary"}
-                  size="sm"
-                  onClick={handleShopStatusToggle}
-                >
-                  {shopOpen ? 'Open' : 'Closed'}
-                </Button>
-              </div>
-              
-              <Button variant="ghost" size="sm">
-                <Bell className="h-4 w-4" />
-                {(newOrdersCount + lowStockCount) > 0 && (
-                  <Badge className="ml-1 h-5 w-5 rounded-full p-0 flex items-center justify-center">
-                    {newOrdersCount + lowStockCount}
-                  </Badge>
-                )}
-              </Button>
-
               <Button variant="ghost" size="sm" onClick={handleLogout}>
                 <LogOut className="h-4 w-4 mr-2" />
                 Logout
@@ -437,7 +464,6 @@ export default function ShopOwnerDashboard() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-          {/* Sidebar */}
           <div className="lg:col-span-1">
             <Card>
               <CardContent className="p-0">
@@ -469,9 +495,7 @@ export default function ShopOwnerDashboard() {
             </Card>
           </div>
 
-          {/* Main Content */}
           <div className="lg:col-span-4">
-            {/* Dashboard */}
             {activeTab === 'dashboard' && (
               <div className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -479,162 +503,78 @@ export default function ShopOwnerDashboard() {
                     <CardContent className="p-6">
                       <div className="flex items-center justify-between">
                         <div>
-                          <p className="text-sm text-gray-600">New Orders</p>
-                          <p className="text-3xl font-bold text-orange-600">{newOrdersCount}</p>
-                        </div>
-                        <ShoppingBag className="h-8 w-8 text-orange-600" />
-                      </div>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card>
-                    <CardContent className="p-6">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-sm text-gray-600">Today&apos;s Revenue</p>
-                          <p className="text-3xl font-bold text-green-600">R{(orders.reduce((sum, order) => sum + order.total, 0)).toFixed(2)}</p>
-                        </div>
-                        <BarChart3 className="h-8 w-8 text-green-600" />
-                      </div>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card>
-                    <CardContent className="p-6">
-                      <div className="flex items-center justify-between">
-                        <div>
                           <p className="text-sm text-gray-600">Menu Items</p>
                           <p className="text-3xl font-bold text-blue-600">{menuItems.length}</p>
+                          {unavailableMenuItems.length > 0 && (
+                            <p className="text-xs text-red-600 mt-1">{unavailableMenuItems.length} unavailable</p>
+                          )}
                         </div>
                         <Package className="h-8 w-8 text-blue-600" />
                       </div>
                     </CardContent>
                   </Card>
+                  
+                  <Card>
+                    <CardContent className="p-6">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm text-gray-600">Total Ingredients</p>
+                          <p className="text-3xl font-bold text-green-600">{ingredients.length}</p>
+                          {lowStockCount > 0 && (
+                            <p className="text-xs text-orange-600 mt-1">{lowStockCount} low stock</p>
+                          )}
+                        </div>
+                        <Package className="h-8 w-8 text-green-600" />
+                      </div>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card>
+                    <CardContent className="p-6">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm text-gray-600">Out of Stock</p>
+                          <p className="text-3xl font-bold text-red-600">{outOfStockCount}</p>
+                        </div>
+                        <AlertTriangle className="h-8 w-8 text-red-600" />
+                      </div>
+                    </CardContent>
+                  </Card>
                 </div>
 
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Shop Information</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <p className="text-sm text-gray-600">Location</p>
-                        <p className="font-medium">{shopData.address}, {shopData.city}</p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-600">Cuisine Type</p>
-                        <p className="font-medium">{shopData.cuisine}</p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-600">Contact</p>
-                        <p className="font-medium">{shopData.phone}</p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-gray-600">Owner</p>
-                        <p className="font-medium">{shopData.ownerName}</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Recent Orders</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {orders.slice(0, 3).map(order => (
-                        <div key={order.id} className="flex items-center justify-between p-4 border rounded-lg">
-                          <div>
-                            <p className="font-medium">{order.id}</p>
-                            <p className="text-sm text-gray-600">{order.customerName} • R{order.total}</p>
-                          </div>
-                          <Badge className={getOrderStatusColor(order.status)}>
-                            {order.status}
-                          </Badge>
+                {(lowStockCount > 0 || unavailableMenuItems.length > 0) && (
+                  <Card>
+                    <CardHeader>
+                      <CardTitle className="flex items-center space-x-2">
+                        <AlertIcon className="h-5 w-5 text-orange-600" />
+                        <span>Alerts</span>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      {outOfStockCount > 0 && (
+                        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                          <p className="font-medium text-red-800">{outOfStockCount} ingredient(s) out of stock</p>
+                          <p className="text-sm text-red-600 mt-1">Restock immediately to avoid menu disruptions</p>
                         </div>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
+                      )}
+                      {lowStockCount > 0 && (
+                        <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                          <p className="font-medium text-orange-800">{lowStockCount} ingredient(s) running low</p>
+                          <p className="text-sm text-orange-600 mt-1">Consider restocking soon</p>
+                        </div>
+                      )}
+                      {unavailableMenuItems.length > 0 && (
+                        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                          <p className="font-medium text-yellow-800">{unavailableMenuItems.length} menu item(s) unavailable</p>
+                          <p className="text-sm text-yellow-600 mt-1">Due to ingredient shortages</p>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                )}
               </div>
             )}
 
-            {/* Orders */}
-            {activeTab === 'orders' && (
-              <Card>
-                <CardHeader>
-                  <CardTitle>Order Management</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {orders.map(order => (
-                      <div key={order.id} className="border rounded-lg p-4">
-                        <div className="flex items-center justify-between mb-4">
-                          <div>
-                            <h4 className="font-medium">{order.id}</h4>
-                            <p className="text-sm text-gray-600">
-                              {order.customerName} • {new Date(order.orderTime).toLocaleTimeString()}
-                            </p>
-                          </div>
-                          <Badge className={getOrderStatusColor(order.status)}>
-                            {order.status}
-                          </Badge>
-                        </div>
-                        
-                        <div className="mb-4">
-                          {order.items.map((item, index) => (
-                            <div key={index} className="flex justify-between text-sm">
-                              <span>{item.quantity}x {item.name}</span>
-                              <span>R{(item.price * item.quantity).toFixed(2)}</span>
-                            </div>
-                          ))}
-                          <div className="border-t pt-2 mt-2 font-medium">
-                            Total: R{order.total.toFixed(2)}
-                          </div>
-                        </div>
-                        
-                        {order.specialInstructions && (
-                          <div className="mb-4 p-2 bg-yellow-50 rounded text-sm">
-                            <strong>Special Instructions:</strong> {order.specialInstructions}
-                          </div>
-                        )}
-                        
-                        <div className="flex space-x-2">
-                          {order.status === 'new' && (
-                            <Button 
-                              size="sm" 
-                              onClick={() => handleOrderStatusUpdate(order.id, 'preparing')}
-                            >
-                              Accept Order
-                            </Button>
-                          )}
-                          {order.status === 'preparing' && (
-                            <Button 
-                              size="sm" 
-                              onClick={() => handleOrderStatusUpdate(order.id, 'ready')}
-                            >
-                              Mark Ready
-                            </Button>
-                          )}
-                          {order.status === 'ready' && (
-                            <Button 
-                              size="sm" 
-                              onClick={() => handleOrderStatusUpdate(order.id, 'completed')}
-                            >
-                              Mark Completed
-                            </Button>
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Menu */}
             {activeTab === 'menu' && (
               <Card>
                 <CardHeader>
@@ -669,7 +609,41 @@ export default function ShopOwnerDashboard() {
                               {item.description && (
                                 <p className="text-sm text-gray-700 mb-2">{item.description}</p>
                               )}
-                              <p className="text-lg font-bold text-orange-600">R{item.price.toFixed(2)}</p>
+                              <p className="text-lg font-bold text-orange-600 mb-2">R{item.price.toFixed(2)}</p>
+                              
+                              {item.ingredients && item.ingredients.length > 0 && (
+                                <div className="mt-3">
+                                  <p className="text-xs font-medium text-gray-600 mb-1">Ingredients:</p>
+                                  <div className="flex flex-wrap gap-1">
+                                    {item.ingredients.map((ing, idx) => {
+                                      const ingredient = ingredients.find(i => i.id === ing._id || i.id === ing)
+                                      const isLowStock = ingredient && ingredient.stock <= ingredient.lowStockThreshold
+                                      const isOutOfStock = ingredient && ingredient.stock <= 0
+                                      
+                                      return (
+                                        <Badge 
+                                          key={idx} 
+                                          variant="outline"
+                                          className={
+                                            isOutOfStock ? 'bg-red-50 text-red-700 border-red-200' :
+                                            isLowStock ? 'bg-orange-50 text-orange-700 border-orange-200' :
+                                            'bg-gray-50'
+                                          }
+                                        >
+                                          {ing.name || ingredient?.name || 'Unknown'}
+                                          {ingredient && ` (${ingredient.stock})`}
+                                        </Badge>
+                                      )
+                                    })}
+                                  </div>
+                                </div>
+                              )}
+                              
+                              {!item.available && item.unavailableReason && (
+                                <div className="mt-2 text-xs text-red-600 bg-red-50 p-2 rounded">
+                                  {item.unavailableReason}
+                                </div>
+                              )}
                             </div>
                             <div className="flex items-center space-x-2 ml-4">
                               <Button
@@ -677,7 +651,7 @@ export default function ShopOwnerDashboard() {
                                 size="sm"
                                 onClick={() => handleToggleAvailability(item.id)}
                               >
-                                {item.available ? 'Mark Unavailable' : 'Mark Available'}
+                                {item.available ? 'Disable' : 'Enable'}
                               </Button>
                               <Button
                                 variant="ghost"
@@ -704,136 +678,89 @@ export default function ShopOwnerDashboard() {
               </Card>
             )}
 
-            {/* Ingredients */}
             {activeTab === 'ingredients' && (
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center justify-between">
                     Ingredient Management
-                    <Button size="sm">
+                    <Button size="sm" onClick={openAddIngredientModal}>
                       <Plus className="h-4 w-4 mr-2" />
                       Add Ingredient
                     </Button>
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-4">
-                    {ingredients.map(ingredient => {
-                      const stockStatus = getStockStatus(ingredient)
-                      const StatusIcon = stockStatus.icon
-                      
-                      return (
-                        <div key={ingredient.id} className="flex items-center justify-between p-4 border rounded-lg">
-                          <div>
-                            <h4 className="font-medium">{ingredient.name}</h4>
-                            <p className="text-sm text-gray-600">
-                              {ingredient.stock} {ingredient.unit} remaining
-                            </p>
-                          </div>
-                          <div className="flex items-center space-x-4">
-                            <div className={`flex items-center space-x-1 ${stockStatus.color}`}>
-                              <StatusIcon className="h-4 w-4" />
-                              <span className="text-sm">{stockStatus.status}</span>
+                  {ingredients.length === 0 ? (
+                    <div className="text-center py-12">
+                      <Package className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                      <p className="text-gray-600 mb-4">No ingredients yet</p>
+                      <Button onClick={openAddIngredientModal}>Add Your First Ingredient</Button>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {ingredients.map(ingredient => {
+                        const stockStatus = getStockStatus(ingredient)
+                        const StatusIcon = stockStatus.icon
+                        
+                        return (
+                          <div key={ingredient.id} className={`border rounded-lg p-4 ${stockStatus.bgColor}`}>
+                            <div className="flex items-center justify-between">
+                              <div className="flex-1">
+                                <div className="flex items-center space-x-3 mb-1">
+                                  <h4 className="font-medium">{ingredient.name}</h4>
+                                  <div className={`flex items-center space-x-1 ${stockStatus.color}`}>
+                                    <StatusIcon className="h-4 w-4" />
+                                    <span className="text-sm font-medium">{stockStatus.status}</span>
+                                  </div>
+                                </div>
+                                <p className="text-sm text-gray-600">
+                                  {ingredient.stock} {ingredient.unit} remaining
+                                  {ingredient.stock <= ingredient.lowStockThreshold && 
+                                    ` (Low threshold: ${ingredient.lowStockThreshold})`
+                                  }
+                                </p>
+                              </div>
+                              <div className="flex items-center space-x-3">
+                                <div className="flex items-center space-x-2">
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => handleStockUpdate(ingredient.id, 'subtract')}
+                                    disabled={ingredient.stock <= 0}
+                                  >
+                                    -
+                                  </Button>
+                                  <span className="w-12 text-center font-medium">{ingredient.stock}</span>
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => handleStockUpdate(ingredient.id, 'add')}
+                                  >
+                                    +
+                                  </Button>
+                                </div>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => openEditIngredientModal(ingredient)}
+                                >
+                                  <Edit className="h-4 w-4" />
+                                </Button>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => handleDeleteIngredient(ingredient.id)}
+                                  className="text-red-600 hover:text-red-700"
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </div>
                             </div>
-                            <div className="flex items-center space-x-2">
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => handleIngredientUpdate(ingredient.id, Math.max(0, ingredient.stock - 1))}
-                              >
-                                -
-                              </Button>
-                              <span className="w-12 text-center">{ingredient.stock}</span>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => handleIngredientUpdate(ingredient.id, ingredient.stock + 1)}
-                              >
-                                +
-                              </Button>
-                            </div>
                           </div>
-                        </div>
-                      )
-                    })}
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Settings */}
-            {activeTab === 'settings' && (
-              <Card>
-                <CardHeader>
-                  <CardTitle>Restaurant Settings</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div>
-                    <h3 className="font-medium mb-3">Business Information</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label>Restaurant Name</Label>
-                        <Input defaultValue={shopData.businessName} className="mt-1" />
-                      </div>
-                      <div>
-                        <Label>Contact Phone</Label>
-                        <Input defaultValue={shopData.phone} className="mt-1" />
-                      </div>
-                      <div>
-                        <Label>Address</Label>
-                        <Input defaultValue={shopData.address} className="mt-1" />
-                      </div>
-                      <div>
-                        <Label>City</Label>
-                        <Input defaultValue={shopData.city} className="mt-1" />
-                      </div>
+                        )
+                      })}
                     </div>
-                  </div>
-                  
-                  <div>
-                    <h3 className="font-medium mb-3">Banking Information</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <Label>Bank Name</Label>
-                        <Input defaultValue={shopData.bankName} className="mt-1" disabled />
-                      </div>
-                      <div>
-                        <Label>Account Holder</Label>
-                        <Input defaultValue={shopData.accountHolder} className="mt-1" disabled />
-                      </div>
-                    </div>
-                    <p className="text-sm text-gray-500 mt-2">Contact support to update banking information</p>
-                  </div>
-                  
-                  <div>
-                    <h3 className="font-medium mb-3">Operating Hours</h3>
-                    <div className="space-y-2">
-                      {Object.entries(shopData.operatingHours || {}).map(([day, hours]) => (
-                        <div key={day} className="flex items-center justify-between text-sm">
-                          <span className="capitalize font-medium">{day}</span>
-                          <span className="text-gray-600">
-                            {hours.closed ? 'Closed' : `${hours.open} - ${hours.close}`}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <h3 className="font-medium mb-3">Notifications</h3>
-                    <div className="space-y-3">
-                      <label className="flex items-center justify-between">
-                        <span>New order notifications</span>
-                        <input type="checkbox" defaultChecked className="rounded" />
-                      </label>
-                      <label className="flex items-center justify-between">
-                        <span>Low stock alerts</span>
-                        <input type="checkbox" defaultChecked className="rounded" />
-                      </label>
-                    </div>
-                  </div>
-                  
-                  <Button>Save Settings</Button>
+                  )}
                 </CardContent>
               </Card>
             )}
@@ -849,10 +776,7 @@ export default function ShopOwnerDashboard() {
               <h2 className="text-xl font-bold">
                 {editingItem ? 'Edit Menu Item' : 'Add New Menu Item'}
               </h2>
-              <button
-                onClick={closeMenuModal}
-                className="text-gray-400 hover:text-gray-600"
-              >
+              <button onClick={() => setShowMenuModal(false)} className="text-gray-400 hover:text-gray-600">
                 <X className="h-5 w-5" />
               </button>
             </div>
@@ -874,9 +798,7 @@ export default function ShopOwnerDashboard() {
                   placeholder="e.g., Classic Beef Burger"
                   className="mt-1"
                 />
-                {menuErrors.name && (
-                  <p className="text-sm text-red-600 mt-1">{menuErrors.name}</p>
-                )}
+                {menuErrors.name && <p className="text-sm text-red-600 mt-1">{menuErrors.name}</p>}
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -893,9 +815,7 @@ export default function ShopOwnerDashboard() {
                     placeholder="89.00"
                     className="mt-1"
                   />
-                  {menuErrors.price && (
-                    <p className="text-sm text-red-600 mt-1">{menuErrors.price}</p>
-                  )}
+                  {menuErrors.price && <p className="text-sm text-red-600 mt-1">{menuErrors.price}</p>}
                 </div>
 
                 <div>
@@ -914,13 +834,8 @@ export default function ShopOwnerDashboard() {
                     <option value="Sides">Sides</option>
                     <option value="Drinks">Drinks</option>
                     <option value="Desserts">Desserts</option>
-                    <option value="Kota">Kota</option>
-                    <option value="Dagwood">Dagwood</option>
-                    <option value="Hotdog">Hotdog</option>
                   </select>
-                  {menuErrors.category && (
-                    <p className="text-sm text-red-600 mt-1">{menuErrors.category}</p>
-                  )}
+                  {menuErrors.category && <p className="text-sm text-red-600 mt-1">{menuErrors.category}</p>}
                 </div>
               </div>
 
@@ -931,39 +846,64 @@ export default function ShopOwnerDashboard() {
                   name="description"
                   value={menuFormData.description}
                   onChange={handleMenuInputChange}
-                  placeholder="Describe your item (optional)"
+                  placeholder="Describe your item"
                   className="mt-1"
                   rows={3}
                 />
               </div>
 
-              <div className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  id="available"
-                  name="available"
-                  checked={menuFormData.available}
-                  onChange={handleMenuInputChange}
-                  className="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
-                />
-                <Label htmlFor="available" className="mb-0">
-                  Available for customers
-                </Label>
+              <div>
+                <Label>Select Ingredients</Label>
+                <div className="mt-2 border rounded-lg p-4 max-h-48 overflow-y-auto">
+                  {ingredients.length === 0 ? (
+                    <p className="text-sm text-gray-500">No ingredients available. Add ingredients first.</p>
+                  ) : (
+                    <div className="space-y-2">
+                      {ingredients.map(ingredient => {
+                        const isSelected = menuFormData.selectedIngredients.includes(ingredient.id)
+                        const isLowStock = ingredient.stock <= ingredient.lowStockThreshold
+                        const isOutOfStock = ingredient.stock <= 0
+                        
+                        return (
+                          <label
+                            key={ingredient.id}
+                            className={`flex items-center space-x-3 p-2 rounded cursor-pointer hover:bg-gray-50 ${
+                              isOutOfStock ? 'opacity-50' : ''
+                            }`}
+                          >
+                            <input
+                              type="checkbox"
+                              checked={isSelected}
+                              onChange={() => handleIngredientSelection(ingredient.id)}
+                              className="h-4 w-4"
+                            />
+                            <span className="flex-1">{ingredient.name}</span>
+                            <span className="text-sm text-gray-500">
+                              {ingredient.stock} {ingredient.unit}
+                            </span>
+                            {isOutOfStock && (
+                              <Badge variant="secondary" className="text-red-600">Out</Badge>
+                            )}
+                            {!isOutOfStock && isLowStock && (
+                              <Badge variant="secondary" className="text-orange-600">Low</Badge>
+                            )}
+                          </label>
+                        )
+                      })}
+                    </div>
+                  )}
+                </div>
+                <p className="text-xs text-gray-500 mt-2">
+                  Item availability will be automatically managed based on ingredient stock
+                </p>
               </div>
             </div>
 
             <div className="sticky bottom-0 bg-gray-50 px-6 py-4 flex items-center justify-end space-x-3 border-t">
-              <Button
-                variant="outline"
-                onClick={closeMenuModal}
-                disabled={isSaving}
-              >
+              <Button variant="outline" onClick={() => setShowMenuModal(false)} disabled={isSaving}>
                 Cancel
               </Button>
-              <Button
-                onClick={handleSaveMenuItem}
-                disabled={isSaving}
-              >
+              <Button onClick={handleSaveMenuItem} disabled={isSaving}>
                 {isSaving ? (
                   <>
                     <Loader className="h-4 w-4 mr-2 animate-spin" />
@@ -973,6 +913,115 @@ export default function ShopOwnerDashboard() {
                   <>
                     <Save className="h-4 w-4 mr-2" />
                     {editingItem ? 'Update Item' : 'Add Item'}
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Ingredient Modal */}
+      {showIngredientModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg max-w-md w-full">
+            <div className="border-b px-6 py-4 flex items-center justify-between">
+              <h2 className="text-xl font-bold">
+                {editingIngredient ? 'Edit Ingredient' : 'Add New Ingredient'}
+              </h2>
+              <button onClick={() => setShowIngredientModal(false)} className="text-gray-400 hover:text-gray-600">
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="p-6 space-y-4">
+              {ingredientErrors.general && (
+                <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-md text-sm">
+                  {ingredientErrors.general}
+                </div>
+              )}
+
+              <div>
+                <Label htmlFor="ing-name">Ingredient Name *</Label>
+                <Input
+                  id="ing-name"
+                  name="name"
+                  value={ingredientFormData.name}
+                  onChange={handleIngredientInputChange}
+                  placeholder="e.g., Beef Patties"
+                  className="mt-1"
+                />
+                {ingredientErrors.name && <p className="text-sm text-red-600 mt-1">{ingredientErrors.name}</p>}
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="stock">Stock Quantity *</Label>
+                  <Input
+                    id="stock"
+                    name="stock"
+                    type="number"
+                    min="0"
+                    value={ingredientFormData.stock}
+                    onChange={handleIngredientInputChange}
+                    placeholder="50"
+                    className="mt-1"
+                  />
+                  {ingredientErrors.stock && <p className="text-sm text-red-600 mt-1">{ingredientErrors.stock}</p>}
+                </div>
+
+                <div>
+                  <Label htmlFor="unit">Unit *</Label>
+                  <select
+                    id="unit"
+                    name="unit"
+                    value={ingredientFormData.unit}
+                    onChange={handleIngredientInputChange}
+                    className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  >
+                    <option value="pieces">Pieces</option>
+                    <option value="kg">Kilograms</option>
+                    <option value="grams">Grams</option>
+                    <option value="liters">Liters</option>
+                    <option value="ml">Milliliters</option>
+                    <option value="units">Units</option>
+                    <option value="packs">Packs</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="threshold">Low Stock Alert Threshold</Label>
+                <Input
+                  id="threshold"
+                  name="lowStockThreshold"
+                  type="number"
+                  min="0"
+                  value={ingredientFormData.lowStockThreshold}
+                  onChange={handleIngredientInputChange}
+                  placeholder="10"
+                  className="mt-1"
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  You&apos;ll be alerted when stock falls below this level
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-gray-50 px-6 py-4 flex items-center justify-end space-x-3 border-t">
+              <Button variant="outline" onClick={() => setShowIngredientModal(false)} disabled={isSaving}>
+                Cancel
+              </Button>
+              <Button onClick={handleSaveIngredient} disabled={isSaving}>
+                {isSaving ? (
+                  <>
+                    <Loader className="h-4 w-4 mr-2 animate-spin" />
+                    Saving...
+                  </>
+                ) : (
+                  <>
+                    <Save className="h-4 w-4 mr-2" />
+                    {editingIngredient ? 'Update' : 'Add'}
                   </>
                 )}
               </Button>

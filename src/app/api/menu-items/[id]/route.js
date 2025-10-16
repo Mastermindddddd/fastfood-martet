@@ -2,9 +2,20 @@
 import { NextResponse } from "next/server";
 import mongoose from "mongoose";
 import MenuItem from "@/models/MenuItem";
+import Ingredient from "@/models/Ingredient";
 import Shop from "@/models/Shop";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+
+// Helper function to check ingredient availability
+async function checkIngredientAvailability(ingredientIds) {
+  const ingredients = await Ingredient.find({ _id: { $in: ingredientIds } });
+  const unavailableIngredients = ingredients.filter(ing => !ing.isAvailable || ing.stock <= 0);
+  return {
+    available: unavailableIngredients.length === 0,
+    unavailableIngredients: unavailableIngredients.map(ing => ing.name)
+  };
+}
 
 // PUT - Update menu item
 export async function PUT(req, { params }) {
@@ -18,16 +29,14 @@ export async function PUT(req, { params }) {
       );
     }
 
-    // Connect to database
     if (mongoose.connection.readyState !== 1) {
       await mongoose.connect(process.env.MONGO_URL);
     }
 
     const { id } = params;
     const body = await req.json();
-    const { name, price, category, description, available } = body;
+    const { name, price, category, description, ingredients } = body;
 
-    // Find menu item
     const menuItem = await MenuItem.findById(id);
     if (!menuItem) {
       return NextResponse.json(
@@ -36,13 +45,27 @@ export async function PUT(req, { params }) {
       );
     }
 
-    // Verify ownership
     const shop = await Shop.findById(menuItem.shopId);
     if (!shop || shop.email !== session.user.email) {
       return NextResponse.json(
         { success: false, message: "Unauthorized to modify this item" },
         { status: 403 }
       );
+    }
+
+    // Check ingredient availability if ingredients are updated
+    let available = menuItem.available;
+    let unavailableReason = menuItem.unavailableReason;
+    
+    const updatedIngredients = ingredients !== undefined ? ingredients : menuItem.ingredients;
+    if (updatedIngredients && updatedIngredients.length > 0) {
+      const availabilityCheck = await checkIngredientAvailability(updatedIngredients);
+      available = availabilityCheck.available;
+      if (!available) {
+        unavailableReason = `Out of stock: ${availabilityCheck.unavailableIngredients.join(', ')}`;
+      } else {
+        unavailableReason = '';
+      }
     }
 
     // Update menu item
@@ -53,10 +76,12 @@ export async function PUT(req, { params }) {
         price: price !== undefined ? parseFloat(price) : menuItem.price,
         category: category || menuItem.category,
         description: description !== undefined ? description : menuItem.description,
-        available: available !== undefined ? available : menuItem.available
+        ingredients: updatedIngredients,
+        available,
+        unavailableReason
       },
       { new: true, runValidators: true }
-    );
+    ).populate('ingredients');
 
     return NextResponse.json({
       success: true,
@@ -85,14 +110,12 @@ export async function DELETE(req, { params }) {
       );
     }
 
-    // Connect to database
     if (mongoose.connection.readyState !== 1) {
       await mongoose.connect(process.env.MONGO_URL);
     }
 
     const { id } = params;
 
-    // Find menu item
     const menuItem = await MenuItem.findById(id);
     if (!menuItem) {
       return NextResponse.json(
@@ -101,7 +124,6 @@ export async function DELETE(req, { params }) {
       );
     }
 
-    // Verify ownership
     const shop = await Shop.findById(menuItem.shopId);
     if (!shop || shop.email !== session.user.email) {
       return NextResponse.json(
@@ -110,7 +132,6 @@ export async function DELETE(req, { params }) {
       );
     }
 
-    // Delete menu item
     await MenuItem.findByIdAndDelete(id);
 
     return NextResponse.json({
@@ -127,7 +148,7 @@ export async function DELETE(req, { params }) {
   }
 }
 
-// PATCH - Toggle availability (quick update)
+// PATCH - Toggle availability or refresh based on ingredients
 export async function PATCH(req, { params }) {
   try {
     const session = await getServerSession(authOptions);
@@ -139,17 +160,15 @@ export async function PATCH(req, { params }) {
       );
     }
 
-    // Connect to database
     if (mongoose.connection.readyState !== 1) {
       await mongoose.connect(process.env.MONGO_URL);
     }
 
     const { id } = params;
     const body = await req.json();
-    const { available } = body;
+    const { action } = body; // 'toggle' or 'refresh'
 
-    // Find menu item
-    const menuItem = await MenuItem.findById(id);
+    const menuItem = await MenuItem.findById(id).populate('ingredients');
     if (!menuItem) {
       return NextResponse.json(
         { success: false, message: "Menu item not found" },
@@ -157,7 +176,6 @@ export async function PATCH(req, { params }) {
       );
     }
 
-    // Verify ownership
     const shop = await Shop.findById(menuItem.shopId);
     if (!shop || shop.email !== session.user.email) {
       return NextResponse.json(
@@ -166,12 +184,40 @@ export async function PATCH(req, { params }) {
       );
     }
 
-    // Toggle or set availability
+    let available = menuItem.available;
+    let unavailableReason = menuItem.unavailableReason;
+
+    if (action === 'refresh' && menuItem.ingredients.length > 0) {
+      // Check ingredient availability
+      const availabilityCheck = await checkIngredientAvailability(
+        menuItem.ingredients.map(ing => ing._id)
+      );
+      available = availabilityCheck.available;
+      unavailableReason = available 
+        ? '' 
+        : `Out of stock: ${availabilityCheck.unavailableIngredients.join(', ')}`;
+    } else {
+      // Manual toggle (only if no ingredient issues)
+      if (menuItem.ingredients.length > 0) {
+        const availabilityCheck = await checkIngredientAvailability(
+          menuItem.ingredients.map(ing => ing._id)
+        );
+        if (!availabilityCheck.available) {
+          return NextResponse.json({
+            success: false,
+            message: `Cannot enable: ${availabilityCheck.unavailableIngredients.join(', ')} out of stock`
+          }, { status: 400 });
+        }
+      }
+      available = !menuItem.available;
+      unavailableReason = '';
+    }
+
     const updatedItem = await MenuItem.findByIdAndUpdate(
       id,
-      { available: available !== undefined ? available : !menuItem.available },
+      { available, unavailableReason },
       { new: true }
-    );
+    ).populate('ingredients');
 
     return NextResponse.json({
       success: true,
