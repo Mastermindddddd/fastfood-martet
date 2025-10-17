@@ -76,16 +76,39 @@ export default async function HomePage() {
             </div>
           </div>
 
-          {/* Image side */}
-          <div className="flex justify-center lg:justify-end">
-            <Image
-              src="/kota.png"
-              alt="Delicious Food"
-              width={500}
-              height={400}
-              className="rounded-3xl w-full max-w-sm sm:max-w-md lg:max-w-full object-cover"
-              priority
-            />
+          <div className="relative flex justify-center lg:justify-end">
+            <div className="relative group">
+              
+              <Image
+                src="/kota.png"
+                alt="Delicious Kota"
+                width={600}
+                height={500}
+                className="relative w-full max-w-sm sm:max-w-md lg:max-w-xl group-hover:scale-105 transition-transform duration-500"
+                priority
+              />
+              
+              {/* Floating badges */}
+              <div className="absolute top-8 -right-4 backdrop-blur-xl p-4 rounded-2xl shadow-2xl animate-float">
+                <div className="flex items-center space-x-2">
+                  <span className="text-3xl">🔥</span>
+                  <div>
+                    <div className="font-bold text-slate-900">Hot & Fresh</div>
+                    <div className="text-sm text-slate-600">30 min delivery</div>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="absolute bottom-8 -left-4 backdrop-blur-xl p-4 rounded-2xl shadow-2xl animate-float-delayed">
+                <div className="flex items-center space-x-2">
+                  <span className="text-3xl">💯</span>
+                  <div>
+                    <div className="font-bold text-slate-900">Quality Food</div>
+                    <div className="text-sm text-slate-600">100% Fresh</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -95,6 +118,46 @@ export default async function HomePage() {
       <section className="py-12 sm:py-16 px-4 bg-slate-50/50">
         <div className="max-w-7xl mx-auto">
           <SectionCards />
+        </div>
+      </section>
+
+      {/* Popular Categories with enhanced cards */}
+      <section className="py-16 px-4 bg-gradient-to-b from-white to-slate-50">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl sm:text-5xl font-black text-slate-900 mb-4">
+              🍽️ Popular on <span className="text-orange-600">FoodHub SA</span>
+            </h2>
+            <p className="text-xl text-slate-600 max-w-2xl mx-auto">
+              Explore South Africa&apos;s favorite fast food delivered to your door
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6">
+            {[
+              { name: 'Burgers', emoji: '🍔', count: '120+', color: 'from-yellow-400 to-orange-500' },
+              { name: 'Kota', emoji: '🥖', count: '200+', color: 'from-orange-400 to-red-500' },
+              { name: 'Pizza', emoji: '🍕', count: '150+', color: 'from-red-400 to-pink-500' },
+              { name: 'Chicken', emoji: '🍗', count: '180+', color: 'from-amber-400 to-orange-500' },
+              { name: 'Pap & Vleis', emoji: '🍖', count: '90+', color: 'from-red-500 to-orange-600' },
+              { name: 'Drinks', emoji: '🥤', count: '100+', color: 'from-blue-400 to-cyan-500' }
+            ].map((category) => (
+              <div 
+                key={category.name} 
+                className="group relative bg-white p-6 rounded-3xl text-center hover:shadow-2xl transition-all duration-300 cursor-pointer border-2 border-slate-100 hover:border-orange-300 hover:-translate-y-2 overflow-hidden"
+              >
+                <div className={`absolute inset-0 bg-gradient-to-br ${category.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}></div>
+                
+                <div className="relative z-10">
+                  <div className="text-5xl mb-3 group-hover:scale-125 group-hover:rotate-12 transition-all duration-300">
+                    {category.emoji}
+                  </div>
+                  <h3 className="font-bold text-slate-900 text-lg mb-1">{category.name}</h3>
+                  <p className="text-sm text-orange-600 font-semibold">{category.count} shops</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -178,43 +241,36 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* How It Works Section */}
-      <section className="py-16 sm:py-20 px-4 bg-slate-50">
+      
+      {/* How It Works  */}
+      <section className="py-20 px-4 bg-gradient-to-b from-slate-50 to-white">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12 sm:mb-16 px-4">
-            <h2 className="text-3xl sm:text-4xl font-bold text-slate-800 mb-3 sm:mb-4">How It Works</h2>
-            <p className="text-lg sm:text-xl text-slate-600">Ordering your favorite food is just a few clicks away</p>
+          <div className="text-center mb-16">
+            <h2 className="text-4xl sm:text-5xl font-black text-slate-900 mb-4">
+              Order in <span className="text-orange-600">3 Easy Steps</span>
+            </h2>
+            <p className="text-xl text-slate-600">From craving to eating in minutes! 🚀</p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-6 lg:gap-8 px-4">
-            <div className="text-center">
-              <div className="w-16 h-16 sm:w-18 sm:h-18 lg:w-20 lg:h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
-                <span className="text-2xl sm:text-3xl">📱</span>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
+            {[
+              { step: '1', emoji: '🔍', title: 'Browse & Choose', desc: 'Find your favorite restaurant and pick what you love from hundreds of options' },
+              { step: '2', emoji: '🛒', title: 'Add to Cart', desc: 'Customize your order, add special instructions, and proceed to checkout' },
+              { step: '3', emoji: '🚀', title: 'Fast Delivery', desc: 'Track your order in real-time and enjoy hot, fresh food at your doorstep!' }
+            ].map((item) => (
+              <div key={item.step} className="relative group">
+                <div className="text-center p-8 rounded-3xl bg-white border-2 border-slate-100 hover:border-orange-300 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
+                  <div className="absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-12 bg-gradient-to-r from-orange-600 to-red-600 rounded-full flex items-center justify-center text-white font-black text-xl shadow-lg">
+                    {item.step}
+                  </div>
+                  <div className="text-6xl mb-6 mt-4 group-hover:scale-125 group-hover:rotate-12 transition-all duration-300">
+                    {item.emoji}
+                  </div>
+                  <h3 className="text-2xl font-bold text-slate-900 mb-4">{item.title}</h3>
+                  <p className="text-slate-600 leading-relaxed">{item.desc}</p>
+                </div>
               </div>
-              <h3 className="text-lg sm:text-xl font-bold text-slate-800 mb-2 sm:mb-3">Choose Restaurant</h3>
-              <p className="text-slate-600 text-sm sm:text-base leading-relaxed">Browse through our extensive list of partner restaurants and cuisines</p>
-            </div>
-            <div className="text-center">
-              <div className="w-16 h-16 sm:w-18 sm:h-18 lg:w-20 lg:h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
-                <span className="text-2xl sm:text-3xl">🍕</span>
-              </div>
-              <h3 className="text-lg sm:text-xl font-bold text-slate-800 mb-2 sm:mb-3">Select Items</h3>
-              <p className="text-slate-600 text-sm sm:text-base leading-relaxed">Add your favorite dishes to cart and customize as needed</p>
-            </div>
-            <div className="text-center">
-              <div className="w-16 h-16 sm:w-18 sm:h-18 lg:w-20 lg:h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
-                <span className="text-2xl sm:text-3xl">💳</span>
-              </div>
-              <h3 className="text-lg sm:text-xl font-bold text-slate-800 mb-2 sm:mb-3">Make Payment</h3>
-              <p className="text-slate-600 text-sm sm:text-base leading-relaxed">Choose your preferred payment method and complete the order</p>
-            </div>
-            <div className="text-center">
-              <div className="w-16 h-16 sm:w-18 sm:h-18 lg:w-20 lg:h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
-                <span className="text-2xl sm:text-3xl">🚚</span>
-              </div>
-              <h3 className="text-lg sm:text-xl font-bold text-slate-800 mb-2 sm:mb-3">Fast Delivery</h3>
-              <p className="text-slate-600 text-sm sm:text-base leading-relaxed">Sit back and relax while we deliver your food fresh and hot</p>
-            </div>
+            ))}
           </div>
         </div>
       </section>
@@ -287,35 +343,6 @@ export default async function HomePage() {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Popular Categories Section */}
-      <section className="py-20 px-4 bg-slate-50">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-slate-800 mb-4">Popular Categories</h2>
-            <p className="text-xl text-slate-600">Discover cuisines loved by our customers</p>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-6 gap-6">
-            {[
-              { name: 'Pizza', emoji: '🍕', count: '150+ Restaurants' },
-              { name: 'Burgers', emoji: '🍔', count: '120+ Restaurants' },
-              { name: 'Kota', emoji: '🍔', count: '200+ Restaurants' },
-              { name: 'Mexican', emoji: '🌮', count: '80+ Restaurants' },
-              { name: 'Desserts', emoji: '🍰', count: '90+ Restaurants' },
-              { name: 'Healthy', emoji: '🥗', count: '100+ Restaurants' }
-            ].map((category) => (
-              <div key={category.name} className="bg-white p-6 rounded-2xl text-center hover:shadow-lg transition-all duration-300 cursor-pointer group border border-slate-200 hover:border-orange-300">
-                <div className="text-4xl mb-3 group-hover:scale-110 transition-transform duration-300">
-                  {category.emoji}
-                </div>
-                <h3 className="font-bold text-slate-800 mb-1">{category.name}</h3>
-                <p className="text-sm text-slate-600">{category.count}</p>
-              </div>
-            ))}
           </div>
         </div>
       </section>
