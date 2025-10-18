@@ -1,5 +1,6 @@
 import {AppProvider} from "@/components/AppContext";
 import Header from "@/components/layout/Header";
+import LocationFooterBar from "@/components/LocationFooterBar";
 import { Roboto } from 'next/font/google'
 import './globals.css'
 import {Toaster} from "react-hot-toast";
@@ -85,6 +86,7 @@ export default function RootLayout({ children }) {
           </div>
         </div>
       </footer>
+            <LocationFooterBar />
           </AppProvider>
         </main>
       </body>
