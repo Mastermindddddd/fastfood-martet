@@ -1,9 +1,22 @@
 "use client";
+
 import { SessionProvider } from "next-auth/react";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
+// Create a context
 export const CartContext = createContext({});
+
+// ✅ Create a custom hook for using the context
+export function useCartContext() {
+  return useContext(CartContext);
+}
+
+// (Optional) If you also want an "App" context that holds user data, define it here
+export const AppContext = createContext({});
+export function useAppContext() {
+  return useContext(AppContext);
+}
 
 export function AppProvider({ children }) {
   const [cartProducts, setCartProducts] = useState([]);
@@ -13,8 +26,8 @@ export function AppProvider({ children }) {
 
   // Load cart from session storage
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const cart = sessionStorage.getItem('cart');
+    if (typeof window !== "undefined") {
+      const cart = sessionStorage.getItem("cart");
       if (cart) {
         setCartProducts(JSON.parse(cart));
       }
@@ -23,20 +36,20 @@ export function AppProvider({ children }) {
 
   // Save cart to session storage
   useEffect(() => {
-    if (cartProducts?.length > 0 && typeof window !== 'undefined') {
-      sessionStorage.setItem('cart', JSON.stringify(cartProducts));
+    if (cartProducts?.length > 0 && typeof window !== "undefined") {
+      sessionStorage.setItem("cart", JSON.stringify(cartProducts));
     }
   }, [cartProducts]);
 
   // Load saved location on mount
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const saved = sessionStorage.getItem('userLocation');
+    if (typeof window !== "undefined") {
+      const saved = sessionStorage.getItem("userLocation");
       if (saved) {
         try {
           setUserLocation(JSON.parse(saved));
         } catch (e) {
-          sessionStorage.removeItem('userLocation');
+          sessionStorage.removeItem("userLocation");
         }
       }
     }
@@ -44,27 +57,27 @@ export function AppProvider({ children }) {
 
   function clearCart() {
     setCartProducts([]);
-    if (typeof window !== 'undefined') {
-      sessionStorage.removeItem('cart');
+    if (typeof window !== "undefined") {
+      sessionStorage.removeItem("cart");
     }
   }
 
   function removeCartProduct(indexToRemove) {
-    setCartProducts(prevCartProducts => {
-      const newCartProducts = prevCartProducts.filter((v, index) => index !== indexToRemove);
-      if (typeof window !== 'undefined') {
-        sessionStorage.setItem('cart', JSON.stringify(newCartProducts));
+    setCartProducts((prev) => {
+      const newCartProducts = prev.filter((_, i) => i !== indexToRemove);
+      if (typeof window !== "undefined") {
+        sessionStorage.setItem("cart", JSON.stringify(newCartProducts));
       }
       return newCartProducts;
     });
-    toast.success('Product removed');
+    toast.success("Product removed");
   }
 
   function addToCart(product, size = null, extras = []) {
-    setCartProducts(prevProducts => {
-      const newProducts = [...prevProducts, { ...product, size, extras }];
-      if (typeof window !== 'undefined') {
-        sessionStorage.setItem('cart', JSON.stringify(newProducts));
+    setCartProducts((prev) => {
+      const newProducts = [...prev, { ...product, size, extras }];
+      if (typeof window !== "undefined") {
+        sessionStorage.setItem("cart", JSON.stringify(newProducts));
       }
       return newProducts;
     });
@@ -72,8 +85,8 @@ export function AppProvider({ children }) {
 
   function requestLocation() {
     if (!navigator.geolocation) {
-      setLocationError('Geolocation is not supported by your browser');
-      toast.error('Geolocation is not supported');
+      setLocationError("Geolocation is not supported by your browser");
+      toast.error("Geolocation is not supported");
       return;
     }
 
@@ -90,24 +103,24 @@ export function AppProvider({ children }) {
         };
         setUserLocation(locationData);
         setLocationLoading(false);
-        
-        if (typeof window !== 'undefined') {
-          sessionStorage.setItem('userLocation', JSON.stringify(locationData));
+
+        if (typeof window !== "undefined") {
+          sessionStorage.setItem("userLocation", JSON.stringify(locationData));
         }
-        
-        toast.success('Location access granted');
+
+        toast.success("Location access granted");
       },
       (err) => {
-        let errorMessage = 'Unable to retrieve your location';
+        let errorMessage = "Unable to retrieve your location";
         switch (err.code) {
           case err.PERMISSION_DENIED:
-            errorMessage = 'Location permission denied';
+            errorMessage = "Location permission denied";
             break;
           case err.POSITION_UNAVAILABLE:
-            errorMessage = 'Location information unavailable';
+            errorMessage = "Location information unavailable";
             break;
           case err.TIMEOUT:
-            errorMessage = 'Location request timed out';
+            errorMessage = "Location request timed out";
             break;
         }
         setLocationError(errorMessage);
@@ -117,7 +130,7 @@ export function AppProvider({ children }) {
       {
         enableHighAccuracy: true,
         timeout: 10000,
-        maximumAge: 300000, // Cache for 5 minutes
+        maximumAge: 300000,
       }
     );
   }
@@ -125,27 +138,31 @@ export function AppProvider({ children }) {
   function clearLocation() {
     setUserLocation(null);
     setLocationError(null);
-    if (typeof window !== 'undefined') {
-      sessionStorage.removeItem('userLocation');
+    if (typeof window !== "undefined") {
+      sessionStorage.removeItem("userLocation");
     }
   }
 
   return (
     <SessionProvider>
-      <CartContext.Provider value={{
-        cartProducts,
-        setCartProducts,
-        addToCart,
-        removeCartProduct,
-        clearCart,
-        userLocation,
-        locationError,
-        locationLoading,
-        requestLocation,
-        clearLocation,
-      }}>
-        {children}
-      </CartContext.Provider>
+      <AppContext.Provider value={{ userLocation }}>
+        <CartContext.Provider
+          value={{
+            cartProducts,
+            setCartProducts,
+            addToCart,
+            removeCartProduct,
+            clearCart,
+            userLocation,
+            locationError,
+            locationLoading,
+            requestLocation,
+            clearLocation,
+          }}
+        >
+          {children}
+        </CartContext.Provider>
+      </AppContext.Provider>
     </SessionProvider>
   );
 }
