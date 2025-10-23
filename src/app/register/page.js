@@ -132,9 +132,7 @@ export default function RegisterPage() {
                     placeholder="Enter your password"
                     className="pr-10"
                   />
-                  <button type="button" className="absolute inset-y-0 right-0 pr-3 flex items-center" onClick={() => setShowPassword(!showPassword)}>
-                    {showPassword ? <EyeOff className="h-4 w-4 text-gray-400" /> : <Eye className="h-4 w-4 text-gray-400" />}
-                  </button>
+                  
                 </div>
                 {errors.password && <p className="text-sm text-red-600">{errors.password}</p>}
               </div>
