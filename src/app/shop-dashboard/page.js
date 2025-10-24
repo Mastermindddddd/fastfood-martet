@@ -829,6 +829,7 @@ export default function ShopOwnerDashboard() {
                   >
                     <option value="">Select category</option>
                     <option value="Burgers">Burgers</option>
+                    <option value="Kota">Kota</option>
                     <option value="Pizza">Pizza</option>
                     <option value="Chicken">Chicken</option>
                     <option value="Sides">Sides</option>
