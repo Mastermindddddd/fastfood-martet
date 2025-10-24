@@ -11,15 +11,6 @@ export async function POST(req) {
       await mongoose.connect(process.env.MONGO_URL);
     }
 
-    // Validate password
-    const { password } = body;
-    if (!password?.length || password.length < 5) {
-      return Response.json(
-        { success: false, message: "Password must be at least 5 characters long" },
-        { status: 400 }
-      );
-    }
-
     // Check if shop with email already exists
     const existingShop = await Shop.findOne({ email: body.email });
     if (existingShop) {
@@ -28,11 +19,6 @@ export async function POST(req) {
         { status: 400 }
       );
     }
-
-    // Hash password
-    const salt = bcrypt.genSaltSync(10);
-    const hashedPassword = bcrypt.hashSync(password, salt);
-    body.password = hashedPassword;
 
     // Create shop
     const createdShop = await Shop.create(body);
