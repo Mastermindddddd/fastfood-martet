@@ -86,7 +86,7 @@ export default function RootLayout({ children }) {
           </div>
         </div>
       </footer>
-            <LocationFooterBar />
+            {/*<LocationFooterBar />*/}
           </AppProvider>
         </main>
       </body>
