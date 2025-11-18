@@ -170,7 +170,7 @@ export default async function HomePage() {
               Why Choose FastBite Express?
             </h2>
             <p className="text-base sm:text-lg md:text-xl lg:text-xl text-slate-600 max-w-3xl mx-auto px-2 lg:px-0">
-              We're committed to providing you with the best food delivery experience possible.
+              We&apos;re committed to providing you with the best food delivery experience possible.
             </p>
           </div>
 
