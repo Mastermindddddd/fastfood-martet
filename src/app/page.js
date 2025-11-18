@@ -12,7 +12,8 @@ export default async function HomePage() {
   return (
     <div className="relative min-h-screen bg-white overflow-hidden">
 
-      <div className="absolute top-32 -left-8 w-24 h-24 opacity-80 animate-float z-10 transform hover:scale-110 transition-transform duration-300">
+      {/* Decorative images - hidden on mobile, visible on larger screens */}
+      <div className="hidden md:block absolute top-32 -left-8 w-24 h-24 opacity-80 animate-float z-10 transform hover:scale-110 transition-transform duration-300">
         <Image
           src="/sallad1.png"
           alt="Fresh lettuce decoration"
@@ -22,7 +23,7 @@ export default async function HomePage() {
         />
       </div>
 
-      <div className="absolute top-80 -right-12 w-38 h-38 opacity-70 animate-float-delayed z-10 transform hover:scale-110 transition-transform duration-300 rotate-12">
+      <div className="hidden lg:block absolute top-80 -right-12 w-38 h-38 opacity-70 animate-float-delayed z-10 transform hover:scale-110 transition-transform duration-300 rotate-12">
         <Image
           src="/sallad2.png"
           alt="Fresh lettuce decoration"
@@ -32,7 +33,7 @@ export default async function HomePage() {
         />
       </div>
 
-      <div className="absolute top-80 -left-6 w-30 h-30 opacity-60 animate-bounce-slow z-10 transform hover:scale-110 transition-transform duration-300 -rotate-12">
+      <div className="hidden lg:block absolute top-80 -left-6 w-30 h-30 opacity-60 animate-bounce-slow z-10 transform hover:scale-110 transition-transform duration-300 -rotate-12">
         <Image
           src="/sallad1.png"
           alt="Fresh lettuce decoration"
@@ -46,37 +47,37 @@ export default async function HomePage() {
       <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-white to-orange-50/40 -z-10"></div>
 
       {/* Hero Section */}
-      <section className="relative py-12 sm:py-20 px-4 bg-gradient-to-br from-orange-50 via-white to-orange-100">
+      <section className="relative py-6 sm:py-12 md:py-20 px-4 sm:px-6 bg-gradient-to-br from-orange-50 via-white to-orange-100">
         {/* Search Section */}
-        <div className="max-w-3xl mx-auto mt-10 sm:mt-16">
+        <div className="max-w-3xl mx-auto mt-4 sm:mt-8 md:mt-10 lg:mt-16 mb-6 sm:mb-8 md:mb-12">
           <SearchBar />
         </div>
         
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 lg:gap-12 items-center">
           {/* Text side */}
-          <div className="text-center lg:text-left">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-800 leading-tight mb-6">
+          <div className="text-center lg:text-left order-2 lg:order-1">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-800 leading-tight mb-4 sm:mb-6 px-2 sm:px-0">
               Delicious Food,
-              <span className="bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent block lg:inline">
+              <span className="bg-gradient-to-r from-orange-600 to-red-600 bg-clip-text text-transparent block lg:inline mt-1">
                 Delivered Fast
               </span>
             </h1>
-            <p className="text-lg sm:text-xl text-slate-600 max-w-xl mx-auto lg:mx-0 mb-8 leading-relaxed">
+            <p className="text-base sm:text-lg md:text-xl text-slate-600 max-w-xl mx-auto lg:mx-0 mb-6 sm:mb-8 leading-relaxed px-2 sm:px-0">
               Premium food delivery from your favorite restaurants, delivered fresh to your doorstep.
             </p>
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start">
-              <button className="w-full sm:w-auto px-6 py-4 bg-gradient-to-r from-orange-600 to-red-600 text-white rounded-xl font-semibold hover:from-orange-700 hover:to-red-700 transition-all duration-300 shadow-lg hover:shadow-xl text-base sm:text-lg">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start px-2 sm:px-0">
+              <button className="w-full sm:w-auto px-6 py-3 sm:py-4 bg-gradient-to-r from-orange-600 to-red-600 text-white rounded-xl font-semibold hover:from-orange-700 hover:to-red-700 transition-all duration-300 shadow-lg hover:shadow-xl text-sm sm:text-base md:text-lg">
                 🚀 Order Now
               </button>
-              <Link href='/menu'>
-                <button className="w-full sm:w-auto px-6 py-4 border-2 border-orange-600 text-orange-600 rounded-xl font-semibold hover:bg-orange-600 hover:text-white transition-all duration-300 text-base sm:text-lg">
-                  📖 View Menu
+              <Link href='/restaurents' className="w-full sm:w-auto">
+                <button className="w-full sm:w-auto px-6 py-3 sm:py-4 border-2 border-orange-600 text-orange-600 rounded-xl font-semibold hover:bg-orange-600 hover:text-white transition-all duration-300 text-sm sm:text-base md:text-lg">
+                  📖 View Shops
                 </button>
               </Link>
             </div>
           </div>
 
-          <div className="relative flex justify-center lg:justify-end">
+          <div className="relative flex justify-center lg:justify-end order-1 lg:order-2 mb-6 lg:mb-0">
             <div className="relative group">
               
               <Image
@@ -84,27 +85,27 @@ export default async function HomePage() {
                 alt="Delicious Kota"
                 width={600}
                 height={500}
-                className="relative w-full max-w-sm sm:max-w-md lg:max-w-xl group-hover:scale-105 transition-transform duration-500"
+                className="relative w-full max-w-[280px] sm:max-w-sm md:max-w-md lg:max-w-xl group-hover:scale-105 transition-transform duration-500"
                 priority
               />
               
-              {/* Floating badges */}
-              <div className="absolute top-8 -right-4 backdrop-blur-xl p-4 rounded-2xl shadow-2xl animate-float">
+              {/* Floating badges - hidden on mobile, visible on larger screens */}
+              <div className="hidden md:block absolute top-4 md:top-8 -right-2 md:-right-4 backdrop-blur-xl p-3 md:p-4 rounded-2xl shadow-2xl animate-float">
                 <div className="flex items-center space-x-2">
-                  <span className="text-3xl">🔥</span>
+                  <span className="text-2xl md:text-3xl">🔥</span>
                   <div>
-                    <div className="font-bold text-slate-900">Hot & Fresh</div>
-                    <div className="text-sm text-slate-600">30 min delivery</div>
+                    <div className="font-bold text-slate-900 text-xs md:text-sm">Hot & Fresh</div>
+                    <div className="text-xs text-slate-600">30 min delivery</div>
                   </div>
                 </div>
               </div>
               
-              <div className="absolute bottom-8 -left-4 backdrop-blur-xl p-4 rounded-2xl shadow-2xl animate-float-delayed">
+              <div className="hidden md:block absolute bottom-4 md:bottom-8 -left-2 md:-left-4 backdrop-blur-xl p-3 md:p-4 rounded-2xl shadow-2xl animate-float-delayed">
                 <div className="flex items-center space-x-2">
-                  <span className="text-3xl">💯</span>
+                  <span className="text-2xl md:text-3xl">💯</span>
                   <div>
-                    <div className="font-bold text-slate-900">Quality Food</div>
-                    <div className="text-sm text-slate-600">100% Fresh</div>
+                    <div className="font-bold text-slate-900 text-xs md:text-sm">Quality Food</div>
+                    <div className="text-xs text-slate-600">100% Fresh</div>
                   </div>
                 </div>
               </div>
@@ -115,25 +116,25 @@ export default async function HomePage() {
       </section>
 
       {/* Section Cards */}
-      <section className="py-12 sm:py-16 px-4 bg-slate-50/50">
+      <section className="py-8 sm:py-12 md:py-16 px-4 sm:px-6 bg-slate-50/50">
         <div className="max-w-7xl mx-auto">
           <SectionCards />
         </div>
       </section>
 
       {/* Popular Categories with enhanced cards */}
-      <section className="py-16 px-4 bg-gradient-to-b from-white to-slate-50">
+      <section className="py-10 sm:py-14 md:py-16 px-4 sm:px-6 bg-gradient-to-b from-white to-slate-50">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl sm:text-5xl font-black text-slate-900 mb-4">
+          <div className="text-center mb-8 sm:mb-10 md:mb-12">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-slate-900 mb-3 sm:mb-4 px-2">
               🍽️ Popular on <span className="text-orange-600">FoodHub SA</span>
             </h2>
-            <p className="text-xl text-slate-600 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg md:text-xl text-slate-600 max-w-2xl mx-auto px-2">
               Explore South Africa&apos;s favorite fast food delivered to your door
             </p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 md:gap-6">
             {[
               { name: 'Burgers', emoji: '🍔', count: '120+', color: 'from-yellow-400 to-orange-500' },
               { name: 'Kota', emoji: '🥖', count: '200+', color: 'from-orange-400 to-red-500' },
@@ -144,16 +145,16 @@ export default async function HomePage() {
             ].map((category) => (
               <div 
                 key={category.name} 
-                className="group relative bg-white p-6 rounded-3xl text-center hover:shadow-2xl transition-all duration-300 cursor-pointer border-2 border-slate-100 hover:border-orange-300 hover:-translate-y-2 overflow-hidden"
+                className="group relative bg-white p-4 sm:p-5 md:p-6 rounded-2xl sm:rounded-3xl text-center hover:shadow-2xl transition-all duration-300 cursor-pointer border-2 border-slate-100 hover:border-orange-300 hover:-translate-y-1 sm:hover:-translate-y-2 overflow-hidden active:scale-95"
               >
                 <div className={`absolute inset-0 bg-gradient-to-br ${category.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}></div>
                 
                 <div className="relative z-10">
-                  <div className="text-5xl mb-3 group-hover:scale-125 group-hover:rotate-12 transition-all duration-300">
+                  <div className="text-3xl sm:text-4xl md:text-5xl mb-2 sm:mb-3 group-hover:scale-125 group-hover:rotate-12 transition-all duration-300">
                     {category.emoji}
                   </div>
-                  <h3 className="font-bold text-slate-900 text-lg mb-1">{category.name}</h3>
-                  <p className="text-sm text-orange-600 font-semibold">{category.count} shops</p>
+                  <h3 className="font-bold text-slate-900 text-sm sm:text-base md:text-lg mb-1 line-clamp-1">{category.name}</h3>
+                  <p className="text-xs sm:text-sm text-orange-600 font-semibold">{category.count} shops</p>
                 </div>
               </div>
             ))}
@@ -162,18 +163,18 @@ export default async function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section className="py-16 sm:py-20 px-4 bg-white">
+      <section className="py-10 sm:py-14 md:py-16 lg:py-20 px-4 sm:px-6 bg-white">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12 sm:mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-slate-800 mb-4">
+          <div className="text-center mb-8 sm:mb-12 md:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-slate-800 mb-3 sm:mb-4 px-2">
               Why Choose FastBite Express?
             </h2>
-            <p className="text-lg sm:text-xl text-slate-600 max-w-3xl mx-auto">
-              We’re committed to providing you with the best food delivery experience possible.
+            <p className="text-base sm:text-lg md:text-xl text-slate-600 max-w-3xl mx-auto px-2">
+              We're committed to providing you with the best food delivery experience possible.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 md:gap-8">
             {[
               {
                 emoji: '🚚',
@@ -193,13 +194,13 @@ export default async function HomePage() {
             ].map((item) => (
               <div
                 key={item.title}
-                className="group p-6 sm:p-8 rounded-2xl border border-slate-200 hover:border-orange-300 hover:shadow-xl transition-all duration-300 bg-white"
+                className="group p-5 sm:p-6 md:p-8 rounded-2xl border border-slate-200 hover:border-orange-300 hover:shadow-xl transition-all duration-300 bg-white"
               >
-                <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
-                  <span className="text-xl sm:text-2xl">{item.emoji}</span>
+                <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center mb-4 sm:mb-6 group-hover:scale-110 transition-transform duration-300">
+                  <span className="text-lg sm:text-xl md:text-2xl">{item.emoji}</span>
                 </div>
-                <h3 className="text-xl sm:text-2xl font-bold text-slate-800 mb-4">{item.title}</h3>
-                <p className="text-slate-600 leading-relaxed text-sm sm:text-base mb-6">{item.desc}</p>
+                <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-slate-800 mb-3 sm:mb-4">{item.title}</h3>
+                <p className="text-slate-600 leading-relaxed text-sm sm:text-base mb-4 sm:mb-6">{item.desc}</p>
                 <div className="flex items-center text-orange-600 font-semibold text-sm sm:text-base">
                   <span>Learn more</span>
                   <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -213,29 +214,29 @@ export default async function HomePage() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 sm:py-20 px-4 bg-gradient-to-r from-orange-600 to-red-600 text-white">
+      <section className="py-10 sm:py-14 md:py-16 lg:py-20 px-4 sm:px-6 bg-gradient-to-r from-orange-600 to-red-600 text-white">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12 sm:mb-16 px-4">
-            <h2 className="text-3xl sm:text-4xl font-bold mb-3 sm:mb-4">Trusted by Thousands</h2>
-            <p className="text-lg sm:text-xl text-orange-100">Join our growing community of satisfied customers</p>
+          <div className="text-center mb-8 sm:mb-12 md:mb-16 px-2">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 sm:mb-3 md:mb-4">Trusted by Thousands</h2>
+            <p className="text-base sm:text-lg md:text-xl text-orange-100">Join our growing community of satisfied customers</p>
           </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 px-4">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8 px-2">
             <div className="text-center">
-              <div className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-1 sm:mb-2">50K+</div>
-              <div className="text-orange-100 text-sm sm:text-base lg:text-lg">Happy Customers</div>
+              <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-1 sm:mb-2">50K+</div>
+              <div className="text-orange-100 text-xs sm:text-sm md:text-base lg:text-lg">Happy Customers</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-1 sm:mb-2">500+</div>
-              <div className="text-orange-100 text-sm sm:text-base lg:text-lg">Partner Restaurants</div>
+              <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-1 sm:mb-2">500+</div>
+              <div className="text-orange-100 text-xs sm:text-sm md:text-base lg:text-lg">Partner Restaurants</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-1 sm:mb-2">100K+</div>
-              <div className="text-orange-100 text-sm sm:text-base lg:text-lg">Orders Delivered</div>
+              <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-1 sm:mb-2">100K+</div>
+              <div className="text-orange-100 text-xs sm:text-sm md:text-base lg:text-lg">Orders Delivered</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-1 sm:mb-2">25</div>
-              <div className="text-orange-100 text-sm sm:text-base lg:text-lg">Cities Served</div>
+              <div className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-1 sm:mb-2">25</div>
+              <div className="text-orange-100 text-xs sm:text-sm md:text-base lg:text-lg">Cities Served</div>
             </div>
           </div>
         </div>
@@ -243,31 +244,31 @@ export default async function HomePage() {
 
       
       {/* How It Works  */}
-      <section className="py-20 px-4 bg-gradient-to-b from-slate-50 to-white">
+      <section className="py-12 sm:py-16 md:py-20 px-4 sm:px-6 bg-gradient-to-b from-slate-50 to-white">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-black text-slate-900 mb-4">
+          <div className="text-center mb-10 sm:mb-12 md:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black text-slate-900 mb-3 sm:mb-4 px-2">
               Order in <span className="text-orange-600">3 Easy Steps</span>
             </h2>
-            <p className="text-xl text-slate-600">From craving to eating in minutes! 🚀</p>
+            <p className="text-base sm:text-lg md:text-xl text-slate-600 px-2">From craving to eating in minutes! 🚀</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 lg:gap-12">
             {[
               { step: '1', emoji: '🔍', title: 'Browse & Choose', desc: 'Find your favorite restaurant and pick what you love from hundreds of options' },
               { step: '2', emoji: '🛒', title: 'Add to Cart', desc: 'Customize your order, add special instructions, and proceed to checkout' },
               { step: '3', emoji: '🚀', title: 'Fast Delivery', desc: 'Track your order in real-time and enjoy hot, fresh food at your doorstep!' }
             ].map((item) => (
               <div key={item.step} className="relative group">
-                <div className="text-center p-8 rounded-3xl bg-white border-2 border-slate-100 hover:border-orange-300 hover:shadow-2xl transition-all duration-300 hover:-translate-y-2">
-                  <div className="absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-12 bg-gradient-to-r from-orange-600 to-red-600 rounded-full flex items-center justify-center text-white font-black text-xl shadow-lg">
+                <div className="text-center p-6 sm:p-8 rounded-2xl sm:rounded-3xl bg-white border-2 border-slate-100 hover:border-orange-300 hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 sm:hover:-translate-y-2">
+                  <div className="absolute -top-5 sm:-top-6 left-1/2 -translate-x-1/2 w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-orange-600 to-red-600 rounded-full flex items-center justify-center text-white font-black text-lg sm:text-xl shadow-lg">
                     {item.step}
                   </div>
-                  <div className="text-6xl mb-6 mt-4 group-hover:scale-125 group-hover:rotate-12 transition-all duration-300">
+                  <div className="text-4xl sm:text-5xl md:text-6xl mb-4 sm:mb-6 mt-3 sm:mt-4 group-hover:scale-125 group-hover:rotate-12 transition-all duration-300">
                     {item.emoji}
                   </div>
-                  <h3 className="text-2xl font-bold text-slate-900 mb-4">{item.title}</h3>
-                  <p className="text-slate-600 leading-relaxed">{item.desc}</p>
+                  <h3 className="text-xl sm:text-2xl font-bold text-slate-900 mb-3 sm:mb-4">{item.title}</h3>
+                  <p className="text-sm sm:text-base text-slate-600 leading-relaxed px-2">{item.desc}</p>
                 </div>
               </div>
             ))}

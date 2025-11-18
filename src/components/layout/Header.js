@@ -7,6 +7,7 @@ import { signOut, useSession } from "next-auth/react"
 import Link from "next/link"
 import { useContext, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
+import Image from "next/image"
 
 function AuthLinks({ status }) {
   if (status === "authenticated") {
@@ -57,13 +58,20 @@ export default function Header() {
       {/* Mobile Header */}
       <div className="flex items-center justify-between md:hidden">
         <Link className="flex items-center gap-2 group" href="/">
-          <motion.span
-            className="text-3xl"
+          <motion.div
+            className="w-10 h-10"
             whileHover={{ rotate: [0, -10, 10, -10, 0] }}
             transition={{ duration: 0.5 }}
           >
-            🍔
-          </motion.span>
+            <Image
+              src="/fryer.png"
+              alt="FastBite logo"
+              width={40}
+              height={40}
+              className="w-full h-full object-contain"
+              priority
+            />
+          </motion.div>
           <div className="flex flex-col">
             <span className="font-bold text-xl text-foreground tracking-tight">FastBite</span>
             <span className="text-[10px] text-muted-foreground font-medium tracking-wider uppercase">Express</span>
@@ -117,10 +125,10 @@ export default function Header() {
               className="mt-4 p-6 bg-muted/30 backdrop-blur-sm rounded-2xl flex flex-col gap-4 border border-border/50"
             >
               <nav className="flex flex-col gap-3">
-                {["Home", "Menu", "About", "Contact"].map((item) => (
+                {["Home", "Restaurents", "About", "Contact"].map((item) => (
                   <Link
                     key={item}
-                    href={item === "Home" ? "/" : item === "Menu" ? "/menu" : `/#${item.toLowerCase()}`}
+                    href={item === "Home" ? "/" : item === "Restaurents" ? "/restaurents" : `/#${item.toLowerCase()}`}
                     onClick={() => setMobileNavOpen(false)}
                     className="text-foreground hover:text-foreground/70 transition-colors duration-200 font-medium py-2"
                   >
@@ -150,13 +158,20 @@ export default function Header() {
         <div className="flex items-center gap-12">
           {/* Logo */}
           <Link className="flex items-center gap-3 group" href="/">
-            <motion.span
-              className="text-4xl"
+            <motion.div
+              className="w-12 h-12"
               whileHover={{ rotate: [0, -10, 10, -10, 0] }}
               transition={{ duration: 0.5 }}
             >
-              🍔
-            </motion.span>
+              <Image
+                src="/fryer.png"
+                alt="Kota-Market logo"
+                width={48}
+                height={48}
+                className="w-full h-full object-contain"
+                priority
+              />
+            </motion.div>
             <div className="flex flex-col">
               <span className="font-bold text-2xl text-foreground tracking-tight">Kota-Market</span>
               <span className="text-xs text-muted-foreground font-medium tracking-wider uppercase text-gray-700">
@@ -167,10 +182,10 @@ export default function Header() {
 
           {/* Navigation Links */}
           <nav className="flex items-center gap-8">
-            {["Home", "Menu", "About", "Contact"].map((item) => (
+            {["Home", "Restaurents", "About", "Contact"].map((item) => (
               <Link
                 key={item}
-                href={item === "Home" ? "/" : item === "Menu" ? "/menu" : `/#${item.toLowerCase()}`}
+                href={item === "Home" ? "/" : item === "Restaurents" ? "/restaurents" : `/#${item.toLowerCase()}`}
                 className="relative text-foreground/70 hover:text-foreground font-medium transition-colors duration-200 group"
               >
                 {item}
