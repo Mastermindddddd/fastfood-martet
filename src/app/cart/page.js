@@ -182,7 +182,7 @@ export default function CartPage() {
               <ShoppingBag className="h-16 w-16 text-gray-400 mx-auto mb-4" />
               <h2 className="text-2xl font-bold mb-2">Your cart is empty</h2>
               <p className="text-gray-600 mb-6">Add some delicious items to get started!</p>
-              <Button onClick={() => router.push('/menu')}>Browse Restaurants</Button>
+              <Button onClick={() => router.push('/restaurents')}>Browse Restaurants</Button>
             </CardContent>
           </Card>
         ) : (

@@ -66,9 +66,9 @@ export default async function HomePage() {
               Premium food delivery from your favorite restaurants, delivered fresh to your doorstep.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 lg:gap-4 justify-center lg:justify-start px-2 lg:px-0">
-              <button className="w-full sm:w-auto px-6 py-3 sm:py-4 lg:py-4 bg-gradient-to-r from-orange-600 to-red-600 text-white rounded-xl font-semibold hover:from-orange-700 hover:to-red-700 transition-all duration-300 shadow-lg hover:shadow-xl text-sm sm:text-base lg:text-lg">
+              {/*<button className="w-full sm:w-auto px-6 py-3 sm:py-4 lg:py-4 bg-gradient-to-r from-orange-600 to-red-600 text-white rounded-xl font-semibold hover:from-orange-700 hover:to-red-700 transition-all duration-300 shadow-lg hover:shadow-xl text-sm sm:text-base lg:text-lg">
                 🚀 Order Now
-              </button>
+              </button>*/}
               <Link href='/restaurents' className="w-full sm:w-auto">
                 <button className="w-full sm:w-auto px-6 py-3 sm:py-4 lg:py-4 border-2 border-orange-600 text-orange-600 rounded-xl font-semibold hover:bg-orange-600 hover:text-white transition-all duration-300 text-sm sm:text-base lg:text-lg">
                   📖 View Shops
