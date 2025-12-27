@@ -13,10 +13,10 @@ function AuthLinks({ status }) {
   if (status === "authenticated") {
     return (
       <motion.button
-        whileHover={{ scale: 1.03 }}
-        whileTap={{ scale: 0.97 }}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
         onClick={() => signOut({ callbackUrl: "/" })}
-        className="bg-orange-500 text-white px-6 py-2.5 rounded-full font-semibold hover:bg-orange-600 transition-all duration-200 shadow-md hover:shadow-lg"
+        className="px-6 py-2.5 bg-gradient-to-r from-orange-600 to-red-600 text-white font-bold rounded-full hover:shadow-lg transition-all duration-200"
       >
         Logout
       </motion.button>
@@ -28,14 +28,14 @@ function AuthLinks({ status }) {
       <>
         <Link
           href="/login"
-          className="text-foreground/70 hover:text-foreground transition-colors duration-200 font-medium"
+          className="text-gray-700 hover:text-orange-600 transition-colors duration-200 font-semibold"
         >
           Login
         </Link>
-        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
           <Link
             href="/register"
-            className="bg-foreground text-background px-6 py-2.5 rounded-full font-medium hover:bg-foreground/90 transition-all duration-200 shadow-sm inline-block"
+            className="px-6 py-2.5 bg-gradient-to-r from-orange-600 to-red-600 text-white font-bold rounded-full hover:shadow-lg transition-all duration-200 inline-block"
           >
             Register
           </Link>
@@ -54,7 +54,78 @@ export default function Header() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
 
   return (
-    <header className="px-4 sm:px-6 lg:px-8 py-4 border-b border-border/50 bg-background/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+    <header className="relative px-4 sm:px-6 lg:px-8 py-4 bg-white/95 backdrop-blur-md border-b-2 border-gray-200 sticky top-0 z-50 shadow-sm">
+      {/* Desktop Header */}
+      <div className="hidden md:flex items-center justify-between max-w-7xl mx-auto">
+        <div className="flex items-center gap-12">
+          {/* Logo */}
+          <Link className="flex items-center gap-3 group" href="/">
+            <motion.div
+              className="relative"
+              whileHover={{ rotate: [0, -10, 10, -10, 0] }}
+              transition={{ duration: 0.5 }}
+            >
+              <Image
+                src="/kota-market2.png"
+                alt="Kota-Market logo"
+                width={60}
+                height={60}
+                className="w-full h-full object-contain"
+                priority
+              />
+            </motion.div>
+            <div className="flex flex-col">
+              <span className="font-black text-2xl text-gray-900 tracking-tight group-hover:text-orange-600 transition-colors">
+                KOTA MARKET
+              </span>
+              <span className="text-xs text-orange-600 font-bold tracking-wider uppercase">
+                SCREW THE DIET
+              </span>
+            </div>
+          </Link>
+
+          {/* Navigation Links */}
+          <nav className="flex items-center gap-8">
+            {["Home", "Restaurents", "About", "Contact"].map((item) => (
+              <Link
+                key={item}
+                href={item === "Home" ? "/" : item === "Restaurents" ? "/restaurents" : `/#${item.toLowerCase()}`}
+                className="relative text-gray-700 hover:text-orange-600 font-bold transition-colors duration-200 group text-sm uppercase tracking-wide"
+              >
+                {item}
+                <span className="absolute -bottom-1 left-0 w-0 h-[3px] bg-gradient-to-r from-orange-600 to-red-600 transition-all duration-300 group-hover:w-full rounded-full" />
+              </Link>
+            ))}
+          </nav>
+        </div>
+
+        {/* Right Side Actions */}
+        <div className="flex items-center gap-6">
+          <AuthLinks status={status} />
+          <Link href="/cart" className="relative group">
+            <motion.div 
+              whileHover={{ scale: 1.1 }} 
+              whileTap={{ scale: 0.9 }}
+              className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+            >
+              <ShoppingCart />
+            </motion.div>
+            <AnimatePresence>
+              {cartProducts?.length > 0 && (
+                <motion.span
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  exit={{ scale: 0 }}
+                  className="absolute -top-1 -right-1 bg-gradient-to-r from-orange-600 to-red-600 text-white text-xs min-w-[24px] h-6 flex items-center justify-center rounded-full font-black shadow-lg px-1.5"
+                >
+                  {cartProducts.length}
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </Link>
+        </div>
+      </div>
+
       {/* Mobile Header */}
       <div className="flex items-center justify-between md:hidden">
         <Link className="flex items-center gap-2 group" href="/">
@@ -64,8 +135,8 @@ export default function Header() {
             transition={{ duration: 0.5 }}
           >
             <Image
-              src="/fryer.png"
-              alt="FastBite logo"
+              src="/kota-market2.png"
+              alt="Kota-Market logo"
               width={40}
               height={40}
               className="w-full h-full object-contain"
@@ -73,8 +144,8 @@ export default function Header() {
             />
           </motion.div>
           <div className="flex flex-col">
-            <span className="font-bold text-xl text-foreground tracking-tight">FastBite</span>
-            <span className="text-[10px] text-muted-foreground font-medium tracking-wider uppercase">Express</span>
+            <span className="font-black text-lg text-gray-900 tracking-tight">KOTA MARKET</span>
+            <span className="text-[9px] text-orange-600 font-bold tracking-wider uppercase">SCREW THE DIET</span>
           </div>
         </Link>
 
@@ -89,7 +160,7 @@ export default function Header() {
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   exit={{ scale: 0 }}
-                  className="absolute -top-2 -right-2 bg-accent text-accent-foreground text-xs w-5 h-5 flex items-center justify-center rounded-full font-bold shadow-md"
+                  className="absolute -top-2 -right-2 bg-gradient-to-r from-orange-600 to-red-600 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full font-black shadow-md"
                 >
                   {cartProducts.length}
                 </motion.span>
@@ -99,7 +170,7 @@ export default function Header() {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="p-2 border border-border rounded-lg hover:bg-muted/50 transition-colors duration-200"
+            className="p-2 border-2 border-gray-300 rounded-lg hover:bg-gray-100 transition-colors duration-200"
             onClick={() => setMobileNavOpen((prev) => !prev)}
           >
             <Bars2 />
@@ -122,7 +193,7 @@ export default function Header() {
               initial={{ y: -20 }}
               animate={{ y: 0 }}
               exit={{ y: -20 }}
-              className="mt-4 p-6 bg-muted/30 backdrop-blur-sm rounded-2xl flex flex-col gap-4 border border-border/50"
+              className="mt-4 p-6 bg-gray-50 rounded-2xl flex flex-col gap-4 border-2 border-gray-200"
             >
               <nav className="flex flex-col gap-3">
                 {["Home", "Restaurents", "About", "Contact"].map((item) => (
@@ -130,98 +201,30 @@ export default function Header() {
                     key={item}
                     href={item === "Home" ? "/" : item === "Restaurents" ? "/restaurents" : `/#${item.toLowerCase()}`}
                     onClick={() => setMobileNavOpen(false)}
-                    className="text-foreground hover:text-foreground/70 transition-colors duration-200 font-medium py-2"
+                    className="text-gray-900 hover:text-orange-600 transition-colors duration-200 font-bold py-2 uppercase tracking-wide"
                   >
                     {item}
                   </Link>
                 ))}
               </nav>
-              <div className="h-px bg-border/50 my-2" />
+              <div className="h-px bg-gray-300 my-2" />
               <div className="flex flex-col gap-3">
                 <AuthLinks status={status} />
               </div>
-              <motion.p
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="text-sm mt-2 font-medium text-center text-muted-foreground"
-              >
-                Welcome,{" "}
-                <span className="text-orange-500 font-semibold">{userName}</span>
-              </motion.p>
+              {session?.user && (
+                <motion.p
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-sm mt-2 font-semibold text-center text-gray-600"
+                >
+                  Welcome,{" "}
+                  <span className="text-orange-600 font-black">{userName}</span>
+                </motion.p>
+              )}
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Desktop Header */}
-      <div className="hidden md:flex items-center justify-between">
-        <div className="flex items-center gap-12">
-          {/* Logo */}
-          <Link className="flex items-center gap-3 group" href="/">
-            <motion.div
-              className="w-12 h-12"
-              whileHover={{ rotate: [0, -10, 10, -10, 0] }}
-              transition={{ duration: 0.5 }}
-            >
-              <Image
-                src="/fryer.png"
-                alt="Kota-Market logo"
-                width={48}
-                height={48}
-                className="w-full h-full object-contain"
-                priority
-              />
-            </motion.div>
-            <div className="flex flex-col">
-              <span className="font-bold text-2xl text-foreground tracking-tight">Kota-Market</span>
-              <span className="text-xs text-muted-foreground font-medium tracking-wider uppercase text-gray-700">
-                Express Delivery
-              </span>
-            </div>
-          </Link>
-
-          {/* Navigation Links */}
-          <nav className="flex items-center gap-8">
-            {["Home", "Restaurents", "About", "Contact"].map((item) => (
-              <Link
-                key={item}
-                href={item === "Home" ? "/" : item === "Restaurents" ? "/restaurents" : `/#${item.toLowerCase()}`}
-                className="relative text-foreground/70 hover:text-foreground font-medium transition-colors duration-200 group"
-              >
-                {item}
-                <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-orange-500 transition-all duration-300 group-hover:w-full rounded-full" />
-              </Link>
-            ))}
-          </nav>
-        </div>
-
-        {/* Right Side Actions */}
-        <div className="flex items-center gap-6">
-          {/*{session?.user && (
-            <p className="text-muted-foreground font-medium">
-              Welcome, <span className="text-foreground">{userName}</span>
-            </p>
-          )}*/}
-          <AuthLinks status={status} />
-          <Link href="/cart" className="relative group">
-            <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-              <ShoppingCart />
-            </motion.div>
-            <AnimatePresence>
-              {cartProducts?.length > 0 && (
-                <motion.span
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  exit={{ scale: 0 }}
-                  className="absolute -top-2 -right-3 bg-accent text-accent-foreground text-xs min-w-[20px] h-5 flex items-center justify-center rounded-full font-bold shadow-md px-1.5"
-                >
-                  {cartProducts.length}
-                </motion.span>
-              )}
-            </AnimatePresence>
-          </Link>
-        </div>
-      </div>
     </header>
   )
 }

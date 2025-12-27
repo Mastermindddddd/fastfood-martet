@@ -12,12 +12,12 @@ export default function Hero() {
             </div>
             <div>
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-neutral-900 leading-tight">
-                Kasi comfort food, delivered with{" "}
+                Kasi comfort food, prepared with{" "}
                 <span className="text-orange-500">speed & style.</span>
               </h1>
               <p className="mt-4 text-base sm:text-lg text-neutral-600 max-w-xl">
                 Indulge in flame-grilled kota and township classics crafted by local chefs.
-                Hot, hearty, and on your doorstep before the cravings hit.
+                Hot, hearty, and ready for you before the cravings hit.
               </p>
             </div>
 
@@ -43,7 +43,7 @@ export default function Hero() {
               </div>
               <div>
                 <p className="text-3xl font-black text-neutral-900">15 min</p>
-                <p className="uppercase text-xs tracking-[0.2em] text-neutral-500">Avg delivery</p>
+                <p className="uppercase text-xs tracking-[0.2em] text-neutral-500">Avg prep time</p>
               </div>
             </div>
           </div>
@@ -67,7 +67,7 @@ export default function Hero() {
               </span>
               <span className="flex items-center gap-2 font-semibold text-neutral-800">
                 <span className="h-2.5 w-2.5 rounded-full bg-orange-500" />
-                Contactless delivery
+                Contactless pickup
               </span>
             </div>
           </div>

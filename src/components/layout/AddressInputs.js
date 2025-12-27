@@ -1,5 +1,25 @@
+"use client"
+
+import MapboxAddressInput from "./MapboxAddressInput";
+
 export default function AddressInputs({addressProps,setAddressProp,disabled=false}) {
   const {phone, streetAddress, postalCode, city, country} = addressProps;
+  
+  const handleAddressSelect = (addressData) => {
+    if (addressData.streetAddress) {
+      setAddressProp('streetAddress', addressData.streetAddress);
+    }
+    if (addressData.city) {
+      setAddressProp('city', addressData.city);
+    }
+    if (addressData.postalCode) {
+      setAddressProp('postalCode', addressData.postalCode);
+    }
+    if (addressData.country) {
+      setAddressProp('country', addressData.country);
+    }
+  };
+
   return (
     <>
       <label>Phone</label>
@@ -7,12 +27,16 @@ export default function AddressInputs({addressProps,setAddressProp,disabled=fals
         disabled={disabled}
         type="tel" placeholder="Phone number"
         value={phone || ''} onChange={ev => setAddressProp('phone', ev.target.value)} />
-      <label>Street address</label>
-      <input
+      
+      <MapboxAddressInput
+        value={streetAddress || ''}
+        onChange={(value) => setAddressProp('streetAddress', value)}
+        onSelect={handleAddressSelect}
+        placeholder="Start typing your address..."
         disabled={disabled}
-        type="text" placeholder="Street address"
-        value={streetAddress || ''} onChange={ev => setAddressProp('streetAddress', ev.target.value)}
+        label="Street address"
       />
+      
       <div className="grid grid-cols-2 gap-2">
         <div>
           <label>Postal code</label>

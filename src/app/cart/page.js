@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useSession } from 'next-auth/react'
 import { useCartContext } from '@/components/AppContext'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import MapboxAddressInput from '@/components/layout/MapboxAddressInput'
 
 export default function CartPage() {
   const { data: session, status } = useSession()
@@ -66,9 +67,9 @@ export default function CartPage() {
       return
     }
 
-    // Validate delivery address
+    // Validate pickup address
     if (!deliveryAddress.street || !deliveryAddress.city || !deliveryAddress.phone) {
-      setError('Please fill in all delivery details')
+      setError('Please fill in all pickup details')
       return
     }
 
@@ -227,20 +228,26 @@ export default function CartPage() {
 
             {/* Order Summary & Checkout */}
             <div className="space-y-6">
-              {/* Delivery Details */}
+              {/* Pickup Details */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Delivery Details</CardTitle>
+                  <CardTitle>Pickup Details</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium mb-1">Street Address</label>
-                    <Input
-                      value={deliveryAddress.street}
-                      onChange={(e) => setDeliveryAddress({...deliveryAddress, street: e.target.value})}
-                      placeholder="123 Main Street"
-                    />
-                  </div>
+                  <MapboxAddressInput
+                    value={deliveryAddress.street}
+                    onChange={(value) => setDeliveryAddress({...deliveryAddress, street: value})}
+                    onSelect={(addressData) => {
+                      setDeliveryAddress({
+                        ...deliveryAddress,
+                        street: addressData.streetAddress || deliveryAddress.street,
+                        city: addressData.city || deliveryAddress.city,
+                        postalCode: addressData.postalCode || deliveryAddress.postalCode
+                      })
+                    }}
+                    placeholder="Start typing your address..."
+                    label="Street Address"
+                  />
                   <div>
                     <label className="block text-sm font-medium mb-1">City</label>
                     <Input
@@ -279,7 +286,7 @@ export default function CartPage() {
                     onChange={(e) => setPaymentMethod(e.target.value)}
                     className="w-full border border-gray-300 rounded-md px-3 py-2"
                   >
-                    <option value="cash">Cash on Delivery</option>
+                    <option value="cash">Cash on Pickup</option>
                     <option value="card">Card Payment</option>
                     <option value="wallet">E-Wallet</option>
                   </select>
@@ -313,7 +320,7 @@ export default function CartPage() {
                     <span>R{subtotal.toFixed(2)}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Delivery Fee</span>
+                    <span>Service Fee</span>
                     <span>R{deliveryFee.toFixed(2)}</span>
                   </div>
                   <div className="border-t pt-2 flex justify-between font-bold text-lg">

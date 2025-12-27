@@ -27,7 +27,7 @@ export default function RootLayout({ children }) {
             <div>
               <h3 className="text-xl font-bold mb-4 text-orange-400">FastBite Express</h3>
               <p className="text-slate-400 mb-4">
-                Your trusted partner for fast, reliable food delivery. Quality meals delivered with care.
+                Your trusted partner for fast, reliable food ordering. Quality meals prepared with care.
               </p>
               <div className="flex gap-3">
                 <div className="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center hover:bg-orange-600 transition-colors cursor-pointer">

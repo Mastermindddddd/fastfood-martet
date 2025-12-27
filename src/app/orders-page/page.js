@@ -14,8 +14,8 @@ const statusConfig = {
   confirmed: { label: 'Confirmed', color: 'bg-blue-100 text-blue-800', icon: CheckCircle },
   preparing: { label: 'Preparing', color: 'bg-purple-100 text-purple-800', icon: Package },
   ready: { label: 'Ready', color: 'bg-green-100 text-green-800', icon: CheckCircle },
-  out_for_delivery: { label: 'Out for Delivery', color: 'bg-indigo-100 text-indigo-800', icon: Truck },
-  delivered: { label: 'Delivered', color: 'bg-green-100 text-green-800', icon: CheckCircle },
+  out_for_delivery: { label: 'Ready for Pickup', color: 'bg-indigo-100 text-indigo-800', icon: Truck },
+  delivered: { label: 'Completed', color: 'bg-green-100 text-green-800', icon: CheckCircle },
   cancelled: { label: 'Cancelled', color: 'bg-red-100 text-red-800', icon: XCircle }
 }
 
@@ -186,10 +186,10 @@ export default function OrdersPage() {
                   </div>
                 </div>
 
-                {/* Delivery Address */}
+                {/* Pickup Address */}
                 {selectedOrder.deliveryAddress && (
                   <div>
-                    <h4 className="font-semibold mb-2">Delivery Address</h4>
+                    <h4 className="font-semibold mb-2">Pickup Address</h4>
                     <p className="text-gray-700">
                       {selectedOrder.deliveryAddress.street}<br />
                       {selectedOrder.deliveryAddress.city} {selectedOrder.deliveryAddress.postalCode}<br />
@@ -224,7 +224,7 @@ export default function OrdersPage() {
                       <span>R{selectedOrder.subtotal.toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span>Delivery Fee</span>
+                      <span>Service Fee</span>
                       <span>R{selectedOrder.deliveryFee.toFixed(2)}</span>
                     </div>
                     <div className="border-t pt-2 flex justify-between font-bold text-lg">

@@ -142,7 +142,7 @@ export default function HomePage() {
       {/* Hero Section */}
       <section className="bg-gradient-to-r from-orange-500 to-red-600 text-white py-12">
         <div className="w-full px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl font-bold mb-4">Delicious Food, Delivered Fast</h2>
+          <h2 className="text-4xl font-bold mb-4">Delicious Food, Ready Fast</h2>
           <p className="text-xl mb-8">Discover the best restaurants near you</p>
           
           {/* Search Bar */}

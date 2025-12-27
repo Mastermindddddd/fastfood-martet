@@ -287,8 +287,8 @@ class PaymentService {
       },
       {
         id: 'cash',
-        name: 'Cash on Delivery',
-        description: 'Pay with cash when your order arrives',
+        name: 'Cash on Pickup',
+        description: 'Pay with cash when you pick up your order',
         icon: 'banknote',
         providers: ['internal'],
         processingFee: 0,

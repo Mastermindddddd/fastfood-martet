@@ -15,7 +15,7 @@ export default function SectionCards() {
             </div>
             <h2 className="text-3xl font-bold mb-4 text-balance">SHOP OWNER</h2>
             <p className="text-primary-foreground/90 mb-6 leading-relaxed">
-              Browse our delicious menu, place orders, and enjoy fresh fast food delivered to your door
+              Browse our delicious menu, place orders, and enjoy fresh fast food ready for pickup
             </p>
             <div className="flex items-center gap-2 text-sm font-semibold">
               <span>CREATE SHOP ACCOUNT</span>

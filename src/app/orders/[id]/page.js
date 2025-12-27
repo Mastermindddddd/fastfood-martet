@@ -41,7 +41,7 @@ export default function OrderPage() {
         <SectionHeaders mainHeader="Your order" />
         <div className="mt-4 mb-8">
           <p>Thanks for your order.</p>
-          <p>We will call you when your order will be on the way.</p>
+          <p>We will call you when your order is ready for pickup.</p>
         </div>
       </div>
       {loadingOrder && (
@@ -57,7 +57,7 @@ export default function OrderPage() {
               Subtotal:
               <span className="text-black font-bold inline-block w-8">${subtotal}</span>
               <br />
-              Delivery:
+              Service Fee:
               <span className="text-black font-bold inline-block w-8">$5</span>
               <br />
               Total:

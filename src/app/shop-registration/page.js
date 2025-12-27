@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { ArrowLeft, Loader, AlertCircle } from 'lucide-react'
+import MapboxAddressInput from '@/components/layout/MapboxAddressInput'
 
 export default function ShopRegistration() {
   const router = useRouter()
@@ -371,13 +372,21 @@ export default function ShopRegistration() {
           {currentStep === 2 && (
             <div className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Restaurant Address *</label>
-                <input
-                  name="address"
+                <MapboxAddressInput
                   value={formData.address}
-                  onChange={handleInputChange}
-                  placeholder="Street address"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  onChange={(value) => {
+                    setFormData({...formData, address: value})
+                  }}
+                  onSelect={(addressData) => {
+                    setFormData({
+                      ...formData,
+                      address: addressData.streetAddress || formData.address,
+                      city: addressData.city || formData.city,
+                      postalCode: addressData.postalCode || formData.postalCode
+                    })
+                  }}
+                  placeholder="Start typing your restaurant address..."
+                  label="Restaurant Address *"
                 />
                 {errors.address && <p className="mt-1 text-sm text-red-600">{errors.address}</p>}
               </div>

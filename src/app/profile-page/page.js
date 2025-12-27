@@ -176,7 +176,7 @@ return ( <div className="min-h-screen bg-gray-50">
         {activeTab === "addresses" && (
           <Card>
             <CardHeader>
-              <CardTitle>Delivery Addresses</CardTitle>
+              <CardTitle>Pickup Addresses</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -242,7 +242,7 @@ return ( <div className="min-h-screen bg-gray-50">
                         Burger Palace • R124.50
                       </p>
                       <p className="text-sm text-gray-500">
-                        Delivered on Sep 28, 2025
+                        Completed on Sep 28, 2025
                       </p>
                     </div>
                     <div className="text-right">
