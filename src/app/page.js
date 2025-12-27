@@ -115,7 +115,7 @@ export default async function HomePage() {
               CHOOSE YOUR <span className="text-orange-500">VIBE</span>
             </h2>
             <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-              Whether you're hungry or hungry for business, we've got you covered
+              Whether you&apos;re hungry or hungry for business, we&apos;ve got you covered
             </p>
           </div>
           <SectionCards />
@@ -172,7 +172,7 @@ export default async function HomePage() {
               WHY CHOOSE <span className="text-orange-600">US?</span>
             </h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              We're not just another food ordering platform. We're your food partner.
+              We&apos;re not just another food ordering platform. We&apos;re your food partner.
             </p>
           </div>
 
@@ -217,7 +217,7 @@ export default async function HomePage() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <div className="inline-block px-4 py-2 bg-orange-100 rounded-full text-orange-700 font-bold text-sm mb-4">
-              DON'T TAKE OUR WORD FOR IT
+              DON&apos;T TAKE OUR WORD FOR IT
             </div>
             <h2 className="text-4xl sm:text-5xl font-black text-gray-900 mb-4">
               WHAT OUR <span className="text-orange-600">CUSTOMERS</span> SAY
@@ -258,7 +258,7 @@ export default async function HomePage() {
                   ))}
                 </div>
                 <p className="text-gray-700 mb-6 text-lg leading-relaxed italic">
-                  "{testimonial.text}"
+                  &quot;{testimonial.text}&quot;
                 </p>
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 bg-gradient-to-br from-orange-400 to-red-500 rounded-full flex items-center justify-center font-black text-white">
