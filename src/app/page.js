@@ -12,90 +12,90 @@ export default async function HomePage() {
   return (
     <div className="min-h-screen bg-white overflow-hidden">
       {/* Hero Section - Bold & Dynamic */}
-      <section className="relative min-h-[90vh] flex items-center justify-center px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-orange-50 via-white to-red-50">
+      <section className="relative min-h-[70vh] sm:min-h-[80vh] lg:min-h-[90vh] flex items-center justify-center px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-0 bg-gradient-to-br from-orange-50 via-white to-red-50">
 
         <div className="relative max-w-7xl mx-auto w-full">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Left Content */}
-            <div className="text-center lg:text-left space-y-8 z-10">
+          <div className="flex flex-col-reverse lg:grid lg:grid-cols-2 gap-8 sm:gap-12 items-center">
+            {/* Left Content - Text */}
+            <div className="text-center lg:text-left space-y-6 sm:space-y-8 z-10 order-2 lg:order-1">
               
               {/* Main Heading */}
-              <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-tight">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black leading-tight">
                 <span className="block text-gray-900">SCREW</span>
                 <span className="block bg-gradient-to-r from-orange-600 via-red-600 to-orange-600 bg-clip-text text-transparent animate-gradient">
                   THE DIET
                 </span>
-                <span className="block text-gray-900 text-4xl sm:text-5xl md:text-6xl lg:text-7xl mt-2">
+                <span className="block text-gray-900 text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl mt-2">
                   EAT GOOD FOOD
                 </span>
               </h1>
 
               {/* Subheading */}
-              <p className="text-xl sm:text-2xl text-gray-700 max-w-2xl mx-auto lg:mx-0 font-medium">
+              <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-700 max-w-2xl mx-auto lg:mx-0 font-medium px-2 sm:px-0">
                 Premium fast food prepared fresh for you. 
                 <span className="text-orange-600 font-bold"> No compromises.</span>
               </p>
 
               {/* Search Bar */}
-              <div className="max-w-2xl mx-auto lg:mx-0">
+              <div className="max-w-2xl mx-auto lg:mx-0 px-2 sm:px-0">
                 <SearchBar />
               </div>
 
               {/* CTA Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <Link href='/restaurents'>
-                  <button className="group relative px-8 py-4 bg-gradient-to-r from-orange-600 to-red-600 text-white font-bold rounded-2xl hover:shadow-2xl hover:scale-105 transition-all duration-300 text-lg overflow-hidden">
-                    <span className="relative z-10 flex items-center gap-2">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start px-2 sm:px-0">
+                <Link href='/restaurents' className="w-full sm:w-auto">
+                  <button className="group relative w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-orange-600 to-red-600 text-white font-bold rounded-2xl hover:shadow-2xl hover:scale-105 transition-all duration-300 text-base sm:text-lg overflow-hidden">
+                    <span className="relative z-10 flex items-center justify-center gap-2">
                       ORDER NOW
-                      <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                       </svg>
                     </span>
                     <div className="absolute inset-0 bg-gradient-to-r from-orange-700 to-red-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   </button>
                 </Link>
-                <Link href='/restaurents'>
-                  <button className="px-8 py-4 border-3 border-gray-900 text-gray-900 font-bold rounded-2xl hover:bg-gray-900 hover:text-white transition-all duration-300 text-lg">
+                <Link href='/restaurents' className="w-full sm:w-auto">
+                  <button className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 border-3 border-gray-900 text-gray-900 font-bold rounded-2xl hover:bg-gray-900 hover:text-white transition-all duration-300 text-base sm:text-lg">
                     BROWSE SHOPS
                   </button>
                 </Link>
               </div>
 
               {/* Quick Stats */}
-              <div className="flex flex-wrap gap-6 justify-center lg:justify-start pt-4">
+              <div className="flex flex-wrap gap-4 sm:gap-6 justify-center lg:justify-start pt-2 sm:pt-4">
                 <div className="text-center lg:text-left">
-                  <div className="text-3xl font-black text-orange-600">50K+</div>
-                  <div className="text-sm text-gray-600 font-medium">Happy Customers</div>
+                  <div className="text-2xl sm:text-3xl font-black text-orange-600">50K+</div>
+                  <div className="text-xs sm:text-sm text-gray-600 font-medium">Happy Customers</div>
                 </div>
                 <div className="text-center lg:text-left">
-                  <div className="text-3xl font-black text-red-600">500+</div>
-                  <div className="text-sm text-gray-600 font-medium">Restaurants</div>
+                  <div className="text-2xl sm:text-3xl font-black text-red-600">500+</div>
+                  <div className="text-xs sm:text-sm text-gray-600 font-medium">Restaurants</div>
                 </div>
                 <div className="text-center lg:text-left">
-                  <div className="text-3xl font-black text-orange-600">30min</div>
-                  <div className="text-sm text-gray-600 font-medium">Avg Prep Time</div>
+                  <div className="text-2xl sm:text-3xl font-black text-orange-600">30min</div>
+                  <div className="text-xs sm:text-sm text-gray-600 font-medium">Avg Prep Time</div>
                 </div>
               </div>
             </div>
 
-            {/* Right Image */}
-            <div className="relative flex justify-center lg:justify-end">
-              <div className="relative group">
-                <div className="absolute -inset-4 group-hover:opacity-75 transition-opacity duration-300"></div>
+            {/* Right Image - Shows first on mobile */}
+            <div className="relative flex justify-center lg:justify-end w-full order-1 lg:order-2">
+              <div className="relative group w-full max-w-sm sm:max-w-md lg:max-w-lg">
+                <div className="absolute -inset-2 sm:-inset-4 group-hover:opacity-75 transition-opacity duration-300"></div>
                 <Image
                   src="/kota-market1.png"
                   alt="Delicious Food"
                   width={600}
                   height={600}
-                  className="relative w-full max-w-lg h-auto rounded-3xl shadow-2xl transform group-hover:scale-105 transition-transform duration-500"
+                  className="relative w-full h-auto rounded-2xl sm:rounded-3xl shadow-2xl transform group-hover:scale-105 transition-transform duration-500"
                   priority
                 />
                 {/* Floating Badge */}
-                <div className="absolute -top-4 -right-4 bg-white rounded-2xl p-4 shadow-xl border-4 border-orange-500 animate-bounce">
+                <div className="absolute -top-2 -right-2 sm:-top-4 sm:-right-4 bg-white rounded-xl sm:rounded-2xl p-2 sm:p-4 shadow-xl border-2 sm:border-4 border-orange-500 animate-bounce">
                   <div className="text-center">
-                    <div className="text-2xl mb-1">⚡</div>
-                    <div className="font-black text-orange-600 text-sm">FAST</div>
-                    <div className="text-xs text-gray-600">PREP</div>
+                    <div className="text-xl sm:text-2xl mb-1">⚡</div>
+                    <div className="font-black text-orange-600 text-xs sm:text-sm">FAST</div>
+                    <div className="text-[10px] sm:text-xs text-gray-600">PREP</div>
                   </div>
                 </div>
               </div>
@@ -105,16 +105,16 @@ export default async function HomePage() {
       </section>
 
       {/* Section Cards - Shop Owner & Customer */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-900 text-white relative overflow-hidden">
+      <section className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 bg-gray-900 text-white relative overflow-hidden">
         <div className="absolute inset-0 opacity-10" style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
         }}></div>
         <div className="max-w-6xl mx-auto relative z-10">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-black mb-4">
+          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black mb-3 sm:mb-4">
               CHOOSE YOUR <span className="text-orange-500">VIBE</span>
             </h2>
-            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg lg:text-xl text-gray-300 max-w-2xl mx-auto px-2 sm:px-0">
               Whether you&apos;re hungry or hungry for business, we&apos;ve got you covered
             </p>
           </div>
@@ -123,21 +123,21 @@ export default async function HomePage() {
       </section>
 
       {/* Popular Categories - Bold Grid */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+      <section className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <div className="inline-block px-4 py-2 bg-orange-100 rounded-full text-orange-700 font-bold text-sm mb-4">
+          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
+            <div className="inline-block px-3 sm:px-4 py-1.5 sm:py-2 bg-orange-100 rounded-full text-orange-700 font-bold text-xs sm:text-sm mb-3 sm:mb-4">
               POPULAR CATEGORIES
             </div>
-            <h2 className="text-4xl sm:text-5xl font-black text-gray-900 mb-4">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-gray-900 mb-3 sm:mb-4">
               FIND YOUR <span className="text-orange-600">FLAVOUR</span>
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-2xl mx-auto px-2 sm:px-0">
               Explore our most loved food categories from across South Africa
             </p>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 lg:gap-6">
             {[
               { name: 'Burgers', emoji: '🍔', color: 'from-yellow-400 to-orange-500', count: '120+' },
               { name: 'Kota', emoji: '🥖', color: 'from-orange-400 to-red-500', count: '200+' },
@@ -148,15 +148,15 @@ export default async function HomePage() {
             ].map((category) => (
               <div 
                 key={category.name} 
-                className="group relative bg-white p-6 rounded-2xl border-2 border-gray-200 hover:border-orange-400 hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:-translate-y-2 overflow-hidden"
+                className="group relative bg-white p-4 sm:p-6 rounded-xl sm:rounded-2xl border-2 border-gray-200 hover:border-orange-400 hover:shadow-2xl transition-all duration-300 cursor-pointer transform hover:-translate-y-2 overflow-hidden"
               >
                 <div className={`absolute inset-0 bg-gradient-to-br ${category.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}></div>
                 <div className="relative z-10 text-center">
-                  <div className="text-5xl sm:text-6xl mb-4 transform group-hover:scale-125 group-hover:rotate-12 transition-transform duration-300">
+                  <div className="text-4xl sm:text-5xl lg:text-6xl mb-2 sm:mb-4 transform group-hover:scale-125 group-hover:rotate-12 transition-transform duration-300">
                     {category.emoji}
                   </div>
-                  <h3 className="font-black text-gray-900 text-base sm:text-lg mb-2">{category.name}</h3>
-                  <p className="text-sm font-bold text-orange-600">{category.count} shops</p>
+                  <h3 className="font-black text-gray-900 text-sm sm:text-base lg:text-lg mb-1 sm:mb-2">{category.name}</h3>
+                  <p className="text-xs sm:text-sm font-bold text-orange-600">{category.count} shops</p>
                 </div>
               </div>
             ))}
@@ -165,18 +165,18 @@ export default async function HomePage() {
       </section>
 
       {/* Features - Modern Cards */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-50 to-white">
+      <section className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-50 to-white">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-black text-gray-900 mb-4">
+          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-gray-900 mb-3 sm:mb-4">
               WHY CHOOSE <span className="text-orange-600">US?</span>
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-2xl mx-auto px-2 sm:px-0">
               We&apos;re not just another food ordering platform. We&apos;re your food partner.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
             {[
               {
                 icon: '⚡',
@@ -199,13 +199,13 @@ export default async function HomePage() {
             ].map((feature) => (
               <div
                 key={feature.title}
-                className="group relative bg-white p-8 rounded-3xl border-2 border-gray-200 hover:border-orange-400 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
+                className="group relative bg-white p-6 sm:p-8 rounded-2xl sm:rounded-3xl border-2 border-gray-200 hover:border-orange-400 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
               >
-                <div className={`w-16 h-16 bg-gradient-to-br ${feature.gradient} rounded-2xl flex items-center justify-center mb-6 transform group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300`}>
-                  <span className="text-3xl">{feature.icon}</span>
+                <div className={`w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br ${feature.gradient} rounded-xl sm:rounded-2xl flex items-center justify-center mb-4 sm:mb-6 transform group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300`}>
+                  <span className="text-2xl sm:text-3xl">{feature.icon}</span>
                 </div>
-                <h3 className="text-2xl font-black text-gray-900 mb-4">{feature.title}</h3>
-                <p className="text-gray-600 leading-relaxed text-lg">{feature.desc}</p>
+                <h3 className="text-xl sm:text-2xl font-black text-gray-900 mb-3 sm:mb-4">{feature.title}</h3>
+                <p className="text-gray-600 leading-relaxed text-base sm:text-lg">{feature.desc}</p>
               </div>
             ))}
           </div>
@@ -213,18 +213,18 @@ export default async function HomePage() {
       </section>
 
       {/* Testimonials - Social Proof */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+      <section className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <div className="inline-block px-4 py-2 bg-orange-100 rounded-full text-orange-700 font-bold text-sm mb-4">
+          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
+            <div className="inline-block px-3 sm:px-4 py-1.5 sm:py-2 bg-orange-100 rounded-full text-orange-700 font-bold text-xs sm:text-sm mb-3 sm:mb-4">
               DON&apos;T TAKE OUR WORD FOR IT
             </div>
-            <h2 className="text-4xl sm:text-5xl font-black text-gray-900 mb-4">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-gray-900 mb-3 sm:mb-4">
               WHAT OUR <span className="text-orange-600">CUSTOMERS</span> SAY
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
             {[
               {
                 name: 'Sarah Johnson',
@@ -250,23 +250,23 @@ export default async function HomePage() {
             ].map((testimonial, idx) => (
               <div
                 key={idx}
-                className="bg-gray-50 p-8 rounded-3xl border-2 border-gray-200 hover:border-orange-400 hover:shadow-xl transition-all duration-300"
+                className="bg-gray-50 p-6 sm:p-8 rounded-2xl sm:rounded-3xl border-2 border-gray-200 hover:border-orange-400 hover:shadow-xl transition-all duration-300"
               >
-                <div className="flex gap-1 mb-4">
+                <div className="flex gap-1 mb-3 sm:mb-4">
                   {[...Array(testimonial.rating)].map((_, i) => (
-                    <span key={i} className="text-yellow-400 text-xl">⭐</span>
+                    <span key={i} className="text-yellow-400 text-lg sm:text-xl">⭐</span>
                   ))}
                 </div>
-                <p className="text-gray-700 mb-6 text-lg leading-relaxed italic">
+                <p className="text-gray-700 mb-4 sm:mb-6 text-base sm:text-lg leading-relaxed italic">
                   &quot;{testimonial.text}&quot;
                 </p>
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-orange-400 to-red-500 rounded-full flex items-center justify-center font-black text-white">
+                <div className="flex items-center gap-3 sm:gap-4">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-orange-400 to-red-500 rounded-full flex items-center justify-center font-black text-white text-sm sm:text-base">
                     {testimonial.avatar}
                   </div>
                   <div>
-                    <div className="font-black text-gray-900">{testimonial.name}</div>
-                    <div className="text-sm text-gray-600">{testimonial.role}</div>
+                    <div className="font-black text-gray-900 text-sm sm:text-base">{testimonial.name}</div>
+                    <div className="text-xs sm:text-sm text-gray-600">{testimonial.role}</div>
                   </div>
                 </div>
               </div>
@@ -276,15 +276,15 @@ export default async function HomePage() {
       </section>
 
       {/* Stats - Bold Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-orange-600 via-red-600 to-orange-600 text-white relative overflow-hidden">
+      <section className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-orange-600 via-red-600 to-orange-600 text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-black opacity-10"></div>
         <div className="max-w-7xl mx-auto relative z-10">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-black mb-4">TRUSTED BY THOUSANDS</h2>
-            <p className="text-xl text-orange-100">Join our growing community of satisfied customers</p>
+          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black mb-3 sm:mb-4">TRUSTED BY THOUSANDS</h2>
+            <p className="text-base sm:text-lg lg:text-xl text-orange-100 px-2 sm:px-0">Join our growing community of satisfied customers</p>
           </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             {[
               { number: '50K+', label: 'Happy Customers' },
               { number: '500+', label: 'Partner Restaurants' },
@@ -292,8 +292,8 @@ export default async function HomePage() {
               { number: '25', label: 'Cities Served' }
             ].map((stat, idx) => (
               <div key={idx} className="text-center">
-                <div className="text-5xl sm:text-6xl font-black mb-2">{stat.number}</div>
-                <div className="text-orange-100 text-lg font-semibold">{stat.label}</div>
+                <div className="text-4xl sm:text-5xl lg:text-6xl font-black mb-1 sm:mb-2">{stat.number}</div>
+                <div className="text-orange-100 text-sm sm:text-base lg:text-lg font-semibold">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -301,31 +301,31 @@ export default async function HomePage() {
       </section>
 
       {/* How It Works */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
+      <section className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl sm:text-5xl font-black text-gray-900 mb-4">
+          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black text-gray-900 mb-3 sm:mb-4">
               ORDER IN <span className="text-orange-600">3 EASY STEPS</span>
             </h2>
-            <p className="text-xl text-gray-600">From craving to eating in minutes! 🚀</p>
+            <p className="text-base sm:text-lg lg:text-xl text-gray-600">From craving to eating in minutes! 🚀</p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
             {[
               { step: '1', emoji: '🔍', title: 'Browse & Choose', desc: 'Find your favorite restaurant and pick what you love from hundreds of options' },
               { step: '2', emoji: '🛒', title: 'Add to Cart', desc: 'Customize your order, add special instructions, and proceed to checkout' },
               { step: '3', emoji: '🚀', title: 'Ready for Pickup', desc: 'Track your order in real-time and enjoy hot, fresh food ready for you!' }
             ].map((item) => (
               <div key={item.step} className="relative group">
-                <div className="bg-white p-8 rounded-3xl border-2 border-gray-200 hover:border-orange-400 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 text-center">
-                  <div className="absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-12 bg-gradient-to-r from-orange-600 to-red-600 rounded-full flex items-center justify-center text-white font-black text-xl shadow-lg">
+                <div className="bg-white p-6 sm:p-8 rounded-2xl sm:rounded-3xl border-2 border-gray-200 hover:border-orange-400 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 text-center">
+                  <div className="absolute -top-4 sm:-top-6 left-1/2 -translate-x-1/2 w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-orange-600 to-red-600 rounded-full flex items-center justify-center text-white font-black text-lg sm:text-xl shadow-lg">
                     {item.step}
                   </div>
-                  <div className="text-6xl mb-6 mt-4 transform group-hover:scale-125 group-hover:rotate-12 transition-transform duration-300">
+                  <div className="text-5xl sm:text-6xl mb-4 sm:mb-6 mt-3 sm:mt-4 transform group-hover:scale-125 group-hover:rotate-12 transition-transform duration-300">
                     {item.emoji}
                   </div>
-                  <h3 className="text-2xl font-black text-gray-900 mb-4">{item.title}</h3>
-                  <p className="text-gray-600 leading-relaxed text-lg">{item.desc}</p>
+                  <h3 className="text-xl sm:text-2xl font-black text-gray-900 mb-3 sm:mb-4">{item.title}</h3>
+                  <p className="text-gray-600 leading-relaxed text-base sm:text-lg">{item.desc}</p>
                 </div>
               </div>
             ))}
@@ -334,25 +334,25 @@ export default async function HomePage() {
       </section>
 
       {/* Final CTA */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white relative overflow-hidden">
+      <section className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white relative overflow-hidden">
         <div className="absolute inset-0 opacity-10" style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
         }}></div>
         <div className="max-w-4xl mx-auto text-center relative z-10">
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-black mb-6">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-4 sm:mb-6">
             READY TO <span className="text-orange-500">ORDER?</span>
           </h2>
-          <p className="text-xl sm:text-2xl text-gray-300 mb-10 max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg lg:text-xl xl:text-2xl text-gray-300 mb-6 sm:mb-8 lg:mb-10 max-w-2xl mx-auto px-2 sm:px-0">
             Join thousands of satisfied customers and experience the best food ordering platform in your city.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href='/restaurents'>
-              <button className="group relative px-10 py-5 bg-gradient-to-r from-orange-600 to-red-600 text-white font-black rounded-2xl hover:shadow-2xl hover:scale-105 transition-all duration-300 text-lg overflow-hidden">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-2 sm:px-0">
+            <Link href='/restaurents' className="w-full sm:w-auto">
+              <button className="group relative w-full sm:w-auto px-8 sm:px-10 py-4 sm:py-5 bg-gradient-to-r from-orange-600 to-red-600 text-white font-black rounded-2xl hover:shadow-2xl hover:scale-105 transition-all duration-300 text-base sm:text-lg overflow-hidden">
                 <span className="relative z-10">START ORDERING NOW</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-orange-700 to-red-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </button>
             </Link>
-            <button className="px-10 py-5 border-3 border-white text-white font-black rounded-2xl hover:bg-white hover:text-gray-900 transition-all duration-300 text-lg">
+            <button className="w-full sm:w-auto px-8 sm:px-10 py-4 sm:py-5 border-3 border-white text-white font-black rounded-2xl hover:bg-white hover:text-gray-900 transition-all duration-300 text-base sm:text-lg">
               DOWNLOAD APP
             </button>
           </div>
