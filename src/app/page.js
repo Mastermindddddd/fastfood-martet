@@ -21,30 +21,25 @@ export default async function HomePage() {
               
               {/* Main Heading */}
               <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black leading-tight">
-                <span className="block text-gray-900">SCREW</span>
-                <span className="block bg-gradient-to-r from-orange-600 via-red-600 to-orange-600 bg-clip-text text-transparent animate-gradient">
+                <span className="block text-gray-900 tracking-tight sm:tracking-tighter drop-shadow-sm">SCREW</span>
+                <span className="block bg-gradient-to-r from-orange-600 via-red-600 to-orange-600 bg-clip-text text-transparent animate-gradient tracking-tight sm:tracking-tighter drop-shadow-lg">
                   THE DIET
                 </span>
-                <span className="block text-gray-900 text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl mt-2">
+                <span className="block text-gray-900 text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl mt-2 tracking-wide sm:tracking-wider font-extrabold">
                   EAT GOOD FOOD
                 </span>
               </h1>
 
               {/* Subheading */}
-              <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-700 max-w-2xl mx-auto lg:mx-0 font-medium px-2 sm:px-0">
+              <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-700 max-w-2xl mx-auto lg:mx-0 font-light sm:font-normal px-2 sm:px-0 leading-relaxed tracking-wide">
                 Premium fast food prepared fresh for you. 
-                <span className="text-orange-600 font-bold"> No compromises.</span>
+                <span className="text-orange-600 font-semibold italic"> No compromises.</span>
               </p>
-
-              {/* Search Bar */}
-              <div className="max-w-2xl mx-auto lg:mx-0 px-2 sm:px-0">
-                <SearchBar />
-              </div>
 
               {/* CTA Buttons */}
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start px-2 sm:px-0">
                 <Link href='/restaurents' className="w-full sm:w-auto">
-                  <button className="group relative w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-orange-600 to-red-600 text-white font-bold rounded-2xl hover:shadow-2xl hover:scale-105 transition-all duration-300 text-base sm:text-lg overflow-hidden">
+                  <button className="group relative w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-orange-600 to-red-600 text-white font-extrabold tracking-wide rounded-2xl hover:shadow-2xl hover:scale-105 transition-all duration-300 text-base sm:text-lg overflow-hidden uppercase">
                     <span className="relative z-10 flex items-center justify-center gap-2">
                       ORDER NOW
                       <svg className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -55,7 +50,7 @@ export default async function HomePage() {
                   </button>
                 </Link>
                 <Link href='/restaurents' className="w-full sm:w-auto">
-                  <button className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 border-3 border-gray-900 text-gray-900 font-bold rounded-2xl hover:bg-gray-900 hover:text-white transition-all duration-300 text-base sm:text-lg">
+                  <button className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 border-3 border-gray-900 text-gray-900 font-extrabold tracking-wide rounded-2xl hover:bg-gray-900 hover:text-white transition-all duration-300 text-base sm:text-lg uppercase">
                     BROWSE SHOPS
                   </button>
                 </Link>
@@ -64,16 +59,16 @@ export default async function HomePage() {
               {/* Quick Stats */}
               <div className="flex flex-wrap gap-4 sm:gap-6 justify-center lg:justify-start pt-2 sm:pt-4">
                 <div className="text-center lg:text-left">
-                  <div className="text-2xl sm:text-3xl font-black text-orange-600">50K+</div>
-                  <div className="text-xs sm:text-sm text-gray-600 font-medium">Happy Customers</div>
+                  <div className="text-2xl sm:text-3xl font-black text-orange-600 tracking-tight drop-shadow-sm">50K+</div>
+                  <div className="text-xs sm:text-sm text-gray-600 font-medium tracking-wide uppercase">Happy Customers</div>
                 </div>
                 <div className="text-center lg:text-left">
-                  <div className="text-2xl sm:text-3xl font-black text-red-600">500+</div>
-                  <div className="text-xs sm:text-sm text-gray-600 font-medium">Restaurants</div>
+                  <div className="text-2xl sm:text-3xl font-black text-red-600 tracking-tight drop-shadow-sm">500+</div>
+                  <div className="text-xs sm:text-sm text-gray-600 font-medium tracking-wide uppercase">Restaurants</div>
                 </div>
                 <div className="text-center lg:text-left">
-                  <div className="text-2xl sm:text-3xl font-black text-orange-600">30min</div>
-                  <div className="text-xs sm:text-sm text-gray-600 font-medium">Avg Prep Time</div>
+                  <div className="text-2xl sm:text-3xl font-black text-orange-600 tracking-tight drop-shadow-sm">30min</div>
+                  <div className="text-xs sm:text-sm text-gray-600 font-medium tracking-wide uppercase">Avg Prep Time</div>
                 </div>
               </div>
             </div>
