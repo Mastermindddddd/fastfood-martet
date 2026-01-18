@@ -293,11 +293,19 @@ function ShopCard({ shop, onClick }) {
       onClick={onClick}
     >
       <div className="relative">
-        <div className="w-full h-48 bg-gradient-to-br from-orange-400 to-red-500 rounded-t-lg flex items-center justify-center">
-          <span className="text-white text-4xl font-bold">
-            {shop.businessName?.charAt(0).toUpperCase()}
-          </span>
-        </div>
+        {shop.shopImage ? (
+          <img 
+            src={shop.shopImage} 
+            alt={shop.businessName}
+            className="w-full h-48 object-cover rounded-t-lg"
+          />
+        ) : (
+          <div className="w-full h-48 bg-gradient-to-br from-orange-400 to-red-500 rounded-t-lg flex items-center justify-center">
+            <span className="text-white text-4xl font-bold">
+              {shop.businessName?.charAt(0).toUpperCase()}
+            </span>
+          </div>
+        )}
         <Badge className="absolute top-2 left-2 bg-orange-500">
           {shop.cuisine || 'Food'}
         </Badge>

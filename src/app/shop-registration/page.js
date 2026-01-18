@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
-import { ArrowLeft, Loader, AlertCircle } from 'lucide-react'
+import { ArrowLeft, Loader, AlertCircle, X } from 'lucide-react'
 import MapboxAddressInput from '@/components/layout/MapboxAddressInput'
 
 export default function ShopRegistration() {
@@ -24,6 +24,7 @@ export default function ShopRegistration() {
     postalCode: '',
     cuisine: '',
     description: '',
+    shopImage: null,
     operatingHours: {
       monday: { open: '09:00', close: '22:00', closed: false },
       tuesday: { open: '09:00', close: '22:00', closed: false },
@@ -40,6 +41,7 @@ export default function ShopRegistration() {
   
   const [errors, setErrors] = useState({})
   const [submitLoading, setSubmitLoading] = useState(false)
+  const [imagePreview, setImagePreview] = useState(null)
 
   // Handle auth status, check for existing shop, and autofill
   useEffect(() => {
@@ -78,6 +80,23 @@ export default function ShopRegistration() {
       console.error("Error checking existing shop:", err)
     }
   }
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFormData(prev => ({
+        ...prev,
+        shopImage: file
+      }));
+      
+      // Create preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -198,35 +217,46 @@ export default function ShopRegistration() {
   }
 
   const handleSubmit = async () => {
-    if (!validateStep(currentStep)) return
+    if (!validateStep(currentStep)) return;
     
-    setSubmitLoading(true)
+    setSubmitLoading(true);
     
     try {
+      const formDataToSend = new FormData();
+      
+      // Append all text fields
+      Object.keys(formData).forEach(key => {
+        if (key === 'operatingHours') {
+          formDataToSend.append(key, JSON.stringify(formData[key]));
+        } else if (key === 'shopImage' && formData[key]) {
+          formDataToSend.append(key, formData[key]);
+        } else if (key !== 'shopImage') {
+          formDataToSend.append(key, formData[key]);
+        }
+      });
+      
+      formDataToSend.append('userId', session?.user?.id);
+  
       const res = await fetch("/api/register-shop", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...formData,
-          userId: session?.user?.id
-        }),
-      })
-
-      const data = await res.json()
-
+        body: formDataToSend, // Changed from JSON.stringify
+      });
+  
+      const data = await res.json();
+  
       if (data.success) {
-        alert("Registration successful! Redirecting to dashboard...")
-        router.push("/shop-dashboard")
+        alert("Registration successful! Redirecting to dashboard...");
+        router.push("/shop-dashboard");
       } else {
-        setErrors({ general: data.message || "Registration failed." })
+        setErrors({ general: data.message || "Registration failed." });
       }
     } catch (err) {
-      console.error("Registration error:", err)
-      setErrors({ general: "Registration failed. Please try again." })
+      console.error("Registration error:", err);
+      setErrors({ general: "Registration failed. Please try again." });
     } finally {
-      setSubmitLoading(false)
+      setSubmitLoading(false);
     }
-  }
+  };
 
   const steps = [
     { id: 1, name: 'Business Info', description: 'Basic business information' },
@@ -447,8 +477,56 @@ export default function ShopRegistration() {
                   rows={4}
                 />
               </div>
-            </div>
-          )}
+              <div>
+      <label className="block text-sm font-medium text-gray-700 mb-1">
+        Shop Image
+      </label>
+      <div className="mt-1 flex items-center space-x-4">
+        {imagePreview ? (
+          <div className="relative w-32 h-32">
+            <img 
+              src={imagePreview} 
+              alt="Preview" 
+              className="w-full h-full object-cover rounded-lg border-2 border-gray-300"
+            />
+            <button
+              type="button"
+              onClick={() => {
+                setImagePreview(null);
+                setFormData(prev => ({ ...prev, shopImage: null }));
+              }}
+              className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+        ) : (
+          <div className="w-32 h-32 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center">
+            <span className="text-gray-400 text-sm">No image</span>
+          </div>
+        )}
+        <div>
+          <input
+            type="file"
+            id="shopImage"
+            accept="image/*"
+            onChange={handleImageChange}
+            className="hidden"
+          />
+          <label
+            htmlFor="shopImage"
+            className="cursor-pointer px-4 py-2 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 inline-block"
+          >
+            Choose Image
+          </label>
+          <p className="text-xs text-gray-500 mt-2">
+            Recommended: 800x600px, Max 5MB
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
 
           {currentStep === 3 && (
             <div className="space-y-6">

@@ -12,6 +12,7 @@ const ShopSchema = new mongoose.Schema({
   postalCode: { type: String },
   cuisine: { type: String, required: true },
   description: { type: String },
+  shopImage: { type: String },
   operatingHours: {
     monday: { open: String, close: String, closed: Boolean },
     tuesday: { open: String, close: String, closed: Boolean },
