@@ -62,6 +62,10 @@ export function AppProvider({ children }) {
     }
   }
 
+  function cartProductPrice(cartProduct) {
+    return cartProduct.price * (cartProduct.quantity || 1);
+  }
+
   function removeCartProduct(indexToRemove) {
     setCartProducts((prev) => {
       const newCartProducts = prev.filter((_, i) => i !== indexToRemove);
@@ -158,6 +162,7 @@ export function AppProvider({ children }) {
             locationLoading,
             requestLocation,
             clearLocation,
+            cartProductPrice
           }}
         >
           {children}

@@ -3,8 +3,21 @@ import bcrypt from "bcrypt";
 import mongoose from "mongoose";
 import { uploadToS3 } from "@/libs/s3Upload";
 
+async function connectDB() {
+  if (mongoose.connection.readyState >= 1) {
+    return;
+  }
+  
+  return mongoose.connect(process.env.MONGO_URL, {
+    serverSelectionTimeoutMS: 5000,
+    socketTimeoutMS: 45000,
+  });
+}
+
 export async function POST(req) {
   try {
+    await connectDB();
+    
     const formData = await req.formData();
     
     // Extract image file if exists
