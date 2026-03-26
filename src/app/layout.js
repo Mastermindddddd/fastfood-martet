@@ -10,6 +10,9 @@ const roboto = Roboto({ subsets: ['latin'], weight: ['400', '500', '700'] })
 export const metadata = {
   title: 'kota-market',
   description: "Explore South Africa's favorite fast food",
+  icons: {
+    icon: '/fryer.png',
+  },
 }
 
 export default function RootLayout({ children }) {
