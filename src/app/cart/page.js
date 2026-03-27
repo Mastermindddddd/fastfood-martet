@@ -229,7 +229,7 @@ export default function CartPage() {
             {/* Order Summary & Checkout */}
             <div className="space-y-6">
               {/* Pickup Details */}
-              <Card>
+              {/*<Card>
                 <CardHeader>
                   <CardTitle>Pickup Details</CardTitle>
                 </CardHeader>
@@ -273,7 +273,7 @@ export default function CartPage() {
                     />
                   </div>
                 </CardContent>
-              </Card>
+              </Card>*/}
 
               {/* Payment Method */}
               <Card>
