@@ -57,7 +57,7 @@ export default async function HomePage() {
               </div>
 
               {/* Quick Stats */}
-              <div className="flex flex-wrap gap-4 sm:gap-6 justify-center lg:justify-start pt-2 sm:pt-4">
+              {/*<div className="flex flex-wrap gap-4 sm:gap-6 justify-center lg:justify-start pt-2 sm:pt-4">
                 <div className="text-center lg:text-left">
                   <div className="text-2xl sm:text-3xl font-black text-orange-600 tracking-tight drop-shadow-sm">50K+</div>
                   <div className="text-xs sm:text-sm text-gray-600 font-medium tracking-wide uppercase">Happy Customers</div>
@@ -70,7 +70,7 @@ export default async function HomePage() {
                   <div className="text-2xl sm:text-3xl font-black text-orange-600 tracking-tight drop-shadow-sm">30min</div>
                   <div className="text-xs sm:text-sm text-gray-600 font-medium tracking-wide uppercase">Avg Prep Time</div>
                 </div>
-              </div>
+              </div>*/}
             </div>
 
             {/* Right Image - Shows first on mobile */}
@@ -271,7 +271,7 @@ export default async function HomePage() {
       </section>
 
       {/* Stats - Bold Section */}
-      <section className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-orange-600 via-red-600 to-orange-600 text-white relative overflow-hidden">
+      {/*<section className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-orange-600 via-red-600 to-orange-600 text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-black opacity-10"></div>
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="text-center mb-8 sm:mb-12 lg:mb-16">
@@ -293,7 +293,7 @@ export default async function HomePage() {
             ))}
           </div>
         </div>
-      </section>
+      </section>*/}
 
       {/* How It Works */}
       <section className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 bg-white">
@@ -347,9 +347,6 @@ export default async function HomePage() {
                 <div className="absolute inset-0 bg-gradient-to-r from-orange-700 to-red-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </button>
             </Link>
-            <button className="w-full sm:w-auto px-8 sm:px-10 py-4 sm:py-5 border-3 border-white text-white font-black rounded-2xl hover:bg-white hover:text-gray-900 transition-all duration-300 text-base sm:text-lg">
-              DOWNLOAD APP
-            </button>
           </div>
         </div>
       </section>
