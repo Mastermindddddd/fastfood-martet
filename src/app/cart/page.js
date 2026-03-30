@@ -30,7 +30,7 @@ export default function CartPage() {
   const [paymentMethod, setPaymentMethod] = useState('cash')
   const [notes, setNotes] = useState('')
 
-  const deliveryFee = 15
+  const deliveryFee = 2
   
   // Calculate subtotal from cartProducts
   const subtotal = cartProducts.reduce((total, product) => {
@@ -56,71 +56,69 @@ export default function CartPage() {
   }, {})
 
   const handlePlaceOrder = async () => {
-    if (!session) {
-      alert('Please sign in to place an order')
-      router.push(`/login?callbackUrl=${encodeURIComponent('/cart')}`)
-      return
-    }
+  if (!session) {
+    router.push(`/login?callbackUrl=${encodeURIComponent('/cart')}`)
+    return
+  }
 
-    if (cartProducts.length === 0) {
-      setError('Your cart is empty')
-      return
-    }
+  if (cartProducts.length === 0) {
+    setError('Your cart is empty')
+    return
+  }
 
-    // Validate pickup address
-    if (!deliveryAddress.street || !deliveryAddress.city || !deliveryAddress.phone) {
-      setError('Please fill in all pickup details')
-      return
-    }
+  setLoading(true)
+  setError(null)
 
-    setLoading(true)
-    setError(null)
+  try {
+    const createdOrders = []
 
-    try {
-      // Place order for each shop separately
-      for (const shopGroup of Object.values(groupedCart)) {
-        const orderData = {
-          shopId: shopGroup.shopId,
-          items: shopGroup.items.map(item => ({
-            menuItemId: item._id || item.id,
-            name: item.name,
-            quantity: 1 // Since your cart doesn't store quantity separately
-          })),
-          deliveryAddress,
-          paymentMethod,
-          notes,
-          deliveryFee
-        }
-
-        const response = await fetch('/api/orders', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(orderData)
-        })
-
-        const data = await response.json()
-
-        if (!data.success) {
-          throw new Error(data.message || 'Failed to place order')
-        }
+    for (const shopGroup of Object.values(groupedCart)) {
+      const orderData = {
+        shopId: shopGroup.shopId,
+        items: shopGroup.items.map(item => ({
+          menuItemId: item._id || item.id,
+          name: item.name,
+          quantity: 1
+        })),
+        paymentMethod,
+        notes,
+        deliveryFee
       }
 
-      setSuccess(true)
-      clearCart()
-      
-      // Redirect to orders page after 2 seconds
-      setTimeout(() => {
-        router.push('/orders')
-      }, 2000)
-    } catch (err) {
-      console.error('Error placing order:', err)
-      setError(err.message || 'Failed to place order')
-    } finally {
-      setLoading(false)
+      const response = await fetch('/api/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(orderData)
+      })
+
+      const data = await response.json()
+
+      if (!data.success) {
+        throw new Error(data.message || 'Failed to place order')
+      }
+
+      createdOrders.push(data.order)
     }
+
+    setSuccess(true)
+    clearCart()
+
+    setTimeout(() => {
+      if (createdOrders.length === 1) {
+        router.push(`/orders/${createdOrders[0]._id}`)
+      } else {
+        router.push('/orders')
+      }
+    }, 1200)
+  } catch (err) {
+    console.error('Error placing order:', err)
+    setError(err.message || 'Failed to place order')
+  } finally {
+    setLoading(false)
   }
+}
 
   if (status === 'loading') {
     return (
@@ -290,7 +288,7 @@ export default function CartPage() {
                   >
                     <option value="cash">Cash on Pickup</option>
                     <option value="card">Card Payment</option>
-                    <option value="wallet">E-Wallet</option>
+                    {/*<option value="wallet">E-Wallet</option>*/}
                   </select>
                 </CardContent>
               </Card>

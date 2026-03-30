@@ -118,7 +118,7 @@ export default async function HomePage() {
       </section>
 
       {/* Popular Categories - Bold Grid */}
-      <section className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 bg-white">
+      {/*<section className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-8 sm:mb-12 lg:mb-16">
             <div className="inline-block px-3 sm:px-4 py-1.5 sm:py-2 bg-orange-100 rounded-full text-orange-700 font-bold text-xs sm:text-sm mb-3 sm:mb-4">
@@ -157,7 +157,7 @@ export default async function HomePage() {
             ))}
           </div>
         </div>
-      </section>
+      </section>*/}
 
       {/* Features - Modern Cards */}
       <section className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-gray-50 to-white">

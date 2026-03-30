@@ -147,7 +147,7 @@ export async function POST(req) {
       subtotal,
       deliveryFee,
       total,
-      deliveryAddress: deliveryAddress || {},
+      deliveryAddress: {},
       paymentMethod: paymentMethod || 'cash',
       paymentStatus: 'pending',
       status: 'pending',

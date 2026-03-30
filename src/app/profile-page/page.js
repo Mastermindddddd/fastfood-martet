@@ -48,9 +48,8 @@ setUser((prev) => ({
 setIsEditing(false);
 };
 
-const handleLogout = () => {
-setUser(null);
-router.push("/");
+const handleLogout = async () => {
+  await signOut({ callbackUrl: "/" });
 };
 
 if (!user) {
