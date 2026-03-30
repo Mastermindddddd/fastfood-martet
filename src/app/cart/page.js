@@ -58,7 +58,7 @@ export default function CartPage() {
   const handlePlaceOrder = async () => {
     if (!session) {
       alert('Please sign in to place an order')
-      router.push('/auth/signin')
+      router.push(`/login?callbackUrl=${encodeURIComponent('/cart')}`)
       return
     }
 
@@ -141,7 +141,9 @@ export default function CartPage() {
             <ShoppingBag className="h-16 w-16 text-gray-400 mx-auto mb-4" />
             <h2 className="text-2xl font-bold mb-2">Sign In Required</h2>
             <p className="text-gray-600 mb-6">Please sign in to view your cart</p>
-            <Button onClick={() => router.push('/auth/signin')}>Sign In</Button>
+            <Button onClick={() => router.push(`/login?callbackUrl=${encodeURIComponent('/cart')}`)}>
+              Sign In
+            </Button>
           </CardContent>
         </Card>
       </div>

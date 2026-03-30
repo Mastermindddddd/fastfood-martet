@@ -79,23 +79,23 @@ export default function HomePage() {
   }
 
   const handleAddToCart = (item) => {
-    if (!session) {
-      alert('Please sign in to add items to cart')
-      router.push('/auth/signin')
-      return
-    }
-    
-    addToCart({
-      id: item._id,
-      name: item.name,
-      price: item.price,
-      shopId: selectedShop._id,
-      shopName: selectedShop.businessName
-    })
-    
-    alert('Item added to cart!')
+  if (!session) {
+    const returnTo = selectedShop ? `/restaurants?shop=${selectedShop._id}` : '/restaurants'
+    router.push(`/login?callbackUrl=${encodeURIComponent(returnTo)}`)
+    return
   }
 
+  addToCart({
+    id: item._id,
+    _id: item._id,
+    name: item.name,
+    price: item.price,
+    shopId: selectedShop._id,
+    shopName: selectedShop.businessName
+  })
+
+  router.push('/cart')
+}
   const closeMenu = () => {
     setSelectedShop(null)
     setMenuItems([])
