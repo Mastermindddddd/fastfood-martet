@@ -24,7 +24,7 @@ export default function RootLayout({ children }) {
             <Toaster />
             <Header />
             {children}
-            <footer className="bg-slate-900 text-white py-12 px-4">
+            {/*<footer className="bg-slate-900 text-white py-12 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
@@ -88,7 +88,7 @@ export default function RootLayout({ children }) {
             <p>&copy; 2025 Kota Market. All rights reserved. | Privacy Policy | Terms of Service</p>
           </div>
         </div>
-      </footer>
+      </footer>*/}
             {/*<LocationFooterBar />*/}
           </AppProvider>
         </main>
