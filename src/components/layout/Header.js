@@ -1,8 +1,8 @@
 "use client"
 
 import { CartContext } from "@/components/AppContext"
-import Bars2 from "@/components/icons/Bars2"
 import ShoppingCart from "@/components/icons/ShoppingCart"
+import Bars2 from "@/components/icons/Bars2"
 import { signOut, useSession } from "next-auth/react"
 import Link from "next/link"
 import { useContext, useState } from "react"
@@ -16,7 +16,7 @@ function AuthLinks({ status }) {
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onClick={() => signOut({ callbackUrl: "/" })}
-        className="px-6 py-2.5 bg-gradient-to-r from-orange-600 to-red-600 text-white font-bold rounded-full hover:shadow-lg transition-all duration-200"
+        className="px-5 py-2.5 text-sm font-semibold bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-full hover:shadow-lg hover:shadow-orange-500/30 transition-all duration-200"
       >
         Logout
       </motion.button>
@@ -28,14 +28,14 @@ function AuthLinks({ status }) {
       <>
         <Link
           href="/login"
-          className="text-gray-700 hover:text-orange-600 transition-colors duration-200 font-semibold"
+          className="px-5 py-2.5 text-sm font-medium border border-orange-500/40 rounded-full hover:border-orange-500/70 hover:bg-orange-500/10 text-white transition-all duration-200"
         >
-          Login
+          Sign In
         </Link>
         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
           <Link
             href="/register"
-            className="px-6 py-2.5 bg-gradient-to-r from-orange-600 to-red-600 text-white font-bold rounded-full hover:shadow-lg transition-all duration-200 inline-block"
+            className="px-5 py-2.5 text-sm font-semibold bg-gradient-to-r from-orange-500 to-red-500 text-white rounded-full hover:shadow-lg hover:shadow-orange-500/30 transition-all duration-200 inline-block"
           >
             Register
           </Link>
@@ -53,60 +53,53 @@ export default function Header() {
   const { cartProducts } = useContext(CartContext)
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
 
+  const navLinks = [
+    { label: "Home", href: "/" },
+    { label: "Restaurants", href: "/restaurents" },
+    { label: "About", href: "/#about" },
+    { label: "Contact", href: "/#contact" },
+  ]
+
   return (
-    <header className="relative px-4 sm:px-6 lg:px-8 py-4 bg-white/95 backdrop-blur-md border-b-2 border-gray-200 sticky top-0 z-50 shadow-sm">
-      {/* Desktop Header */}
-      <div className="hidden md:flex items-center justify-between max-w-7xl mx-auto">
-        <div className="flex items-center gap-12">
-          {/* Logo */}
-          <Link className="flex items-center gap-3 group" href="/">
-            <motion.div
-              className="relative"
-              whileHover={{ rotate: [0, -10, 10, -10, 0] }}
-              transition={{ duration: 0.5 }}
+    <header className="fixed top-0 w-full bg-gray-950/80 backdrop-blur-2xl border-b border-orange-500/20 z-50">
+      {/* Desktop */}
+      <div className="hidden md:flex items-center justify-between max-w-7xl mx-auto px-6 py-5">
+        {/* Logo */}
+        <Link href="/" className="flex items-center gap-3 group">
+          <motion.div whileHover={{ rotate: [0, -10, 10, -10, 0] }} transition={{ duration: 0.5 }}>
+            <Image src="/kota-market2.png" alt="Kota Market" width={42} height={42} priority />
+          </motion.div>
+          <div className="flex flex-col">
+            <span className="font-black text-xl tracking-tighter bg-gradient-to-r from-white via-orange-200 to-orange-500 bg-clip-text text-transparent">
+              KOTA MARKET
+            </span>
+            <span className="text-[10px] text-orange-500/80 font-bold tracking-widest uppercase">
+              Screw the Diet
+            </span>
+          </div>
+        </Link>
+
+        {/* Nav */}
+        <nav className="flex items-center gap-10 text-sm font-medium">
+          {navLinks.map((item) => (
+            <Link
+              key={item.label}
+              href={item.href}
+              className="text-gray-400 hover:text-white transition-colors duration-200"
             >
-              <Image
-                src="/kota-market2.png"
-                alt="Kota-Market logo"
-                width={60}
-                height={60}
-                className="w-full h-full object-contain"
-                priority
-              />
-            </motion.div>
-            <div className="flex flex-col">
-              <span className="font-black text-2xl text-gray-900 tracking-tight group-hover:text-orange-600 transition-colors">
-                KOTA MARKET
-              </span>
-              <span className="text-xs text-orange-600 font-bold tracking-wider uppercase">
-                SCREW THE DIET
-              </span>
-            </div>
-          </Link>
+              {item.label}
+            </Link>
+          ))}
+        </nav>
 
-          {/* Navigation Links */}
-          <nav className="flex items-center gap-8">
-            {["Home", "Restaurents", "About", "Contact"].map((item) => (
-              <Link
-                key={item}
-                href={item === "Home" ? "/" : item === "Restaurents" ? "/restaurents" : `/#${item.toLowerCase()}`}
-                className="relative text-gray-700 hover:text-orange-600 font-bold transition-colors duration-200 group text-sm uppercase tracking-wide"
-              >
-                {item}
-                <span className="absolute -bottom-1 left-0 w-0 h-[3px] bg-gradient-to-r from-orange-600 to-red-600 transition-all duration-300 group-hover:w-full rounded-full" />
-              </Link>
-            ))}
-          </nav>
-        </div>
-
-        {/* Right Side Actions */}
-        <div className="flex items-center gap-6">
+        {/* Actions */}
+        <div className="flex items-center gap-4">
           <AuthLinks status={status} />
-          <Link href="/cart" className="relative group">
-            <motion.div 
-              whileHover={{ scale: 1.1 }} 
+          <Link href="/cart" className="relative">
+            <motion.div
+              whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
-              className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+              className="p-2 text-gray-300 hover:text-white transition-colors"
             >
               <ShoppingCart />
             </motion.div>
@@ -116,7 +109,7 @@ export default function Header() {
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   exit={{ scale: 0 }}
-                  className="absolute -top-1 -right-1 bg-gradient-to-r from-orange-600 to-red-600 text-white text-xs min-w-[24px] h-6 flex items-center justify-center rounded-full font-black shadow-lg px-1.5"
+                  className="absolute -top-1 -right-1 bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs min-w-[20px] h-5 flex items-center justify-center rounded-full font-black shadow-lg px-1"
                 >
                   {cartProducts.length}
                 </motion.span>
@@ -126,31 +119,20 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Mobile Header */}
-      <div className="flex items-center justify-between md:hidden">
-        <Link className="flex items-center gap-2 group" href="/">
-          <motion.div
-            className="w-10 h-10"
-            whileHover={{ rotate: [0, -10, 10, -10, 0] }}
-            transition={{ duration: 0.5 }}
-          >
-            <Image
-              src="/kota-market2.png"
-              alt="Kota-Market logo"
-              width={40}
-              height={40}
-              className="w-full h-full object-contain"
-              priority
-            />
-          </motion.div>
+      {/* Mobile */}
+      <div className="flex md:hidden items-center justify-between px-4 py-4">
+        <Link href="/" className="flex items-center gap-2">
+          <Image src="/kota-market2.png" alt="Kota Market" width={36} height={36} priority />
           <div className="flex flex-col">
-            <span className="font-black text-lg text-gray-900 tracking-tight">KOTA MARKET</span>
-            <span className="text-[9px] text-orange-600 font-bold tracking-wider uppercase">SCREW THE DIET</span>
+            <span className="font-black text-base tracking-tighter bg-gradient-to-r from-white to-orange-400 bg-clip-text text-transparent">
+              KOTA MARKET
+            </span>
+            <span className="text-[8px] text-orange-500/80 font-bold tracking-widest uppercase">Screw the Diet</span>
           </div>
         </Link>
 
         <div className="flex items-center gap-3">
-          <Link href="/cart" className="relative group">
+          <Link href="/cart" className="relative text-gray-300">
             <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
               <ShoppingCart />
             </motion.div>
@@ -160,7 +142,7 @@ export default function Header() {
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   exit={{ scale: 0 }}
-                  className="absolute -top-2 -right-2 bg-gradient-to-r from-orange-600 to-red-600 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full font-black shadow-md"
+                  className="absolute -top-2 -right-2 bg-gradient-to-r from-orange-500 to-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full font-black"
                 >
                   {cartProducts.length}
                 </motion.span>
@@ -168,9 +150,8 @@ export default function Header() {
             </AnimatePresence>
           </Link>
           <motion.button
-            whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="p-2 border-2 border-gray-300 rounded-lg hover:bg-gray-100 transition-colors duration-200"
+            className="p-2 border border-orange-500/30 rounded-lg text-gray-300 hover:bg-orange-500/10 transition-colors"
             onClick={() => setMobileNavOpen((prev) => !prev)}
           >
             <Bars2 />
@@ -186,42 +167,32 @@ export default function Header() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="md:hidden overflow-hidden"
+            transition={{ duration: 0.3 }}
+            className="md:hidden overflow-hidden border-t border-orange-500/20"
           >
-            <motion.div
-              initial={{ y: -20 }}
-              animate={{ y: 0 }}
-              exit={{ y: -20 }}
-              className="mt-4 p-6 bg-gray-50 rounded-2xl flex flex-col gap-4 border-2 border-gray-200"
-            >
-              <nav className="flex flex-col gap-3">
-                {["Home", "Restaurents", "About", "Contact"].map((item) => (
+            <div className="px-4 py-6 bg-gray-950/95 flex flex-col gap-4">
+              <nav className="flex flex-col gap-1">
+                {navLinks.map((item) => (
                   <Link
-                    key={item}
-                    href={item === "Home" ? "/" : item === "Restaurents" ? "/restaurents" : `/#${item.toLowerCase()}`}
+                    key={item.label}
+                    href={item.href}
                     onClick={() => setMobileNavOpen(false)}
-                    className="text-gray-900 hover:text-orange-600 transition-colors duration-200 font-bold py-2 uppercase tracking-wide"
+                    className="text-gray-300 hover:text-white hover:bg-white/5 transition-all px-3 py-2.5 rounded-lg font-medium text-sm"
                   >
-                    {item}
+                    {item.label}
                   </Link>
                 ))}
               </nav>
-              <div className="h-px bg-gray-300 my-2" />
+              <div className="h-px bg-orange-500/20 my-1" />
               <div className="flex flex-col gap-3">
                 <AuthLinks status={status} />
               </div>
               {session?.user && (
-                <motion.p
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="text-sm mt-2 font-semibold text-center text-gray-600"
-                >
-                  Welcome,{" "}
-                  <span className="text-orange-600 font-black">{userName}</span>
-                </motion.p>
+                <p className="text-xs text-center text-gray-500 mt-1">
+                  Welcome, <span className="text-orange-400 font-semibold">{userName}</span>
+                </p>
               )}
-            </motion.div>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

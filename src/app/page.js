@@ -11,111 +11,85 @@ export default async function HomePage() {
 
   return (
     <div className="min-h-screen bg-white overflow-hidden">
-      {/* Hero Section - Bold & Dynamic */}
-      <section className="relative min-h-[70vh] sm:min-h-[80vh] lg:min-h-[90vh] flex items-center justify-center px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-0 bg-gradient-to-br from-orange-50 via-white to-red-50">
+    
+      {/* Hero Section */}
+<section className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden bg-gray-950 pt-24">
+  {/* Background image with overlay */}
+  <div className="absolute inset-0">
+    <Image
+      src="/kota-market1.png"
+      alt="Background food"
+      fill
+      className="object-cover opacity-20"
+      priority
+    />
+    <div className="absolute inset-0 bg-gradient-to-br from-gray-950 via-gray-950/90 to-orange-950/30" />
+  </div>
 
-        <div className="relative max-w-7xl mx-auto w-full">
-          <div className="flex flex-col-reverse lg:grid lg:grid-cols-2 gap-8 sm:gap-12 items-center">
-            {/* Left Content - Text */}
-            <div className="text-center lg:text-left space-y-6 sm:space-y-8 z-10 order-2 lg:order-1">
-              
-              {/* Main Heading */}
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black leading-tight">
-                <span className="block text-gray-900 tracking-tight sm:tracking-tighter drop-shadow-sm">SCREW</span>
-                <span className="block bg-gradient-to-r from-orange-600 via-red-600 to-orange-600 bg-clip-text text-transparent animate-gradient tracking-tight sm:tracking-tighter drop-shadow-lg">
-                  THE DIET
-                </span>
-                <span className="block text-gray-900 text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl mt-2 tracking-wide sm:tracking-wider font-extrabold">
-                  EAT GOOD FOOD
-                </span>
-              </h1>
+  <div className="relative z-10 max-w-7xl mx-auto w-full">
+    <div className="grid lg:grid-cols-2 gap-16 items-center">
 
-              {/* Subheading */}
-              <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-700 max-w-2xl mx-auto lg:mx-0 font-light sm:font-normal px-2 sm:px-0 leading-relaxed tracking-wide">
-                Premium fast food prepared fresh for you. 
-                <span className="text-orange-600 font-semibold italic"> No compromises.</span>
-              </p>
+      {/* Left — Text */}
+      <div className="text-center lg:text-left space-y-8">
+        <div className="inline-block">
+          <span className="text-xs font-semibold tracking-widest text-orange-500/80 uppercase">
+            South Africa&apos;s Favourite Fast Food
+          </span>
+        </div>
 
-              {/* CTA Buttons */}
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start px-2 sm:px-0">
-                <Link href='/restaurents' className="w-full sm:w-auto">
-                  <button className="group relative w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-orange-600 to-red-600 text-white font-extrabold tracking-wide rounded-2xl hover:shadow-2xl hover:scale-105 transition-all duration-300 text-base sm:text-lg overflow-hidden uppercase">
-                    <span className="relative z-10 flex items-center justify-center gap-2">
-                      ORDER NOW
-                      <svg className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                      </svg>
-                    </span>
-                    <div className="absolute inset-0 bg-gradient-to-r from-orange-700 to-red-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  </button>
-                </Link>
-                <Link href='/restaurents' className="w-full sm:w-auto">
-                  <button className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 border-3 border-gray-900 text-gray-900 font-extrabold tracking-wide rounded-2xl hover:bg-gray-900 hover:text-white transition-all duration-300 text-base sm:text-lg uppercase">
-                    BROWSE SHOPS
-                  </button>
-                </Link>
-              </div>
+        <h1 className="text-6xl sm:text-7xl lg:text-8xl font-black leading-none tracking-tighter">
+          <span className="block bg-gradient-to-br from-white via-white to-orange-200/60 bg-clip-text text-transparent">
+            Screw
+          </span>
+          <span className="block text-orange-500">
+            the Diet.
+          </span>
+        </h1>
 
-              {/* Quick Stats */}
-              {/*<div className="flex flex-wrap gap-4 sm:gap-6 justify-center lg:justify-start pt-2 sm:pt-4">
-                <div className="text-center lg:text-left">
-                  <div className="text-2xl sm:text-3xl font-black text-orange-600 tracking-tight drop-shadow-sm">50K+</div>
-                  <div className="text-xs sm:text-sm text-gray-600 font-medium tracking-wide uppercase">Happy Customers</div>
-                </div>
-                <div className="text-center lg:text-left">
-                  <div className="text-2xl sm:text-3xl font-black text-red-600 tracking-tight drop-shadow-sm">500+</div>
-                  <div className="text-xs sm:text-sm text-gray-600 font-medium tracking-wide uppercase">Restaurants</div>
-                </div>
-                <div className="text-center lg:text-left">
-                  <div className="text-2xl sm:text-3xl font-black text-orange-600 tracking-tight drop-shadow-sm">30min</div>
-                  <div className="text-xs sm:text-sm text-gray-600 font-medium tracking-wide uppercase">Avg Prep Time</div>
-                </div>
-              </div>*/}
-            </div>
+        <p className="text-lg text-gray-400 leading-relaxed max-w-md mx-auto lg:mx-0 font-light">
+          Premium fast food prepared fresh for you.{" "}
+          <span className="text-orange-400 font-medium">No compromises.</span>
+        </p>
 
-            {/* Right Image - Shows first on mobile */}
-            <div className="relative flex justify-center lg:justify-end w-full order-1 lg:order-2">
-              <div className="relative group w-full max-w-sm sm:max-w-md lg:max-w-lg">
-                <div className="absolute -inset-2 sm:-inset-4 group-hover:opacity-75 transition-opacity duration-300"></div>
-                <Image
-                  src="/kota-market1.png"
-                  alt="Delicious Food"
-                  width={600}
-                  height={600}
-                  className="relative w-full h-auto rounded-2xl sm:rounded-3xl shadow-2xl transform group-hover:scale-105 transition-transform duration-500"
-                  priority
-                />
-                {/* Floating Badge */}
-                <div className="absolute -top-2 -right-2 sm:-top-4 sm:-right-4 bg-white rounded-xl sm:rounded-2xl p-2 sm:p-4 shadow-xl border-2 sm:border-4 border-orange-500 animate-bounce">
-                  <div className="text-center">
-                    <div className="text-xl sm:text-2xl mb-1">⚡</div>
-                    <div className="font-black text-orange-600 text-xs sm:text-sm">FAST</div>
-                    <div className="text-[10px] sm:text-xs text-gray-600">PREP</div>
-                  </div>
-                </div>
-              </div>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+  
+  <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+
+  {/* Customer Card */}
+  <div className="flex justify-center lg:justify-start">
+  <SectionCards />
+</div>
+
+</div>
+
+</div>
+
+      </div>
+
+      {/* Right — Image */}
+      <div className="relative flex justify-center lg:justify-end">
+        <div className="relative group">
+          <Image
+            src="/kota-market1.png"
+            alt="Delicious Food"
+            width={520}
+            height={520}
+            className="relative w-full max-w-md h-auto rounded-3xl shadow-2xl shadow-black/60 transform group-hover:scale-105 transition-transform duration-500"
+            priority
+          />
+          {/* Floating badge */}
+          <div className="absolute -top-4 -right-4 bg-gray-900 border border-orange-500/40 rounded-2xl p-3 shadow-xl backdrop-blur-sm">
+            <div className="text-center">
+              <div className="text-xl mb-0.5">⚡</div>
+              <div className="font-black text-orange-500 text-xs">FAST</div>
+              <div className="text-[10px] text-gray-500">PREP</div>
             </div>
           </div>
         </div>
-      </section>
-
-      {/* Section Cards - Shop Owner & Customer */}
-      <section className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 bg-gray-900 text-white relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-        }}></div>
-        <div className="max-w-6xl mx-auto relative z-10">
-          <div className="text-center mb-8 sm:mb-12 lg:mb-16">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black mb-3 sm:mb-4">
-              CHOOSE YOUR <span className="text-orange-500">VIBE</span>
-            </h2>
-            <p className="text-base sm:text-lg lg:text-xl text-gray-300 max-w-2xl mx-auto px-2 sm:px-0">
-              Whether you&apos;re hungry or hungry for business, we&apos;ve got you covered
-            </p>
-          </div>
-          <SectionCards />
-        </div>
-      </section>
+      </div>
+    </div>
+  </div>
+</section>
 
       {/* Popular Categories - Bold Grid */}
       {/*<section className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 bg-white">
