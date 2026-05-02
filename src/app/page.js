@@ -57,7 +57,7 @@ function GuestHero() {
     <div className="grid lg:grid-cols-2 gap-16 items-center">
       <div className="text-center lg:text-left space-y-8">
         <span className="text-xs font-semibold tracking-widest text-orange-500 uppercase">
-          South Africa's Favourite Fast Food
+          South Africa&apos;s Favourite Fast Food
         </span>
         <h1 className="text-6xl sm:text-7xl lg:text-8xl font-black leading-none tracking-tighter">
           <span className="block bg-gradient-to-br from-gray-900 via-gray-800 to-orange-600 bg-clip-text text-transparent">Screw</span>
