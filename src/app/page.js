@@ -11,85 +11,82 @@ export default async function HomePage() {
 
   return (
     <div className="min-h-screen bg-white overflow-hidden">
-    
+
       {/* Hero Section */}
-<section className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden bg-gray-950 pt-24">
-  {/* Background image with overlay */}
-  <div className="absolute inset-0">
-    <Image
-      src="/kota-market1.png"
-      alt="Background food"
-      fill
-      className="object-cover opacity-20"
-      priority
-    />
-    <div className="absolute inset-0 bg-gradient-to-br from-gray-950 via-gray-950/90 to-orange-950/30" />
-  </div>
+      <section className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden bg-white pt-24">
 
-  <div className="relative z-10 max-w-7xl mx-auto w-full">
-    <div className="grid lg:grid-cols-2 gap-16 items-center">
-
-      {/* Left — Text */}
-      <div className="text-center lg:text-left space-y-8">
-        <div className="inline-block">
-          <span className="text-xs font-semibold tracking-widest text-orange-500/80 uppercase">
-            South Africa&apos;s Favourite Fast Food
-          </span>
-        </div>
-
-        <h1 className="text-6xl sm:text-7xl lg:text-8xl font-black leading-none tracking-tighter">
-          <span className="block bg-gradient-to-br from-white via-white to-orange-200/60 bg-clip-text text-transparent">
-            Screw
-          </span>
-          <span className="block text-orange-500">
-            the Diet.
-          </span>
-        </h1>
-
-        <p className="text-lg text-gray-400 leading-relaxed max-w-md mx-auto lg:mx-0 font-light">
-          Premium fast food prepared fresh for you.{" "}
-          <span className="text-orange-400 font-medium">No compromises.</span>
-        </p>
-
-        <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-  
-  <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-
-  {/* Customer Card */}
-  <div className="flex justify-center lg:justify-start">
-  <SectionCards />
-</div>
-
-</div>
-
-</div>
-
-      </div>
-
-      {/* Right — Image */}
-      <div className="relative flex justify-center lg:justify-end">
-        <div className="relative group">
+        {/* Background image with light overlay */}
+        <div className="absolute inset-0">
           <Image
             src="/kota-market1.png"
-            alt="Delicious Food"
-            width={520}
-            height={520}
-            className="relative w-full max-w-md h-auto rounded-3xl shadow-2xl shadow-black/60 transform group-hover:scale-105 transition-transform duration-500"
+            alt="Background food"
+            fill
+            className="object-cover opacity-20"
             priority
           />
-          {/* Floating badge */}
-          <div className="absolute -top-4 -right-4 bg-gray-900 border border-orange-500/40 rounded-2xl p-3 shadow-xl backdrop-blur-sm">
-            <div className="text-center">
-              <div className="text-xl mb-0.5">⚡</div>
-              <div className="font-black text-orange-500 text-xs">FAST</div>
-              <div className="text-[10px] text-gray-500">PREP</div>
+          <div className="absolute inset-0 bg-gradient-to-br from-white via-white/90 to-orange-50/60" />
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto w-full">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+
+            {/* Left — Text */}
+            <div className="text-center lg:text-left space-y-8">
+
+              <div className="inline-block">
+                <span className="text-xs font-semibold tracking-widest text-orange-500 uppercase">
+                  South Africa&apos;s Favourite Fast Food
+                </span>
+              </div>
+
+              <h1 className="text-6xl sm:text-7xl lg:text-8xl font-black leading-none tracking-tighter">
+                <span className="block bg-gradient-to-br from-gray-900 via-gray-800 to-orange-600 bg-clip-text text-transparent">
+                  Screw
+                </span>
+                <span className="block text-orange-500">
+                  the Diet.
+                </span>
+              </h1>
+
+              <p className="text-lg text-gray-600 leading-relaxed max-w-md mx-auto lg:mx-0 font-light">
+                Premium fast food prepared fresh for you.{" "}
+                <span className="text-orange-500 font-medium">No compromises.</span>
+              </p>
+
+              <div className="flex justify-center lg:justify-start">
+                <SectionCards />
+              </div>
+
             </div>
+
+            {/* Right — Image */}
+            <div className="relative flex justify-center lg:justify-end">
+              <div className="relative group">
+
+                <Image
+                  src="/kota-market1.png"
+                  alt="Delicious Food"
+                  width={520}
+                  height={520}
+                  className="relative w-full max-w-md h-auto rounded-3xl shadow-2xl transform group-hover:scale-105 transition-transform duration-500"
+                  priority
+                />
+
+                {/* Floating badge */}
+                <div className="absolute -top-4 -right-4 bg-white border border-orange-200 rounded-2xl p-3 shadow-xl backdrop-blur-sm">
+                  <div className="text-center">
+                    <div className="text-xl mb-0.5">⚡</div>
+                    <div className="font-black text-orange-500 text-xs">FAST</div>
+                    <div className="text-[10px] text-gray-500">PREP</div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
           </div>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
+      </section>
 
       {/* Popular Categories - Bold Grid */}
       {/*<section className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 bg-white">

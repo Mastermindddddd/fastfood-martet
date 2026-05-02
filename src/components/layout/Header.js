@@ -28,7 +28,7 @@ function AuthLinks({ status }) {
       <>
         <Link
           href="/login"
-          className="px-5 py-2.5 text-sm font-medium border border-orange-500/40 rounded-full hover:border-orange-500/70 hover:bg-orange-500/10 text-white transition-all duration-200"
+          className="px-5 py-2.5 text-sm font-medium border border-orange-500/40 rounded-full hover:border-orange-500/70 bg-yellow-300 hover:bg-orange-400 text-white transition-all duration-200"
         >
           Sign In
         </Link>
@@ -61,7 +61,7 @@ export default function Header() {
   ]
 
   return (
-    <header className="fixed top-0 w-full bg-gray-950/80 backdrop-blur-2xl border-b border-orange-500/20 z-50">
+    <header className="fixed top-0 w-full bg-white backdrop-blur-2xl border-b border-orange-500/20 z-50">
       {/* Desktop */}
       <div className="hidden md:flex items-center justify-between max-w-7xl mx-auto px-6 py-5">
         {/* Logo */}
@@ -70,7 +70,7 @@ export default function Header() {
             <Image src="/kota-market2.png" alt="Kota Market" width={42} height={42} priority />
           </motion.div>
           <div className="flex flex-col">
-            <span className="font-black text-xl tracking-tighter bg-gradient-to-r from-white via-orange-200 to-orange-500 bg-clip-text text-transparent">
+            <span className="font-black text-xl tracking-tighter bg-gradient-to-r from-yellow-400 via-orange-200 to-orange-500 bg-clip-text text-transparent">
               KOTA MARKET
             </span>
             <span className="text-[10px] text-orange-500/80 font-bold tracking-widest uppercase">
@@ -85,7 +85,7 @@ export default function Header() {
             <Link
               key={item.label}
               href={item.href}
-              className="text-gray-400 hover:text-white transition-colors duration-200"
+              className="text-gray-400 hover:text-orange-400 transition-colors duration-200"
             >
               {item.label}
             </Link>
