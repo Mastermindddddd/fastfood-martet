@@ -5,7 +5,7 @@ import ShoppingCart from "@/components/icons/ShoppingCart"
 import Bars2 from "@/components/icons/Bars2"
 import { signOut, useSession } from "next-auth/react"
 import Link from "next/link"
-import { useContext, useState } from "react"
+import { useContext, useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Image from "next/image"
 
@@ -47,18 +47,38 @@ function AuthLinks({ status }) {
   return null
 }
 
+function useIsShopOwner(email) {
+  const [isOwner, setIsOwner] = useState(false)
+  useEffect(() => {
+    if (!email) return
+    fetch(`/api/check-shop?email=${encodeURIComponent(email)}`)
+      .then(r => r.json())
+      .then(data => setIsOwner(data.shopExists))
+      .catch(() => {})
+  }, [email])
+  return isOwner
+}
+
 export default function Header() {
   const { data: session, status } = useSession()
   const userName = session?.user?.name || "Guest"
   const { cartProducts } = useContext(CartContext)
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
+  const isShopOwner = useIsShopOwner(session?.user?.email)
 
-  const navLinks = [
-    { label: "Home", href: "/" },
-    { label: "Restaurants", href: "/restaurents" },
-    { label: "About", href: "/#about" },
-    { label: "Contact", href: "/#contact" },
-  ]
+  const navLinks = isShopOwner
+  ? [
+      { label: "Home", href: "/" },
+      { label: "Dashboard", href: "/shop-dashboard" },
+      { label: "About", href: "/#about" },
+      { label: "Contact", href: "/#contact" },
+    ]
+  : [
+      { label: "Home", href: "/" },
+      { label: "Restaurants", href: "/restaurents" },
+      { label: "About", href: "/#about" },
+      { label: "Contact", href: "/#contact" },
+    ]
 
   return (
     <header className="fixed top-0 w-full bg-white backdrop-blur-2xl border-b border-orange-500/20 z-50">
