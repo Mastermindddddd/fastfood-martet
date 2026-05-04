@@ -1,5 +1,8 @@
+import { NextResponse } from "next/server";
 import Shop from "@/models/Shop";
 import mongoose from "mongoose";
+
+export const dynamic = 'force-dynamic';
 
 async function connectDB() {
   if (mongoose.connection.readyState >= 1) {
@@ -22,7 +25,7 @@ export async function GET(req) {
     const email = searchParams.get("email");
 
     if (!email) {
-      return Response.json(
+      return NextResponse.json(
         { shopExists: false, message: "Email is required" },
         { status: 400 }
       );
@@ -30,13 +33,13 @@ export async function GET(req) {
 
     const shop = await Shop.findOne({ email });
 
-    return Response.json({
+    return NextResponse.json({
       shopExists: !!shop,
       shop: shop || null,
     });
   } catch (error) {
     console.error("Error checking shop by email:", error);
-    return Response.json(
+    return NextResponse.json(
       { shopExists: false, message: "Server error. Please try again later." },
       { status: 500 }
     );

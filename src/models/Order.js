@@ -88,4 +88,6 @@ OrderSchema.index({ userId: 1, createdAt: -1 });
 OrderSchema.index({ shopId: 1, createdAt: -1 });
 OrderSchema.index({ status: 1 });
 
-export default mongoose.models.Order || mongoose.model("Order", OrderSchema);
+const Order = mongoose.models.Order || mongoose.model("Order", OrderSchema);
+export default Order;
+export { Order };

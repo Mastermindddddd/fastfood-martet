@@ -37,4 +37,6 @@ const MenuItemSchema = new mongoose.Schema({
 // Index for faster queries
 MenuItemSchema.index({ shopId: 1, available: 1 });
 
-export default mongoose.models.MenuItem || mongoose.model("MenuItem", MenuItemSchema);
+const MenuItem = mongoose.models.MenuItem || mongoose.model("MenuItem", MenuItemSchema);
+export default MenuItem;
+export { MenuItem };
