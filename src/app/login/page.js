@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { signIn } from "next-auth/react"
 import { Eye, EyeOff, ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -12,6 +12,8 @@ import Link from "next/link"
 
 export default function LoginPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirectTo = searchParams.get('redirect')
 
   const [formData, setFormData] = useState({
     email: "",
@@ -76,8 +78,11 @@ export default function LoginPage() {
 
       console.log("Shop check response:", data) // DEBUG
 
-      // Step 3: Redirect based on shop existence
-      if (data.shopExists) {
+      // Step 3: Redirect based on redirect parameter or shop existence
+      if (redirectTo) {
+        console.log("Redirecting to:", redirectTo) // DEBUG
+        router.push(`/${redirectTo}`)
+      } else if (data.shopExists) {
         console.log("Redirecting to shop dashboard") // DEBUG
         router.push("/shop-dashboard")
       } else {

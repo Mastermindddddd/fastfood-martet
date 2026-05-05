@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { Eye, EyeOff, ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -11,6 +11,8 @@ import Link from "next/link"
 
 export default function RegisterPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirectTo = searchParams.get('redirect')
 
   const [formData, setFormData] = useState({
     name: "",
@@ -67,8 +69,14 @@ export default function RegisterPage() {
 
       if (!res.ok) throw new Error(data.message || "Registration failed")
 
-      alert("Registration successful! Redirecting to login...")
-      router.push("/login")
+      alert("Registration successful! Redirecting...")
+      
+      // Redirect based on the redirect parameter
+      if (redirectTo === 'shop-registration') {
+        router.push("/login?redirect=shop-registration")
+      } else {
+        router.push("/login")
+      }
     } catch (err) {
       console.error("Error during registration:", err)
       setErrors({ general: err.message })

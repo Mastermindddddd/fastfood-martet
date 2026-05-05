@@ -63,44 +63,39 @@ export default function ShopOwnerDashboard() {
   const [ingredientErrors, setIngredientErrors] = useState({})
 
   useEffect(() => {
-    if (status === 'loading') return
-    if (status === 'unauthenticated') {
-      router.push('/login')
-      return
-    }
-
     const loadShopData = async () => {
+      if (status === 'loading') return
+      if (status === 'unauthenticated') {
+        router.push('/login')
+        return
+      }
       if (status === 'authenticated' && session?.user?.email) {
-        await fetchShopData(session.user.email)
+        try {
+          const res = await fetch(`/api/check-shop?email=${encodeURIComponent(session.user.email)}`)
+          const data = await res.json()
+
+          if (!data.shopExists || !data.shop) {
+            setError('No shop found for this account')
+            router.push('/shop-registration')
+            return
+          }
+
+          setShopData(data.shop)
+          await Promise.all([
+            loadMenuItems(data.shop._id),
+            loadIngredients(data.shop._id)
+          ])
+          setIsLoading(false)
+        } catch (err) {
+          console.error('Error fetching shop data:', err)
+          setError('Failed to load shop data')
+          setIsLoading(false)
+        }
       }
     }
 
     loadShopData()
   }, [status, session, router])
-
-  const fetchShopData = async (email) => {
-    try {
-      const res = await fetch(`/api/check-shop?email=${encodeURIComponent(email)}`)
-      const data = await res.json()
-
-      if (!data.shopExists || !data.shop) {
-        setError('No shop found for this account')
-        router.push('/shop-registration')
-        return
-      }
-
-      setShopData(data.shop)
-      await Promise.all([
-        loadMenuItems(data.shop._id),
-        loadIngredients(data.shop._id)
-      ])
-      setIsLoading(false)
-    } catch (err) {
-      console.error('Error fetching shop data:', err)
-      setError('Failed to load shop data')
-      setIsLoading(false)
-    }
-  }
 
   const loadMenuItems = async (shopId) => {
     try {

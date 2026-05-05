@@ -1,4 +1,4 @@
-import {AppProvider} from "@/components/AppContext";
+import { Providers } from "@/components/Providers";
 import Header from "@/components/layout/Header";
 import LocationFooterBar from "@/components/LocationFooterBar";
 import { Roboto } from 'next/font/google'
@@ -20,7 +20,7 @@ export default function RootLayout({ children }) {
     <html lang="en" className="scroll-smooth">
       <body className={roboto.className}>
         <main className="">
-          <AppProvider>
+          <Providers>
             <Toaster />
             <Header />
             {children}
@@ -90,7 +90,7 @@ export default function RootLayout({ children }) {
         </div>
       </footer>*/}
             {/*<LocationFooterBar />*/}
-          </AppProvider>
+          </Providers>
         </main>
       </body>
     </html>

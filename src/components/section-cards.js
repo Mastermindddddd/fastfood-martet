@@ -11,7 +11,7 @@ export default function SectionCards({ compact = false }) {
       } mx-auto px-2`}
     >
       {/* SHOP OWNER */}
-      <Link href="/shop-registration">
+      <Link href="/register?redirect=shop-registration">
         <div
           className={`group relative overflow-hidden rounded-2xl bg-gradient-to-br from-primary to-primary/80 
           ${compact ? "p-3" : "p-8"} 

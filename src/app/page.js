@@ -1,54 +1,11 @@
+"use client"
+
 import SearchBar from "@/components/search-bar"
 import SectionCards from "@/components/section-cards"
 import Image from 'next/image'
 import Link from 'next/link'
-import { getServerSession } from "next-auth"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
-
-// Fetch shop status server-side so there's no layout flash
-async function getShopStatus(email) {
-  if (!email) return false
-  try {
-    const res = await fetch(
-      `${process.env.NEXTAUTH_URL}/api/check-shop?email=${encodeURIComponent(email)}`,
-      { cache: 'no-store' }
-    )
-    const data = await res.json()
-    return data.shopExists
-  } catch {
-    return false
-  }
-}
-
-export default async function HomePage() {
-  const session = await getServerSession(authOptions)
-  const isShopOwner = session?.user?.email
-    ? await getShopStatus(session.user.email)
-    : false
-
-  return (
-    <div className="min-h-screen bg-white overflow-hidden">
-      <section className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden bg-white pt-24">
-
-        {/* background */}
-        <div className="absolute inset-0">
-          <Image src="/kota-market1.png" alt="" fill className="object-cover opacity-20" priority />
-          <div className="absolute inset-0 bg-gradient-to-br from-white via-white/90 to-orange-50/60" />
-        </div>
-
-        <div className="relative z-10 max-w-7xl mx-auto w-full">
-          {isShopOwner ? (
-            <ShopOwnerHero userName={session.user.name} />
-          ) : session ? (
-            <CustomerHero userName={session.user.name} />
-          ) : (
-            <GuestHero />
-          )}
-        </div>
-      </section>
-    </div>
-  )
-}
+import { useSession } from "next-auth/react"
+import { useState, useEffect } from "react"
 
 // ── Hero variants ────────────────────────────────────────
 
@@ -161,6 +118,68 @@ function HeroImage() {
           </div>
         </div>
       </div>
+    </div>
+  )
+}
+
+export default function HomePage() {
+  const { data: session, status } = useSession()
+  const [isShopOwner, setIsShopOwner] = useState(false)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function checkShopStatus() {
+      if (session?.user?.email) {
+        try {
+          const res = await fetch(`/api/check-shop?email=${encodeURIComponent(session.user.email)}`)
+          const data = await res.json()
+          setIsShopOwner(data.shopExists || false)
+        } catch (error) {
+          console.error('Error checking shop status:', error)
+          setIsShopOwner(false)
+        }
+      } else {
+        setIsShopOwner(false)
+      }
+      setLoading(false)
+    }
+
+    if (status !== 'loading') {
+      checkShopStatus()
+    }
+  }, [session, status])
+
+  if (loading && status === 'loading') {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-white overflow-hidden">
+      <section className="relative min-h-screen flex items-center justify-center px-6 overflow-hidden bg-white pt-24">
+
+        {/* background */}
+        <div className="absolute inset-0">
+          <Image src="/kota-market1.png" alt="" fill className="object-cover opacity-20" priority />
+          <div className="absolute inset-0 bg-gradient-to-br from-white via-white/90 to-orange-50/60" />
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto w-full">
+          {isShopOwner ? (
+            <ShopOwnerHero userName={session?.user?.name} />
+          ) : session ? (
+            <CustomerHero userName={session.user.name} />
+          ) : (
+            <GuestHero />
+          )}
+        </div>
+      </section>
     </div>
   )
 }

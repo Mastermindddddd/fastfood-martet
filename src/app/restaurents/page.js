@@ -278,7 +278,13 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h3 className="text-2xl font-bold mb-4">Are you a restaurant owner?</h3>
           <p className="text-gray-600 mb-6">Join FoodHub SA and reach more customers</p>
-          <Button size="lg" onClick={() => router.push('/shop-registration')}>
+          <Button size="lg" onClick={() => {
+            if (session) {
+              router.push('/shop-registration')
+            } else {
+              router.push('/register?redirect=shop-registration')
+            }
+          }}>
             Register Your Restaurant
           </Button>
         </div>
