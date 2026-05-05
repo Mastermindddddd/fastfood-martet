@@ -10,7 +10,7 @@ export default function LocationFooterBar() {
     if (!userLocation && !locationError) {
       requestLocation();
     }
-  }, []);
+  }, [userLocation, locationError, requestLocation]);
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 border-t border-slate-700 shadow-2xl">

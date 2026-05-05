@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { Search, MapPin, Star, Clock, Filter, ShoppingCart, Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -292,12 +293,14 @@ function ShopCard({ shop, onClick }) {
       className="cursor-pointer hover:shadow-lg transition-shadow"
       onClick={onClick}
     >
-      <div className="relative">
+      <div className="relative w-full h-48">
         {shop.shopImage ? (
-          <img 
-            src={shop.shopImage} 
+          <Image
+            src={shop.shopImage}
             alt={shop.businessName}
-            className="w-full h-48 object-cover rounded-t-lg"
+            fill
+            className="object-cover rounded-t-lg"
+            unoptimized
           />
         ) : (
           <div className="w-full h-48 bg-gradient-to-br from-orange-400 to-red-500 rounded-t-lg flex items-center justify-center">

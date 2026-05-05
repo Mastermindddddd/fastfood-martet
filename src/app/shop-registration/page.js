@@ -1,5 +1,6 @@
 "use client"
 import { useState, useEffect } from 'react'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import { ArrowLeft, Loader, AlertCircle, X } from 'lucide-react'
@@ -484,10 +485,12 @@ export default function ShopRegistration() {
       <div className="mt-1 flex items-center space-x-4">
         {imagePreview ? (
           <div className="relative w-32 h-32">
-            <img 
-              src={imagePreview} 
-              alt="Preview" 
-              className="w-full h-full object-cover rounded-lg border-2 border-gray-300"
+            <Image
+              src={imagePreview}
+              alt="Preview"
+              fill
+              className="object-cover rounded-lg border-2 border-gray-300"
+              unoptimized
             />
             <button
               type="button"

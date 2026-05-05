@@ -68,9 +68,14 @@ export default function ShopOwnerDashboard() {
       router.push('/login')
       return
     }
-    if (status === 'authenticated' && session?.user?.email) {
-      fetchShopData(session.user.email)
+
+    const loadShopData = async () => {
+      if (status === 'authenticated' && session?.user?.email) {
+        await fetchShopData(session.user.email)
+      }
     }
+
+    loadShopData()
   }, [status, session, router])
 
   const fetchShopData = async (email) => {
