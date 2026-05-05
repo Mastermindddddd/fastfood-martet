@@ -13,22 +13,19 @@ import Link from "next/link"
 export default function LoginPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const redirectTo = searchParams.get('redirect')
 
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  })
+  // Strip any leading slash from the redirect param to avoid double slashes
+  const rawRedirect = searchParams.get("redirect")
+  const redirectTo = rawRedirect ? rawRedirect.replace(/^\/+/, "") : null
+
+  const [formData, setFormData] = useState({ email: "", password: "" })
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [errors, setErrors] = useState({})
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }))
+    setFormData((prev) => ({ ...prev, [name]: value }))
     if (errors[name]) setErrors((prev) => ({ ...prev, [name]: "" }))
   }
 
@@ -46,52 +43,57 @@ export default function LoginPage() {
     if (!validateForm()) return
 
     setIsLoading(true)
+    setErrors({})
 
     try {
-      // Step 1: Try signing in with credentials
-      const res = await signIn("credentials", {
+      // Step 1: Sign in with credentials
+      const result = await signIn("credentials", {
         email: formData.email,
         password: formData.password,
         redirect: false,
       })
 
-      console.log("SignIn response:", res) // DEBUG
-
-      if (res?.error) {
+      if (!result?.ok || result?.error) {
         setErrors({ general: "Invalid email or password" })
-        setIsLoading(false)
         return
       }
 
-      if (!res?.ok) {
-        setErrors({ general: "Login failed. Please try again." })
-        setIsLoading(false)
+      // Step 2: Flush the App Router cache so it recognises the new session.
+      // Without this, router.push() fires but the middleware/layout still
+      // sees the old (unauthenticated) state and can silently cancel the nav.
+      router.refresh()
+
+      // Step 3: If a redirect param was supplied, honour it immediately.
+      if (redirectTo) {
+        router.push(`/${redirectTo}`)
         return
       }
 
-      // Step 2: Check if email exists in Shop model
-      const email = formData.email
-      console.log("Checking shop for email:", email) // DEBUG
+      // Step 4: No redirect param — decide destination based on shop existence.
+      const checkRes = await fetch(
+        `/api/check-shop?email=${encodeURIComponent(formData.email)}`
+      )
 
-      const checkRes = await fetch(`/api/check-shop?email=${encodeURIComponent(email)}`)
+      if (!checkRes.ok) {
+        console.error("Shop check failed with status:", checkRes.status)
+        // Use window.location as a hard fallback — guaranteed to navigate
+        window.location.href = "/"
+        return
+      }
+
       const data = await checkRes.json()
 
-      console.log("Shop check response:", data) // DEBUG
-
-      // Step 3: Redirect based on redirect parameter or shop existence
-      if (redirectTo) {
-        console.log("Redirecting to:", redirectTo) // DEBUG
-        router.push(`/${redirectTo}`)
-      } else if (data.shopExists) {
-        console.log("Redirecting to shop dashboard") // DEBUG
-        router.push("/shop-dashboard")
+      // Use window.location.href instead of router.push so the full page
+      // reload picks up the new session cookie before protected layouts run.
+      if (data.shopExists) {
+        window.location.href = "/shop-dashboard"
       } else {
-        console.log("Redirecting to home") // DEBUG
-        router.push("/")
+        window.location.href = "/"
       }
     } catch (err) {
-      console.error("Error during login:", err)
+      console.error("Login error:", err)
       setErrors({ general: "An error occurred. Please try again." })
+    } finally {
       setIsLoading(false)
     }
   }
@@ -127,7 +129,7 @@ export default function LoginPage() {
                   onChange={handleInputChange}
                   placeholder="Enter your email"
                 />
-                {errors.email && <p className="text-sm text-red-600">{errors.email}</p>}
+                {errors.email && <p className="text-sm text-red-600 mt-1">{errors.email}</p>}
               </div>
 
               <div>
@@ -147,14 +149,10 @@ export default function LoginPage() {
                     onClick={() => setShowPassword((prev) => !prev)}
                     className="absolute right-3 cursor-pointer text-gray-400 hover:text-gray-600"
                   >
-                    {showPassword ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
-                    )}
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </span>
                 </div>
-                {errors.password && <p className="text-sm text-red-600">{errors.password}</p>}
+                {errors.password && <p className="text-sm text-red-600 mt-1">{errors.password}</p>}
               </div>
 
               <Button type="submit" className="w-full" disabled={isLoading}>
