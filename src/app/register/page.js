@@ -1,18 +1,21 @@
 "use client"
 
 import { useState } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useSearchParams } from "next/navigation"
 import { Eye, EyeOff, ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
+import toast from "react-hot-toast"
 
 export default function RegisterPage() {
-  const router = useRouter()
   const searchParams = useSearchParams()
-  const redirectTo = searchParams.get('redirect')
+
+  // Strip any leading slash from the redirect param to avoid double slashes
+  const rawRedirect = searchParams.get("redirect")
+  const redirectTo = rawRedirect ? rawRedirect.replace(/^\/+/, "") : null
 
   const [formData, setFormData] = useState({
     name: "",
@@ -27,28 +30,19 @@ export default function RegisterPage() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }))
+    setFormData((prev) => ({ ...prev, [name]: value }))
     if (errors[name]) setErrors((prev) => ({ ...prev, [name]: "" }))
   }
 
   const validateForm = () => {
     const newErrors = {}
-
     if (!formData.name.trim()) newErrors.name = "Name is required"
     if (!formData.email.trim()) newErrors.email = "Email is required"
-    else if (!/\S+@\S+\.\S+/.test(formData.email))
-      newErrors.email = "Invalid email address"
+    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = "Invalid email address"
     if (!formData.phone.trim()) newErrors.phone = "Phone is required"
-    if (!formData.password)
-      newErrors.password = "Password is required"
-    else if (formData.password.length < 5)
-      newErrors.password = "Password must be at least 5 characters"
-    if (formData.password !== formData.confirmPassword)
-      newErrors.confirmPassword = "Passwords do not match"
-
+    if (!formData.password) newErrors.password = "Password is required"
+    else if (formData.password.length < 5) newErrors.password = "Password must be at least 5 characters"
+    if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = "Passwords do not match"
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
   }
@@ -66,16 +60,16 @@ export default function RegisterPage() {
       })
 
       const data = await res.json()
-
       if (!res.ok) throw new Error(data.message || "Registration failed")
 
-      alert("Registration successful! Redirecting...")
-      
-      // Redirect based on the redirect parameter
-      if (redirectTo === 'shop-registration') {
-        router.push("/login?redirect=shop-registration")
+      toast.success("Account created! Please log in.")
+
+      // After registering, send user to login and preserve the redirect param
+      // so the login page knows where to send them after signing in.
+      if (redirectTo) {
+        window.location.href = `/login?redirect=${redirectTo}`
       } else {
-        router.push("/login")
+        window.location.href = "/login"
       }
     } catch (err) {
       console.error("Error during registration:", err)
@@ -94,7 +88,7 @@ export default function RegisterPage() {
             Back to Home
           </Link>
           <h2 className="text-3xl font-bold text-gray-900">Register</h2>
-          <p className="mt-2 text-gray-600">Create your FoodHub SA account</p>
+          <p className="mt-2 text-gray-600">Create your Kota Market account</p>
         </div>
 
         <Card>
@@ -106,31 +100,27 @@ export default function RegisterPage() {
                 </div>
               )}
 
-              {/* Name */}
               <div>
                 <Label htmlFor="name">Name</Label>
                 <Input id="name" name="name" value={formData.name} onChange={handleInputChange} placeholder="Enter your name" />
-                {errors.name && <p className="text-sm text-red-600">{errors.name}</p>}
+                {errors.name && <p className="text-sm text-red-600 mt-1">{errors.name}</p>}
               </div>
 
-              {/* Email */}
               <div>
                 <Label htmlFor="email">Email Address</Label>
                 <Input id="email" name="email" type="email" value={formData.email} onChange={handleInputChange} placeholder="Enter your email" />
-                {errors.email && <p className="text-sm text-red-600">{errors.email}</p>}
+                {errors.email && <p className="text-sm text-red-600 mt-1">{errors.email}</p>}
               </div>
 
-              {/* Phone */}
               <div>
                 <Label htmlFor="phone">Phone Number</Label>
                 <Input id="phone" name="phone" type="tel" value={formData.phone} onChange={handleInputChange} placeholder="Enter your phone number" />
-                {errors.phone && <p className="text-sm text-red-600">{errors.phone}</p>}
+                {errors.phone && <p className="text-sm text-red-600 mt-1">{errors.phone}</p>}
               </div>
 
-              {/* Password */}
               <div>
                 <Label htmlFor="password">Password</Label>
-                <div className="relative">
+                <div className="relative flex items-center">
                   <Input
                     id="password"
                     name="password"
@@ -138,14 +128,18 @@ export default function RegisterPage() {
                     value={formData.password}
                     onChange={handleInputChange}
                     placeholder="Enter your password"
-                    className="pr-10"
+                    className="pr-10 w-full"
                   />
-                  
+                  <span
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="absolute right-3 cursor-pointer text-gray-400 hover:text-gray-600"
+                  >
+                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </span>
                 </div>
-                {errors.password && <p className="text-sm text-red-600">{errors.password}</p>}
+                {errors.password && <p className="text-sm text-red-600 mt-1">{errors.password}</p>}
               </div>
 
-              {/* Confirm Password */}
               <div>
                 <Label htmlFor="confirmPassword">Confirm Password</Label>
                 <Input
@@ -156,7 +150,7 @@ export default function RegisterPage() {
                   onChange={handleInputChange}
                   placeholder="Re-enter your password"
                 />
-                {errors.confirmPassword && <p className="text-sm text-red-600">{errors.confirmPassword}</p>}
+                {errors.confirmPassword && <p className="text-sm text-red-600 mt-1">{errors.confirmPassword}</p>}
               </div>
 
               <Button type="submit" className="w-full" disabled={isLoading}>

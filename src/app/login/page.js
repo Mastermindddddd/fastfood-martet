@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useSearchParams } from "next/navigation"
 import { signIn } from "next-auth/react"
 import { Eye, EyeOff, ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -11,7 +11,6 @@ import { Label } from "@/components/ui/label"
 import Link from "next/link"
 
 export default function LoginPage() {
-  const router = useRouter()
   const searchParams = useSearchParams()
 
   // Strip any leading slash from the redirect param to avoid double slashes
@@ -58,33 +57,28 @@ export default function LoginPage() {
         return
       }
 
-      // Step 2: Flush the App Router cache so it recognises the new session.
-      // Without this, router.push() fires but the middleware/layout still
-      // sees the old (unauthenticated) state and can silently cancel the nav.
-      router.refresh()
-
-      // Step 3: If a redirect param was supplied, honour it immediately.
+      // Step 2: If a redirect param was supplied, honour it immediately.
+      // Always use window.location.href (not router.push) — this forces a full
+      // page reload so the new session cookie is sent with the next request
+      // before any protected layout or middleware runs.
       if (redirectTo) {
-        router.push(`/${redirectTo}`)
+        window.location.href = `/${redirectTo}`
         return
       }
 
-      // Step 4: No redirect param — decide destination based on shop existence.
+      // Step 3: No redirect param — decide destination based on shop existence.
       const checkRes = await fetch(
         `/api/check-shop?email=${encodeURIComponent(formData.email)}`
       )
 
       if (!checkRes.ok) {
         console.error("Shop check failed with status:", checkRes.status)
-        // Use window.location as a hard fallback — guaranteed to navigate
         window.location.href = "/"
         return
       }
 
       const data = await checkRes.json()
 
-      // Use window.location.href instead of router.push so the full page
-      // reload picks up the new session cookie before protected layouts run.
       if (data.shopExists) {
         window.location.href = "/shop-dashboard"
       } else {
@@ -107,7 +101,7 @@ export default function LoginPage() {
             Back to Home
           </Link>
           <h2 className="text-3xl font-bold text-gray-900">Login</h2>
-          <p className="mt-2 text-gray-600">Access your FoodHub SA account</p>
+          <p className="mt-2 text-gray-600">Access your Kota Market account</p>
         </div>
 
         <Card>
