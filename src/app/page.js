@@ -61,7 +61,7 @@ function CustomerHero({ userName }) {
         <div className="grid grid-cols-3 gap-4 max-w-sm mx-auto lg:mx-0">
           {[
             { label: 'Restaurants', href: '/restaurants', emoji: '🍔' },
-            { label: 'Cart', href: '/cart', emoji: '📦' },
+            { label: 'Orders', href: '/orders', emoji: '📦' },
             { label: 'Alerts', href: '/shop-dashboard', emoji: '🔔' },
           ].map(card => (
             <Link key={card.label} href={card.href}

@@ -1,93 +1,55 @@
 // models/Order.js
-import mongoose from "mongoose";
+import mongoose, { Schema, model, models } from "mongoose";
 
-const OrderItemSchema = new mongoose.Schema({
-  menuItemId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'MenuItem',
-    required: true
-  },
-  name: {
-    type: String,
-    required: true
-  },
-  price: {
-    type: Number,
-    required: true
-  },
-  quantity: {
-    type: Number,
-    required: true,
-    min: 1
-  }
-});
+const OrderSchema = new Schema(
+  {
+    userEmail: { type: String, required: true },
+    shopId: { type: mongoose.Schema.Types.ObjectId, ref: "Shop", default: null },
 
-const OrderSchema = new mongoose.Schema({
-  userId: {
-    type: String,
-    required: true
-  },
-  userEmail: {
-    type: String,
-    required: true
-  },
-  shopId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Shop',
-    required: true
-  },
-  shopName: {
-    type: String,
-    required: true
-  },
-  items: [OrderItemSchema],
-  subtotal: {
-    type: Number,
-    required: true,
-    min: 0
-  },
-  deliveryFee: {
-    type: Number,
-    default: 0,
-    min: 0
-  },
-  total: {
-    type: Number,
-    required: true,
-    min: 0
-  },
-  status: {
-    type: String,
-    enum: ['pending', 'confirmed', 'preparing', 'ready', 'out_for_delivery', 'delivered', 'cancelled'],
-    default: 'pending'
-  },
-  deliveryAddress: {
-    street: String,
-    city: String,
+    // Cart
+    cartProducts: [
+      {
+        _id: String,
+        name: String,
+        price: Number,
+        image: String,
+        size: Object,
+        extras: [Object],
+      },
+    ],
+
+    // Status tracking
+    status: {
+      type: String,
+      enum: ["pending", "confirmed", "preparing", "ready", "completed", "cancelled"],
+      default: "pending",
+    },
+
+    // Payment
+    paid: { type: Boolean, default: false },
+    paymentMethod: { type: String, enum: ["cash", "card", "wallet"], default: "cash" },
+    stripeSessionId: { type: String },
+
+    // Extra order info
+    notes: { type: String, default: "" },
+    serviceFee: { type: Number, default: 0 },
+
+    // Delivery address
+    phone: String,
+    streetAddress: String,
     postalCode: String,
-    phone: String
-  },
-  paymentMethod: {
-    type: String,
-    enum: ['cash', 'card', 'wallet'],
-    default: 'cash'
-  },
-  paymentStatus: {
-    type: String,
-    enum: ['pending', 'paid', 'failed'],
-    default: 'pending'
-  },
-  notes: {
-    type: String,
-    default: ''
-  }
-}, { timestamps: true });
+    city: String,
+    country: String,
 
-// Index for faster queries
-OrderSchema.index({ userId: 1, createdAt: -1 });
+    // Timestamps
+    updatedAt: { type: Date, default: Date.now },
+  },
+  { timestamps: true }
+);
+
+// Index for efficient queries
 OrderSchema.index({ shopId: 1, createdAt: -1 });
-OrderSchema.index({ status: 1 });
+OrderSchema.index({ userEmail: 1, createdAt: -1 });
 
-const Order = mongoose.models.Order || mongoose.model("Order", OrderSchema);
+const Order = models?.Order || model("Order", OrderSchema);
 export default Order;
-export { Order };
