@@ -292,7 +292,7 @@ export default function CartPage() {
               <div className="space-y-2">
                 {[
                   { value: 'cash', label: 'Cash on Pickup', emoji: '💵' },
-                  { value: 'card', label: 'Card Payment',   emoji: '💳' },
+                  //{ value: 'card', label: 'Card Payment',   emoji: '💳' },
                 ].map(opt => (
                   <label
                     key={opt.value}
