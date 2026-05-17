@@ -6,6 +6,7 @@ import { Trash2, ShoppingBag, CheckCircle, Loader, ChevronRight } from 'lucide-r
 import { useSession } from 'next-auth/react'
 import { useContext } from 'react'
 import { CartContext } from '@/components/AppContext'
+import Image from 'next/image'
 
 export default function CartPage() {
   const { data: session, status } = useSession()
@@ -180,7 +181,7 @@ export default function CartPage() {
   // ── Main cart ────────────────────────────────────────────────────────────
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-20 pb-16">
+    <div className="min-h-screen bg-gray-50 pt-20 pb-16 mt-20">
       <div className="max-w-5xl mx-auto px-4 sm:px-6">
 
         <div className="mb-7">
@@ -215,7 +216,7 @@ export default function CartPage() {
                     >
                       {/* Thumbnail — fixed 56×56, never shrinks */}
                       {item.image ? (
-                        <img
+                        <Image
                           src={item.image}
                           alt={item.name}
                           style={{ width: 56, height: 56, borderRadius: 12, objectFit: 'cover', display: 'block' }}

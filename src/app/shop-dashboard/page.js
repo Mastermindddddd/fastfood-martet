@@ -735,7 +735,7 @@ export default function ShopOwnerDashboard() {
               <div className="space-y-6">
                 <div>
                   <h1 className="text-2xl font-black text-gray-900">Good {new Date().getHours() < 12 ? 'morning' : new Date().getHours() < 18 ? 'afternoon' : 'evening'} 👋</h1>
-                  <p className="text-gray-500 text-sm mt-1">Here's what's happening at {shopData.businessName} today.</p>
+                  <p className="text-gray-500 text-sm mt-1">Here&apos;s what&apos;s happening at {shopData.businessName} today.</p>
                 </div>
 
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -1344,7 +1344,7 @@ export default function ShopOwnerDashboard() {
               <div>
                 <Label htmlFor="threshold" className="text-sm font-semibold text-gray-700">Low Stock Alert Threshold</Label>
                 <Input id="threshold" name="lowStockThreshold" type="number" min="0" value={ingredientFormData.lowStockThreshold} onChange={e => setIngredientFormData(p => ({ ...p, lowStockThreshold: e.target.value }))} placeholder="10" className="mt-1.5 rounded-xl border-gray-200" />
-                <p className="text-xs text-gray-400 mt-1.5">You'll be alerted when stock falls below this level</p>
+                <p className="text-xs text-gray-400 mt-1.5">You&apos;ll be alerted when stock falls below this level</p>
               </div>
             </div>
 
