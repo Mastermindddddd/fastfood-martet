@@ -58,7 +58,19 @@ function CustomerHero({ userName }) {
             Order Now
           </Link>
         </div>
-        <SectionCards />
+        <div className="grid grid-cols-3 gap-4 max-w-sm mx-auto lg:mx-0">
+          {[
+            { label: 'Restaurants', href: '/restaurants', emoji: '🍔' },
+            { label: 'Cart', href: '/cart', emoji: '📦' },
+            { label: 'Alerts', href: '/shop-dashboard', emoji: '🔔' },
+          ].map(card => (
+            <Link key={card.label} href={card.href}
+              className="flex flex-col items-center gap-2 p-4 rounded-2xl border border-orange-100 hover:border-orange-300 hover:bg-orange-50 transition-all">
+              <span className="text-2xl">{card.emoji}</span>
+              <span className="text-xs font-semibold text-gray-600">{card.label}</span>
+            </Link>
+          ))}
+        </div>
       </div>
       <HeroImage />
     </div>
